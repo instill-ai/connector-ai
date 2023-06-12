@@ -1,9 +1,5 @@
 package stabilityai
 
-const (
-	textToImageURL = host + "/v1/generation/stable-diffusion-v1-5/text-to-image"
-)
-
 // TextToImageReq represents the request body for text-to-image API
 type TextToImageReq struct {
 	//required params
@@ -40,9 +36,14 @@ type TextToImageRes struct {
 
 // GenerateImageFromText makes a call to the text-to-image API from Stability AI.
 // https://platform.stability.ai/rest-api#tag/v1generation/operation/textToImage
-func GenerateImageFromText(params TextToImageReq, apiKey string) (results []TextToImage, err error) {
+func (c *Client) GenerateImageFromText(params TextToImageReq, engine string) (results []TextToImage, err error) {
 	var resp TextToImageRes
-	err = makeReq(textToImageURL, "POST", apiKey, params, &resp)
+	// default engine
+	if engine == "" {
+		engine = "stable-diffusion-v1-5"
+	}
+	textToImageURL := host + "/v1/generation/" + engine + "/text-to-image"
+	err = c.makeReq(textToImageURL, "POST", params, &resp)
 	for _, i := range resp.Images {
 		if i.FinishReason == "SUCCESS" {
 			results = append(results, i)
