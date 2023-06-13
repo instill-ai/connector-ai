@@ -16,6 +16,6 @@ type Engine struct {
 // https://platform.stability.ai/rest-api#tag/v1engines/operation/listEngines
 func (c *Client) ListEngines() ([]Engine, error) {
 	var engines []Engine
-	err := c.makeReq(listEnginesURL, "GET", nil, &engines)
+	err := c.sendReq(listEnginesURL, "GET", nil, &engines)
 	return engines, err
 }

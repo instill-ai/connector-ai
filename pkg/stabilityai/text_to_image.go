@@ -1,5 +1,9 @@
 package stabilityai
 
+const (
+	successFinishReason = "SUCCESS"
+)
+
 // TextToImageReq represents the request body for text-to-image API
 type TextToImageReq struct {
 	//required params
@@ -43,9 +47,9 @@ func (c *Client) GenerateImageFromText(params TextToImageReq, engine string) (re
 		engine = "stable-diffusion-v1-5"
 	}
 	textToImageURL := host + "/v1/generation/" + engine + "/text-to-image"
-	err = c.makeReq(textToImageURL, "POST", params, &resp)
+	err = c.sendReq(textToImageURL, "POST", params, &resp)
 	for _, i := range resp.Images {
-		if i.FinishReason == "SUCCESS" {
+		if i.FinishReason == successFinishReason {
 			results = append(results, i)
 		}
 	}
