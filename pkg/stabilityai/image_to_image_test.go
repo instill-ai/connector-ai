@@ -24,7 +24,7 @@ func TestGenerateImageFromImage(t *testing.T) {
 	}{
 		{
 			name:        "error in sending request",
-			req:         ImageToImageReq{InitImage: "a", ImageTaskCommon: ImageTaskCommon{TextPrompts: []TextPrompt{{Text: "a cat and a dog", Weight: 0.5}}}},
+			req:         ImageToImageReq{InitImage: "a", TextPrompts: []TextPrompt{{Text: "a cat and a dog", Weight: 0.5}}},
 			expectedErr: errors.New("error occurred: call failed, while calling URL: https://api.stability.ai/v1/generation/stable-diffusion-v1-5/image-to-image, request body: {\"text_prompts\":[{\"text\":\"a cat and a dog\",\"weight\":0.5}],\"init_image\":\"a\"}"),
 			setMocks: func() {
 				mockResponse = func() (*http.Response, error) {
@@ -34,7 +34,7 @@ func TestGenerateImageFromImage(t *testing.T) {
 		},
 		{
 			name:        "nil response",
-			req:         ImageToImageReq{InitImage: "a", ImageTaskCommon: ImageTaskCommon{TextPrompts: []TextPrompt{{Text: "a cat and a dog", Weight: 0.5}}}},
+			req:         ImageToImageReq{InitImage: "a", TextPrompts: []TextPrompt{{Text: "a cat and a dog", Weight: 0.5}}},
 			expectedErr: errors.New("error occurred: <nil>, while calling URL: https://api.stability.ai/v1/generation/stable-diffusion-v1-5/image-to-image, request body: {\"text_prompts\":[{\"text\":\"a cat and a dog\",\"weight\":0.5}],\"init_image\":\"a\"}"),
 			setMocks: func() {
 				mockResponse = func() (*http.Response, error) {
@@ -44,7 +44,7 @@ func TestGenerateImageFromImage(t *testing.T) {
 		},
 		{
 			name:        "non 200 status code",
-			req:         ImageToImageReq{InitImage: "a", ImageTaskCommon: ImageTaskCommon{TextPrompts: []TextPrompt{{Text: "a cat and a dog", Weight: 0.5}}}},
+			req:         ImageToImageReq{InitImage: "a", TextPrompts: []TextPrompt{{Text: "a cat and a dog", Weight: 0.5}}},
 			expectedErr: errors.New("non-200 status code: 401, while calling URL: https://api.stability.ai/v1/generation/stable-diffusion-v1-5/image-to-image, response body: {\"id\": \"9160aa70-222f-4a36-9eb7-475e2668362a\",\"name\": \"unauthorized\",\"message\": \"missing authorization header\"}"),
 			setMocks: func() {
 				mockResponse = func() (*http.Response, error) {
@@ -54,7 +54,7 @@ func TestGenerateImageFromImage(t *testing.T) {
 		},
 		{
 			name:        "json unmarshal error invalid response",
-			req:         ImageToImageReq{InitImage: "a", ImageTaskCommon: ImageTaskCommon{TextPrompts: []TextPrompt{{Text: "a cat and a dog", Weight: 0.5}}}},
+			req:         ImageToImageReq{InitImage: "a", TextPrompts: []TextPrompt{{Text: "a cat and a dog", Weight: 0.5}}},
 			expectedErr: errors.New("error in json decode: unexpected end of JSON input, while calling URL: https://api.stability.ai/v1/generation/stable-diffusion-v1-5/image-to-image, response body: {"),
 			setMocks: func() {
 				mockResponse = func() (*http.Response, error) {
@@ -64,7 +64,7 @@ func TestGenerateImageFromImage(t *testing.T) {
 		},
 		{
 			name:        "valid response",
-			req:         ImageToImageReq{InitImage: "a", ImageTaskCommon: ImageTaskCommon{TextPrompts: []TextPrompt{{Text: "a cat and a dog", Weight: 0.5}}}},
+			req:         ImageToImageReq{InitImage: "a", TextPrompts: []TextPrompt{{Text: "a cat and a dog", Weight: 0.5}}},
 			expectedRes: []Image{{Base64: "a", Seed: 1234, FinishReason: "SUCCESS"}},
 			setMocks: func() {
 				mockResponse = func() (*http.Response, error) {
