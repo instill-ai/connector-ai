@@ -79,7 +79,7 @@ func TestGenerateImageFromImage(t *testing.T) {
 			if tt.setMocks != nil {
 				tt.setMocks()
 			}
-			res, err := stabilityClient.GenerateImageFromImage(tt.req, "")
+			res, err := stabilityClient.GenerateImageFromImage(tt.req, "stable-diffusion-v1-5")
 			assert.Equal(t, res, tt.expectedRes)
 			assert.Equal(t, err, tt.expectedErr)
 		})

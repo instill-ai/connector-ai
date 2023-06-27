@@ -90,7 +90,7 @@ func TestGenerateImageFromText(t *testing.T) {
 			if tt.setMocks != nil {
 				tt.setMocks()
 			}
-			res, err := stabilityClient.GenerateImageFromText(tt.req, "")
+			res, err := stabilityClient.GenerateImageFromText(tt.req, "stable-diffusion-v1-5")
 			assert.Equal(t, res, tt.expectedRes)
 			assert.Equal(t, err, tt.expectedErr)
 		})
