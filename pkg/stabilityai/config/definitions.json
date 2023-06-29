@@ -1,0 +1,69 @@
+[
+  {
+    "uid": "c86a95cc-7d32-4e22-a290-8c699f6705a4",
+    "id": "stability-ai-model",
+    "title": "Stability AI",
+    "documentationUrl": "https://www.instill.tech/docs/model-connectors/stability-ai",
+    "icon": "stabilityai.svg",
+    "iconUrl": "",
+    "spec": {
+      "connectionSpecification": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "title": "Stability AI Model Connector Spec",
+        "type": "object",
+        "required": [
+          "api_key",
+          "task",
+          "engine"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "api_key": {
+            "title": "API Key",
+            "description": "Access to your API keys can then be managed through Stability AI's Account page",
+            "type": "string"
+          },
+          "task": {
+            "title": "Task",
+            "description": "AI task type",
+            "type": "string",
+            "enum": [
+              "Text to Image",
+              "Image to Image"
+            ]
+          },
+          "engine": {
+            "title": "Engine",
+            "description": "Engine (model) to use",
+            "type": "string",
+            "default": "stable-diffusion-xl-beta-v2-2-2",
+            "enum": [
+              "stable-diffusion-v1",
+              "stable-diffusion-v1-5",
+              "stable-diffusion-512-v2-0",
+              "stable-diffusion-768-v2-0",
+              "stable-diffusion-512-v2-1",
+              "stable-diffusion-768-v2-1",
+              "stable-diffusion-xl-beta-v2-2-2",
+              "stable-inpainting-v1-0",
+              "stable-inpainting-512-v2-0",
+              "esrgan-v1-x2plus",
+              "stable-diffusion-x4-latent-upscaler"
+            ]
+          }
+        }
+      },
+      "documentationUrl": "https://www.instill.tech/docs/ai-connectors/stability-ai"
+    },
+    "public": true,
+    "custom": false,
+    "tombstone": false,
+    "vendorAttributes": {
+      "githubIssueLabel": "stability-ai",
+      "license": "MIT",
+      "releaseStage": "alpha",
+      "resourceRequirements": {},
+      "modelType": "api"
+    }
+  }
+]
