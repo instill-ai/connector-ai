@@ -65,9 +65,13 @@ type HTTPClient interface {
 func Init(logger *zap.Logger, options ConnectorOptions) base.IConnector {
 	once.Do(func() {
 		loader := configLoader.InitJSONSchema(logger)
-		connDefs, err := loader.Load(venderName, connectorPB.ConnectorType_CONNECTOR_TYPE_MODEL, definitionJSON)
+		connDefs, err := loader.Load(venderName, connectorPB.ConnectorType_CONNECTOR_TYPE_AI, definitionJSON)
 		if err != nil {
 			panic(err)
+		}
+		connector = &Connector{
+			BaseConnector: base.BaseConnector{Logger: logger},
+			options:       options,
 		}
 		for idx := range connDefs {
 			err := connector.AddConnectorDefinition(uuid.FromStringOrNil(connDefs[idx].GetUid()), connDefs[idx].GetId(), connDefs[idx])
@@ -76,10 +80,6 @@ func Init(logger *zap.Logger, options ConnectorOptions) base.IConnector {
 			}
 		}
 
-		connector = &Connector{
-			BaseConnector: base.BaseConnector{Logger: logger},
-			options:       options,
-		}
 	})
 	return connector
 }

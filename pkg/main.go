@@ -8,7 +8,7 @@ import (
 	"go.uber.org/zap"
 	"google.golang.org/protobuf/types/known/structpb"
 
-	"github.com/instill-ai/connector-model/pkg/stabilityai"
+	"github.com/instill-ai/connector-ai/pkg/stabilityai"
 	"github.com/instill-ai/connector/pkg/base"
 )
 
