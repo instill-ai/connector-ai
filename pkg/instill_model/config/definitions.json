@@ -1,0 +1,50 @@
+[
+  {
+    "uid": "<unique UUID>",
+    "id": "instill-ai-model-instill-model",
+    "title": "Instill Model",
+    "documentationUrl": "https://www.instill.tech/docs/vdp/model-connectors/instill-model",
+    "icon": "instillmodel.svg",
+    "iconUrl": "",
+    "spec": {
+      "connectionSpecification": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "title": "Stability AI Model Connector Spec",
+        "type": "object",
+        "required": [
+          "server_url",
+          "model_id"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "api_key": {
+            "title": "API Key",
+            "description": "Access to your API keys can then be managed through the Setting page",
+            "type": "string"
+          },
+          "server_url": {
+            "title": "Server URL",
+            "description": "Base URL for the Instill Model API",  // API Gateway entrypoint
+            "type": "string",
+            "default": "https://api.instill.tech/model" // <--- user connector to Instill Model Cloud service  "http://localhost:9080" --> user connect to local Instill Model
+          },
+          "model_id": {
+            "title": "Model ID",
+            "description": "ID of the model to use",
+            "type": "string"
+          }
+        }
+      },
+      "documentationUrl": "https://www.instill.tech/docs/model-connectors/instill-model"
+    },
+    "public": true,
+    "custom": false,
+    "vendorAttributes": {
+      "githubIssueLabel": "instill-model",
+      "license": "MIT",
+      "releaseStage": "alpha",
+      "resourceRequirements": {},
+      "modelType": "api"
+    }
+  },
+]

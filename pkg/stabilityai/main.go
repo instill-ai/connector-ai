@@ -29,12 +29,11 @@ const (
 	imageToImageTask = "Image to Image"
 )
 
-//go:embed config/definitions.json
-var definitionJSON []byte
-
 var (
-	once      sync.Once
-	connector base.IConnector
+	//go:embed config/definitions.json
+	definitionJSON []byte
+	once           sync.Once
+	connector      base.IConnector
 )
 
 type ConnectorOptions struct{}

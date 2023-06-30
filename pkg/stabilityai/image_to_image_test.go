@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"testing"
 
+	"github.com/gofrs/uuid"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -84,4 +85,8 @@ func TestGenerateImageFromImage(t *testing.T) {
 			assert.Equal(t, err, tt.expectedErr)
 		})
 	}
+}
+
+func TestTemp(t *testing.T) {
+	uuid.NewV4()
 }
