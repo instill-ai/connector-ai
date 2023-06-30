@@ -221,3 +221,8 @@ func (c *Connection) Test() (connectorPB.Connector_State, error) {
 	}
 	return connectorPB.Connector_STATE_CONNECTED, nil
 }
+
+func (con *Connection) GetTaskName() (string, error) {
+	// TODO: load from configuration
+	return "TASK_TEXT_TO_IMAGE", nil
+}
