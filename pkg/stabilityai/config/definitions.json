@@ -28,7 +28,8 @@
             "description": "AI task type",
             "type": "string",
             "enum": [
-              "Text to Image"
+              "Text to Image",
+              "Image to Image"
             ]
           },
           "engine": {

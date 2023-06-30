@@ -17,6 +17,7 @@ import (
 	"github.com/instill-ai/connector/pkg/base"
 	"github.com/instill-ai/connector/pkg/configLoader"
 
+	modelPB "github.com/instill-ai/protogen-go/model/model/v1alpha"
 	connectorPB "github.com/instill-ai/protogen-go/vdp/connector/v1alpha"
 )
 
@@ -34,6 +35,10 @@ var (
 	definitionJSON []byte
 	once           sync.Once
 	connector      base.IConnector
+	taskToNameMap  = map[string]modelPB.Model_Task{
+		textToImageTask:  modelPB.Model_TASK_TEXT_TO_IMAGE,
+		imageToImageTask: modelPB.Model_TASK_TEXT_TO_IMAGE,
+	}
 )
 
 type ConnectorOptions struct{}
@@ -122,16 +127,16 @@ func (c *Client) sendReq(reqURL, method string, params interface{}, respObj inte
 	return
 }
 
-func (con *Connection) getAPIKey() string {
-	return fmt.Sprintf("%s", con.config.GetFields()["api_key"].GetStringValue())
+func (c *Connection) getAPIKey() string {
+	return fmt.Sprintf("%s", c.config.GetFields()["api_key"].GetStringValue())
 }
 
-func (con *Connection) getTask() string {
-	return fmt.Sprintf("%s", con.config.GetFields()["task"].GetStringValue())
+func (c *Connection) getTask() string {
+	return fmt.Sprintf("%s", c.config.GetFields()["task"].GetStringValue())
 }
 
-func (con *Connection) getEngine() string {
-	return fmt.Sprintf("%s", con.config.GetFields()["engine"].GetStringValue())
+func (c *Connection) getEngine() string {
+	return fmt.Sprintf("%s", c.config.GetFields()["engine"].GetStringValue())
 }
 
 func (c *Connection) Execute(inputs []*connectorPB.DataPayload) ([]*connectorPB.DataPayload, error) {
@@ -221,7 +226,10 @@ func (c *Connection) Test() (connectorPB.Connector_State, error) {
 	return connectorPB.Connector_STATE_CONNECTED, nil
 }
 
-func (con *Connection) GetTaskName() (string, error) {
-	// TODO: load from configuration
-	return "TASK_TEXT_TO_IMAGE", nil
+func (c *Connection) GetTaskName() (string, error) {
+	name, ok := taskToNameMap[c.getTask()]
+	if !ok {
+		name = modelPB.Model_TASK_UNSPECIFIED
+	}
+	return name.String(), nil
 }
