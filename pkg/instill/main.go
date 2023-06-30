@@ -30,9 +30,15 @@ const (
 
 var (
 	//go:embed config/seed/definitions.json
-	definitionJSON []byte
-	once           sync.Once
-	connector      base.IConnector
+	definitionJSON    []byte
+	once              sync.Once
+	connector         base.IConnector
+	connectorStateMap = map[modelPB.Model_State]connectorPB.Connector_State{
+		modelPB.Model_STATE_UNSPECIFIED: connectorPB.Connector_STATE_UNSPECIFIED,
+		modelPB.Model_STATE_OFFLINE:     connectorPB.Connector_STATE_DISCONNECTED,
+		modelPB.Model_STATE_ONLINE:      connectorPB.Connector_STATE_CONNECTED,
+		modelPB.Model_STATE_ERROR:       connectorPB.Connector_STATE_ERROR,
+	}
 )
 
 type ConnectorOptions struct{}
@@ -174,7 +180,15 @@ func (c *Connection) Execute(inputs []*connectorPB.DataPayload) ([]*connectorPB.
 }
 
 func (c *Connection) Test() (connectorPB.Connector_State, error) {
-	return connectorPB.Connector_STATE_UNSPECIFIED, nil
+	res, err := c.getModel()
+	if err != nil || res == nil || res.Model == nil {
+		return connectorPB.Connector_STATE_UNSPECIFIED, err
+	}
+	st, ok := connectorStateMap[res.Model.State]
+	if !ok {
+		return connectorPB.Connector_STATE_UNSPECIFIED, fmt.Errorf("mapping not found for: %v", res.Model.State)
+	}
+	return st, nil
 }
 
 func (c *Connection) GetTaskName() (string, error) {
