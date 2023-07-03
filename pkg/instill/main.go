@@ -104,8 +104,9 @@ func (c *Connector) CreateConnection(defUid uuid.UUID, config *structpb.Struct, 
 }
 
 // NewClient initializes a new Instill model client
-func (c *Connection) NewClient(serverURL string) (*Client, error) {
+func (c *Connection) NewClient() (*Client, error) {
 	apiKey := ""
+	serverURL := c.getServerURL()
 	if serverURL == config.Config.InstillCloud.Host {
 		apiKey = c.getAPIKey()
 		if apiKey == "" {
@@ -154,7 +155,7 @@ func (c *Connection) getModelID() string {
 func (c *Connection) getModel() (res *GetModelRes, err error) {
 	modelID := c.getModelID()
 	serverURL := c.getServerURL()
-	c.client, err = c.NewClient(serverURL)
+	c.client, err = c.NewClient()
 	if err != nil {
 		return res, err
 	}
