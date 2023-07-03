@@ -174,14 +174,19 @@ func (c *Connection) Execute(inputs []*connectorPB.DataPayload) ([]*connectorPB.
 	}
 	switch res.Model.Task {
 	case modelPB.Model_TASK_UNSPECIFIED:
+		return c.executeUnspecified(res.Model, inputs)
 	case modelPB.Model_TASK_CLASSIFICATION:
 		return c.executeImageClassification(res.Model, inputs)
 	case modelPB.Model_TASK_DETECTION:
 		return c.executeObjectDetection(res.Model, inputs)
 	case modelPB.Model_TASK_KEYPOINT:
+		return c.executeKeyPointDetection(res.Model, inputs)
 	case modelPB.Model_TASK_OCR:
+		return c.executeOCR(res.Model, inputs)
 	case modelPB.Model_TASK_INSTANCE_SEGMENTATION:
+		return c.executeInstanceSegmentation(res.Model, inputs)
 	case modelPB.Model_TASK_SEMANTIC_SEGMENTATION:
+		return c.executeSemanticSegmentation(res.Model, inputs)
 	case modelPB.Model_TASK_TEXT_TO_IMAGE:
 		return c.executeTextToImage(res.Model, inputs)
 	case modelPB.Model_TASK_TEXT_GENERATION:
