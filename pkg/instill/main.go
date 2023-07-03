@@ -1,4 +1,4 @@
-package instill_model
+package instill
 
 import (
 	"bytes"
@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/gofrs/uuid"
+	"github.com/instill-ai/connector-ai/config"
 	"go.uber.org/zap"
 	"google.golang.org/protobuf/types/known/structpb"
 
@@ -22,10 +23,9 @@ import (
 )
 
 const (
-	venderName       = "instillModel"
-	instillCloudHost = "https://api.instill.tech/model"
-	getModelPath     = "/v1alpha/model/"
-	reqTimeout       = time.Second * 60
+	venderName   = "instillModel"
+	getModelPath = "/v1alpha/model/"
+	reqTimeout   = time.Second * 60
 )
 
 var (
@@ -53,6 +53,7 @@ type Connection struct {
 	connector *Connector
 	defUid    uuid.UUID
 	config    *structpb.Struct
+	client    *Client
 }
 
 type GetModelRes struct {
@@ -63,6 +64,7 @@ type GetModelRes struct {
 type Client struct {
 	APIKey     string
 	HTTPClient HTTPClient
+	GRPCClient modelPB.ModelPublicServiceClient
 }
 
 // HTTPClient interface
@@ -102,8 +104,16 @@ func (c *Connector) CreateConnection(defUid uuid.UUID, config *structpb.Struct, 
 }
 
 // NewClient initializes a new Instill model client
-func NewClient(apiKey string) Client {
-	return Client{APIKey: apiKey, HTTPClient: &http.Client{Timeout: reqTimeout}}
+func (c *Connection) NewClient(serverURL string) (*Client, error) {
+	apiKey := ""
+	if serverURL == config.Config.InstillCloud.Host {
+		apiKey = c.getAPIKey()
+		if apiKey == "" {
+			return nil, fmt.Errorf("api key cannot be empty for instill cloud")
+		}
+	}
+	gRPCCLient, _ := initModelPublicServiceClient(serverURL)
+	return &Client{APIKey: apiKey, HTTPClient: &http.Client{Timeout: reqTimeout}, GRPCClient: gRPCCLient}, nil
 }
 
 // sendReq is responsible for making the http request with to given URL, method, and params and unmarshalling the response into given object.
@@ -144,16 +154,12 @@ func (c *Connection) getModelID() string {
 func (c *Connection) getModel() (res *GetModelRes, err error) {
 	modelID := c.getModelID()
 	serverURL := c.getServerURL()
-	apiKey := ""
-	if serverURL == instillCloudHost {
-		apiKey = c.getAPIKey()
-		if apiKey == "" {
-			return res, fmt.Errorf("api key cannot be empty for instill cloud")
-		}
+	c.client, err = c.NewClient(serverURL)
+	if err != nil {
+		return res, err
 	}
-	client := NewClient(apiKey)
 	reqURL := serverURL + getModelPath + modelID
-	err = client.sendReq(reqURL, http.MethodGet, nil, res)
+	err = c.client.sendReq(reqURL, http.MethodGet, nil, res)
 	return res, err
 }
 
@@ -173,6 +179,7 @@ func (c *Connection) Execute(inputs []*connectorPB.DataPayload) ([]*connectorPB.
 	case modelPB.Model_TASK_TEXT_TO_IMAGE:
 		return c.executeTextToImage(res.Model, inputs)
 	case modelPB.Model_TASK_TEXT_GENERATION:
+		return c.executeTextGeneration(res.Model, inputs)
 	default:
 		return inputs, fmt.Errorf("unsupported task: %s", res.Model.Task)
 	}
