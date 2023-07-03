@@ -168,10 +168,15 @@ func (c *Connection) Execute(inputs []*connectorPB.DataPayload) ([]*connectorPB.
 	if err != nil || res == nil || res.Model == nil {
 		return inputs, err
 	}
+	if len(inputs) <= 0 || inputs[0] == nil {
+		return inputs, fmt.Errorf("invalid input: %v for model: %s", inputs, res.Model.Name)
+	}
 	switch res.Model.Task {
 	case modelPB.Model_TASK_UNSPECIFIED:
 	case modelPB.Model_TASK_CLASSIFICATION:
+		return c.executeImageClassification(res.Model, inputs)
 	case modelPB.Model_TASK_DETECTION:
+		return c.executeObjectDetection(res.Model, inputs)
 	case modelPB.Model_TASK_KEYPOINT:
 	case modelPB.Model_TASK_OCR:
 	case modelPB.Model_TASK_INSTANCE_SEGMENTATION:

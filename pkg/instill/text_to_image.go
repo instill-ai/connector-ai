@@ -47,7 +47,7 @@ func (c *Connection) executeTextToImage(model *modelPB.Model, inputs []*connecto
 	}
 	textToImgOutput := output[0].GetTextToImage()
 	if textToImgOutput == nil || len(textToImgOutput.Images) <= 0 {
-		return nil, fmt.Errorf("invalid output: %v for model: %s", *textToImgOutput, model.Name)
+		return nil, fmt.Errorf("invalid output: %v for model: %s", textToImgOutput, model.Name)
 	}
 	for _, img := range textToImgOutput.Images {
 		inputs[0].Images = append(inputs[0].Images, []byte(img))

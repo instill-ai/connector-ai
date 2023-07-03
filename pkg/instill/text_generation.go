@@ -49,7 +49,7 @@ func (c *Connection) executeTextGeneration(model *modelPB.Model, inputs []*conne
 	}
 	textGenOutput := output[0].GetTextGeneration()
 	if textGenOutput == nil || len(textGenOutput.GetText()) <= 0 {
-		return nil, fmt.Errorf("invalid output: %v for model: %s", *textGenOutput, model.Name)
+		return nil, fmt.Errorf("invalid output: %v for model: %s", textGenOutput, model.Name)
 	}
 	inputs[0].Texts = []string{textGenOutput.GetText()}
 	return inputs, nil
