@@ -1,7 +1,7 @@
 [
   {
     "uid": "ddcf42c3-4c30-4c65-9585-25f1c89b2b48",
-    "id": "instill-ai-model",
+    "id": "ai-instill-model",
     "title": "Instill Model",
     "documentationUrl": "https://www.instill.tech/docs/vdp/model-connectors/instill-model",
     "icon": "instillmodel.svg",
