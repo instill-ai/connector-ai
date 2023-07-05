@@ -23,9 +23,11 @@ import (
 )
 
 const (
-	venderName   = "instillModel"
-	getModelPath = "/v1alpha/model/"
-	reqTimeout   = time.Second * 60
+	venderName       = "instillModel"
+	getModelPath     = "/v1alpha/model/"
+	instillCloudHost = "https://api.instill.tech/model"
+	instillCloudPort = 443
+	reqTimeout       = time.Second * 60
 )
 
 var (
