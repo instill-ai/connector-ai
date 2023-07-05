@@ -1,7 +1,7 @@
 [
   {
     "uid": "c86a95cc-7d32-4e22-a290-8c699f6705a4",
-    "id": "stability-ai-model",
+    "id": "ai-stability-ai",
     "title": "Stability AI",
     "documentationUrl": "https://www.instill.tech/docs/model-connectors/stability-ai",
     "icon": "stabilityai.svg",
@@ -19,6 +19,7 @@
         "additionalProperties": false,
         "properties": {
           "api_key": {
+            "credential_field": true,
             "title": "API Key",
             "description": "Access to your API keys can then be managed through Stability AI's Account page",
             "type": "string"
