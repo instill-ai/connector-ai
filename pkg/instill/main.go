@@ -11,7 +11,6 @@ import (
 	"time"
 
 	"github.com/gofrs/uuid"
-	"github.com/instill-ai/connector-ai/config"
 	"go.uber.org/zap"
 	"google.golang.org/protobuf/types/known/structpb"
 
@@ -109,7 +108,7 @@ func (c *Connector) CreateConnection(defUid uuid.UUID, config *structpb.Struct, 
 func (c *Connection) NewClient() (*Client, error) {
 	apiKey := ""
 	serverURL := c.getServerURL()
-	if serverURL == config.Config.InstillCloud.Host {
+	if serverURL == instillCloudHost {
 		apiKey = c.getAPIKey()
 		if apiKey == "" {
 			return nil, fmt.Errorf("api key cannot be empty for instill cloud")
