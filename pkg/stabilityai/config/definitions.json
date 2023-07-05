@@ -19,6 +19,7 @@
         "additionalProperties": false,
         "properties": {
           "api_key": {
+            "credential_field": true,
             "title": "API Key",
             "description": "Access to your API keys can then be managed through Stability AI's Account page",
             "type": "string"
