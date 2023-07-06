@@ -2,7 +2,6 @@ package instill
 
 import (
 	"crypto/tls"
-	"fmt"
 	"log"
 
 	"google.golang.org/grpc"
@@ -21,7 +20,7 @@ func initModelPublicServiceClient(serverURL string) (modelPB.ModelPublicServiceC
 		clientDialOpts = grpc.WithTransportCredentials(insecure.NewCredentials())
 	}
 
-	clientConn, err := grpc.Dial(fmt.Sprintf("%v:%v", serverURL, instillCloudPort), clientDialOpts)
+	clientConn, err := grpc.Dial(serverURL, clientDialOpts)
 	if err != nil {
 		log.Fatal(err.Error())
 		return nil, nil
