@@ -10,7 +10,7 @@ import (
 	connectorPB "github.com/instill-ai/protogen-go/vdp/connector/v1alpha"
 )
 
-func (c *Connection) executeSemanticSegmentation(model *modelPB.Model, inputs []*connectorPB.DataPayload) ([]*connectorPB.DataPayload, error) {
+func (c *Connection) executeSemanticSegmentation(model *Model, inputs []*connectorPB.DataPayload) ([]*connectorPB.DataPayload, error) {
 	if len(inputs) <= 0 {
 		return nil, fmt.Errorf("invalid input: %v for model: %s", inputs, model.Name)
 	}

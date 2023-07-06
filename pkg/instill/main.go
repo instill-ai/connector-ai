@@ -25,7 +25,6 @@ const (
 	venderName       = "instillModel"
 	getModelPath     = "/v1alpha/models/"
 	instillCloudHost = "https://api.instill.tech/model"
-	instillCloudPort = 443
 	reqTimeout       = time.Second * 60
 )
 
@@ -34,11 +33,11 @@ var (
 	definitionJSON    []byte
 	once              sync.Once
 	connector         base.IConnector
-	connectorStateMap = map[modelPB.Model_State]connectorPB.Connector_State{
-		modelPB.Model_STATE_UNSPECIFIED: connectorPB.Connector_STATE_UNSPECIFIED,
-		modelPB.Model_STATE_OFFLINE:     connectorPB.Connector_STATE_DISCONNECTED,
-		modelPB.Model_STATE_ONLINE:      connectorPB.Connector_STATE_CONNECTED,
-		modelPB.Model_STATE_ERROR:       connectorPB.Connector_STATE_ERROR,
+	connectorStateMap = map[string]connectorPB.Connector_State{
+		"STATE_UNSPECIFIED": connectorPB.Connector_STATE_UNSPECIFIED,
+		"STATE_OFFLINE":     connectorPB.Connector_STATE_DISCONNECTED,
+		"STATE_ONLINE":      connectorPB.Connector_STATE_CONNECTED,
+		"STATE_ERROR":       connectorPB.Connector_STATE_ERROR,
 	}
 )
 
@@ -58,7 +57,22 @@ type Connection struct {
 }
 
 type GetModelRes struct {
-	Model *modelPB.Model `json:"model"`
+	Model *Model `json:"model"`
+}
+
+type Model struct {
+	Name            string    `json:"name"`
+	UID             string    `json:"uid"`
+	ID              string    `json:"id"`
+	Description     string    `json:"description"`
+	ModelDefinition string    `json:"model_definition"`
+	Configuration   any       `json:"configuration"`
+	Task            string    `json:"task"`
+	State           string    `json:"state"`
+	Visibility      string    `json:"visibility"`
+	User            string    `json:"user"`
+	CreateTime      time.Time `json:"create_time"`
+	UpdateTime      time.Time `json:"update_time"`
 }
 
 // Client represents an Instill Model client
@@ -225,7 +239,7 @@ func (c *Connection) Test() (connectorPB.Connector_State, error) {
 func (c *Connection) GetTaskName() (string, error) {
 	res, err := c.getModel()
 	if err != nil || res == nil || res.Model == nil {
-		return modelPB.Model_TASK_UNSPECIFIED.String(), err
+		return "TASK_UNSPECIFIED", err
 	}
-	return res.Model.Task.String(), nil
+	return res.Model.Task, nil
 }
