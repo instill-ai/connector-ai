@@ -218,8 +218,10 @@ func (c *Connection) Execute(inputs []*connectorPB.DataPayload) ([]*connectorPB.
 }
 
 func (c *Connection) Test() (connectorPB.Connector_State, error) {
+	fmt.Printf("\n  Testing Stability AI connector \n")
 	client := NewClient(c.getAPIKey())
 	engines, err := client.ListEngines()
+	fmt.Printf("\n list engines response engines:%v, err:%v \n", engines, err)
 	if err != nil {
 		return connectorPB.Connector_STATE_ERROR, err
 	}
