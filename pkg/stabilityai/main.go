@@ -3,6 +3,7 @@ package stabilityai
 import (
 	"bytes"
 	_ "embed"
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -17,6 +18,7 @@ import (
 	"github.com/instill-ai/connector/pkg/base"
 	"github.com/instill-ai/connector/pkg/configLoader"
 
+	modelPB "github.com/instill-ai/protogen-go/model/model/v1alpha"
 	connectorPB "github.com/instill-ai/protogen-go/vdp/connector/v1alpha"
 )
 
@@ -29,12 +31,15 @@ const (
 	imageToImageTask = "Image to Image"
 )
 
-//go:embed config/definitions.json
-var definitionJSON []byte
-
 var (
-	once      sync.Once
-	connector base.IConnector
+	//go:embed config/definitions.json
+	definitionJSON []byte
+	once           sync.Once
+	connector      base.IConnector
+	taskToNameMap  = map[string]modelPB.Model_Task{
+		textToImageTask:  modelPB.Model_TASK_TEXT_TO_IMAGE,
+		imageToImageTask: modelPB.Model_TASK_TEXT_TO_IMAGE,
+	}
 )
 
 type ConnectorOptions struct{}
@@ -123,16 +128,16 @@ func (c *Client) sendReq(reqURL, method string, params interface{}, respObj inte
 	return
 }
 
-func (con *Connection) getAPIKey() string {
-	return fmt.Sprintf("%s", con.config.GetFields()["api_key"].GetStringValue())
+func (c *Connection) getAPIKey() string {
+	return fmt.Sprintf("%s", c.config.GetFields()["api_token"].GetStringValue())
 }
 
-func (con *Connection) getTask() string {
-	return fmt.Sprintf("%s", con.config.GetFields()["task"].GetStringValue())
+func (c *Connection) getTask() string {
+	return fmt.Sprintf("%s", c.config.GetFields()["task"].GetStringValue())
 }
 
-func (con *Connection) getEngine() string {
-	return fmt.Sprintf("%s", con.config.GetFields()["engine"].GetStringValue())
+func (c *Connection) getEngine() string {
+	return fmt.Sprintf("%s", c.config.GetFields()["engine"].GetStringValue())
 }
 
 func (c *Connection) Execute(inputs []*connectorPB.DataPayload) ([]*connectorPB.DataPayload, error) {
@@ -168,7 +173,8 @@ func (c *Connection) Execute(inputs []*connectorPB.DataPayload) ([]*connectorPB.
 			// use inputs[i] instead of dataPayload to modify source data
 			inputs[i].Images = make([][]byte, 0, len(images))
 			for _, image := range images {
-				inputs[i].Images = append(dataPayload.Images, []byte(image.Base64))
+				decoded, _ := decodeBase64(image.Base64)
+				inputs[i].Images = append(dataPayload.Images, decoded)
 			}
 		}
 	case imageToImageTask:
@@ -204,7 +210,8 @@ func (c *Connection) Execute(inputs []*connectorPB.DataPayload) ([]*connectorPB.
 			// use inputs[i] instead of dataPayload to modify source data
 			inputs[i].Images = make([][]byte, 0, len(images))
 			for _, image := range images {
-				inputs[i].Images = append(dataPayload.Images, []byte(image.Base64))
+				decoded, _ := decodeBase64(image.Base64)
+				inputs[i].Images = append(dataPayload.Images, decoded)
 			}
 		}
 	default:
@@ -216,13 +223,24 @@ func (c *Connection) Execute(inputs []*connectorPB.DataPayload) ([]*connectorPB.
 func (c *Connection) Test() (connectorPB.Connector_State, error) {
 	client := NewClient(c.getAPIKey())
 	engines, err := client.ListEngines()
-	if err != nil || len(engines) == 0 {
+	if err != nil {
 		return connectorPB.Connector_STATE_ERROR, err
+	}
+	if len(engines) == 0 {
+		return connectorPB.Connector_STATE_DISCONNECTED, nil
 	}
 	return connectorPB.Connector_STATE_CONNECTED, nil
 }
 
-func (con *Connection) GetTaskName() (string, error) {
-	// TODO: load from configuration
-	return "TASK_TEXT_TO_IMAGE", nil
+func (c *Connection) GetTaskName() (string, error) {
+	name, ok := taskToNameMap[c.getTask()]
+	if !ok {
+		name = modelPB.Model_TASK_UNSPECIFIED
+	}
+	return name.String(), nil
+}
+
+// decode if the string is base64 encoded
+func decodeBase64(input string) ([]byte, error) {
+	return base64.StdEncoding.DecodeString(input)
 }

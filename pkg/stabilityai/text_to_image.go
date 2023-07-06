@@ -1,6 +1,9 @@
 package stabilityai
 
-import "fmt"
+import (
+	"fmt"
+	"net/http"
+)
 
 const (
 	successFinishReason = "SUCCESS"
@@ -46,7 +49,7 @@ func (c *Client) GenerateImageFromText(params TextToImageReq, engine string) (re
 		return nil, fmt.Errorf("no engine selected")
 	}
 	textToImageURL := host + "/v1/generation/" + engine + "/text-to-image"
-	err = c.sendReq(textToImageURL, "POST", params, &resp)
+	err = c.sendReq(textToImageURL, http.MethodPost, params, &resp)
 	for _, i := range resp.Images {
 		if i.FinishReason == successFinishReason {
 			results = append(results, i)
