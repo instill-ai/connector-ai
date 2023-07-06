@@ -22,7 +22,7 @@ func (c *Connection) executeImageClassification(model *Model, inputs []*connecto
 		if len(dataPayload.Images) <= 0 {
 			return nil, fmt.Errorf("invalid input: %v for model: %s", *dataPayload, model.Name)
 		}
-		base64Str, err := encodeToBase64(dataPayload.Images[idx])
+		base64Str, err := encodeToBase64(dataPayload.Images[0])
 		if err != nil {
 			return nil, fmt.Errorf("invalid image string: %v for model: %s", dataPayload.Images[0], model.Name)
 		}
