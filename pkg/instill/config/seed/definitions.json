@@ -3,13 +3,13 @@
     "uid": "ddcf42c3-4c30-4c65-9585-25f1c89b2b48",
     "id": "ai-instill-model",
     "title": "Instill Model",
-    "documentationUrl": "https://www.instill.tech/docs/vdp/model-connectors/instill-model",
+    "documentationUrl": "https://www.instill.tech/docs/vdp/ai-connectors/instill-model",
     "icon": "instillmodel.svg",
     "iconUrl": "",
     "spec": {
       "connectionSpecification": {
         "$schema": "http://json-schema.org/draft-07/schema#",
-        "title": "Instill AI Model Connector Spec",
+        "title": "Instill Model AI Connector Spec",
         "type": "object",
         "required": [
           "server_url",
@@ -19,24 +19,24 @@
         "properties": {
           "api_token": {
             "credential_field": true,
-            "title": "API Key",
-            "description": "Access to your API keys can then be managed through the Setting page",
+            "title": "API Token",
+            "description": "To access models on Instill Cloud, enter your Instill Cloud API Token. You can find your tokens by visiting your Instill Cloud's Settings > API Tokens page. Leave this field empty to access models on your local Instill Model.",
             "type": "string"
           },
           "server_url": {
             "title": "Server URL",
-            "description": "Base URL for the Instill Model API",
+            "description": "Base URL for the Instill Model API. To access models on Instill Cloud, use the base URL `https://api-model.instill.tech`. To access models on your local Instill Model, use the base URL `http://localhost:9080`.",
             "type": "string",
-            "default": "https://api.instill.tech/model"
+            "default": "https://api-model.instill.tech"
           },
           "model_id": {
             "title": "Model ID",
-            "description": "ID of the model to use",
+            "description": "ID of the Instill Model model to be used.",
             "type": "string"
           }
         }
       },
-      "documentationUrl": "https://www.instill.tech/docs/model-connectors/instill-model"
+      "documentationUrl": "https://www.instill.tech/docs/vdp/ai-connectors/instill-model"
     },
     "public": true,
     "custom": false,
