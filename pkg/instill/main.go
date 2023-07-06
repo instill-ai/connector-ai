@@ -168,36 +168,43 @@ func (c *Connection) getModel() (res *GetModelRes, err error) {
 }
 
 func (c *Connection) Execute(inputs []*connectorPB.DataPayload) ([]*connectorPB.DataPayload, error) {
+	fmt.Printf("inputs: %v", inputs)
 	res, err := c.getModel()
+	fmt.Printf("after getModel, res: %v, err: %v", res, err)
 	if err != nil || res == nil || res.Model == nil {
 		return inputs, err
 	}
 	if len(inputs) <= 0 || inputs[0] == nil {
 		return inputs, fmt.Errorf("invalid input: %v for model: %s", inputs, res.Model.Name)
 	}
+	fmt.Printf("input[0]: %v", *inputs[0])
+	fmt.Printf("res.Model.Task: %v", res.Model.Task)
+	var result []*connectorPB.DataPayload
 	switch res.Model.Task {
 	case modelPB.Model_TASK_UNSPECIFIED:
-		return c.executeUnspecified(res.Model, inputs)
+		result, err = c.executeUnspecified(res.Model, inputs)
 	case modelPB.Model_TASK_CLASSIFICATION:
-		return c.executeImageClassification(res.Model, inputs)
+		result, err = c.executeImageClassification(res.Model, inputs)
 	case modelPB.Model_TASK_DETECTION:
-		return c.executeObjectDetection(res.Model, inputs)
+		result, err = c.executeObjectDetection(res.Model, inputs)
 	case modelPB.Model_TASK_KEYPOINT:
-		return c.executeKeyPointDetection(res.Model, inputs)
+		result, err = c.executeKeyPointDetection(res.Model, inputs)
 	case modelPB.Model_TASK_OCR:
-		return c.executeOCR(res.Model, inputs)
+		result, err = c.executeOCR(res.Model, inputs)
 	case modelPB.Model_TASK_INSTANCE_SEGMENTATION:
-		return c.executeInstanceSegmentation(res.Model, inputs)
+		result, err = c.executeInstanceSegmentation(res.Model, inputs)
 	case modelPB.Model_TASK_SEMANTIC_SEGMENTATION:
-		return c.executeSemanticSegmentation(res.Model, inputs)
+		result, err = c.executeSemanticSegmentation(res.Model, inputs)
 	case modelPB.Model_TASK_TEXT_TO_IMAGE:
-		return c.executeTextToImage(res.Model, inputs)
+		result, err = c.executeTextToImage(res.Model, inputs)
 	case modelPB.Model_TASK_TEXT_GENERATION:
-		return c.executeTextGeneration(res.Model, inputs)
+		result, err = c.executeTextGeneration(res.Model, inputs)
 	default:
 		return inputs, fmt.Errorf("unsupported task: %s", res.Model.Task)
 	}
-	return inputs, nil
+	fmt.Printf("result: %v, err:%v", result, err)
+	fmt.Printf("results[0]: %v", *result[0])
+	return result, err
 }
 
 func (c *Connection) Test() (connectorPB.Connector_State, error) {
