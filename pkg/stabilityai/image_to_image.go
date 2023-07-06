@@ -1,6 +1,9 @@
 package stabilityai
 
-import "fmt"
+import (
+	"fmt"
+	"net/http"
+)
 
 // ImageToImageReq represents the request body for image-to-image API
 type ImageToImageReq struct {
@@ -25,7 +28,7 @@ func (c *Client) GenerateImageFromImage(params ImageToImageReq, engine string) (
 		return nil, fmt.Errorf("no engine selected")
 	}
 	imageToImageURL := host + "/v1/generation/" + engine + "/image-to-image"
-	err = c.sendReq(imageToImageURL, "POST", params, &resp)
+	err = c.sendReq(imageToImageURL, http.MethodPost, params, &resp)
 	for _, i := range resp.Images {
 		if i.FinishReason == successFinishReason {
 			results = append(results, i)
