@@ -13,7 +13,8 @@ func (c *Connection) executeTextGeneration(model *Model, inputs []*connectorPB.D
 		return nil, fmt.Errorf("invalid input: %v for model: %s", inputs, model.Name)
 	}
 
-	tasklInputs := []*modelPB.TaskInput{}
+	outputs := []*connectorPB.DataPayload{}
+
 	for idx := range inputs {
 		dataPayload := inputs[idx]
 		if len(dataPayload.Texts) <= 0 {
@@ -35,26 +36,24 @@ func (c *Connection) executeTextGeneration(model *Model, inputs []*connectorPB.D
 				Seed:          &seed,
 			},
 		}
-		tasklInputs = append(tasklInputs, &modelPB.TaskInput{Input: taskInput})
-	}
-	req := modelPB.TriggerModelRequest{
-		Name:       model.Name,
-		TaskInputs: tasklInputs,
-	}
-	if c.client == nil || c.client.GRPCClient == nil {
-		return nil, fmt.Errorf("client not setup: %v", c.client)
-	}
-	res, err := c.client.GRPCClient.TriggerModel(context.Background(), &req)
-	if err != nil || res == nil {
-		return nil, err
-	}
-	taskOutputs := res.GetTaskOutputs()
-	if len(taskOutputs) <= 0 {
-		return nil, fmt.Errorf("invalid output: %v for model: %s", taskOutputs, model.Name)
-	}
 
-	outputs := []*connectorPB.DataPayload{}
-	for idx := range inputs {
+		// only support batch 1
+		req := modelPB.TriggerModelRequest{
+			Name:       model.Name,
+			TaskInputs: []*modelPB.TaskInput{{Input: taskInput}},
+		}
+		if c.client == nil || c.client.GRPCClient == nil {
+			return nil, fmt.Errorf("client not setup: %v", c.client)
+		}
+		res, err := c.client.GRPCClient.TriggerModel(context.Background(), &req)
+		if err != nil || res == nil {
+			return nil, err
+		}
+		taskOutputs := res.GetTaskOutputs()
+		if len(taskOutputs) <= 0 {
+			return nil, fmt.Errorf("invalid output: %v for model: %s", taskOutputs, model.Name)
+		}
+
 		textGenOutput := taskOutputs[0].GetTextGeneration()
 		if textGenOutput == nil || len(textGenOutput.GetText()) <= 0 {
 			return nil, fmt.Errorf("invalid output: %v for model: %s", textGenOutput, model.Name)

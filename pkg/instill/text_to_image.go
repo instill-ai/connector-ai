@@ -13,7 +13,7 @@ func (c *Connection) executeTextToImage(model *Model, inputs []*connectorPB.Data
 		return nil, fmt.Errorf("invalid input: %v for model: %s", inputs, model.Name)
 	}
 
-	tasklInputs := []*modelPB.TaskInput{}
+	outputs := []*connectorPB.DataPayload{}
 	for idx := range inputs {
 		dataPayload := inputs[idx]
 		if len(dataPayload.Texts) <= 0 {
@@ -33,27 +33,25 @@ func (c *Connection) executeTextToImage(model *Model, inputs []*connectorPB.Data
 				Samples:  &samples,
 			},
 		}
-		tasklInputs = append(tasklInputs, &modelPB.TaskInput{Input: taskInput})
-	}
-	req := modelPB.TriggerModelRequest{
-		Name:       model.Name,
-		TaskInputs: tasklInputs,
-	}
-	if c.client == nil || c.client.GRPCClient == nil {
-		return nil, fmt.Errorf("client not setup: %v", c.client)
-	}
-	res, err := c.client.GRPCClient.TriggerModel(context.Background(), &req)
-	if err != nil || res == nil {
-		return nil, err
-	}
-	taskOutputs := res.GetTaskOutputs()
-	if len(taskOutputs) <= 0 {
-		return nil, fmt.Errorf("invalid output: %v for model: %s", taskOutputs, model.Name)
-	}
 
-	outputs := []*connectorPB.DataPayload{}
-	for idx := range inputs {
-		textToImgOutput := taskOutputs[idx].GetTextToImage()
+		// only support batch 1
+		req := modelPB.TriggerModelRequest{
+			Name:       model.Name,
+			TaskInputs: []*modelPB.TaskInput{{Input: taskInput}},
+		}
+		if c.client == nil || c.client.GRPCClient == nil {
+			return nil, fmt.Errorf("client not setup: %v", c.client)
+		}
+		res, err := c.client.GRPCClient.TriggerModel(context.Background(), &req)
+		if err != nil || res == nil {
+			return nil, err
+		}
+		taskOutputs := res.GetTaskOutputs()
+		if len(taskOutputs) <= 0 {
+			return nil, fmt.Errorf("invalid output: %v for model: %s", taskOutputs, model.Name)
+		}
+
+		textToImgOutput := taskOutputs[0].GetTextToImage()
 		if textToImgOutput == nil || len(textToImgOutput.Images) <= 0 {
 			return nil, fmt.Errorf("invalid output: %v for model: %s", textToImgOutput, model.Name)
 		}
@@ -69,5 +67,5 @@ func (c *Connection) executeTextToImage(model *Model, inputs []*connectorPB.Data
 			Images:           images,
 		})
 	}
-	return inputs, nil
+	return outputs, nil
 }
