@@ -122,7 +122,9 @@ func (c *Connection) NewClient() (*Client, error) {
 func (c *Client) sendReq(reqURL, method string, params interface{}, respObj interface{}) (err error) {
 	data, _ := json.Marshal(params)
 	req, _ := http.NewRequest(method, reqURL, bytes.NewBuffer(data))
-	req.Header.Add("Authorization", "Bearer "+c.APIKey)
+	if c.APIKey != "" {
+		req.Header.Add("Authorization", "Bearer "+c.APIKey)
+	}
 	http.DefaultClient.Timeout = reqTimeout
 	res, err := c.HTTPClient.Do(req)
 	if err != nil || res == nil {
