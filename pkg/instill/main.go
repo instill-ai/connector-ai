@@ -166,9 +166,7 @@ func (c *Connection) getModel() (res *GetModelRes, err error) {
 	}
 	reqURL := serverURL + getModelPath + modelID
 	fmt.Printf("\n in getModel() reqURL:%v \n", reqURL)
-	model := &modelPB.Model{}
-	err = c.client.sendReq(reqURL, http.MethodGet, nil, &model)
-	res = &GetModelRes{Model: model}
+	err = c.client.sendReq(reqURL, http.MethodGet, nil, &res)
 	return res, err
 }
 
