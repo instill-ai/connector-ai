@@ -20,7 +20,6 @@ func (c *Connection) executeImageClassification(model *Model, inputs []*connecto
 		return nil, fmt.Errorf("invalid input: %v for model: %s", *dataPayload, model.Name)
 	}
 	base64Str, err := encodeToBase64(dataPayload.Images[0])
-	fmt.Println("base64Str", base64Str)
 	if err != nil {
 		return nil, fmt.Errorf("invalid image string: %v for model: %s", dataPayload.Images[0], model.Name)
 	}
@@ -36,19 +35,15 @@ func (c *Connection) executeImageClassification(model *Model, inputs []*connecto
 	if c.client == nil || c.client.GRPCClient == nil {
 		return nil, fmt.Errorf("client not setup: %v", c.client)
 	}
-	fmt.Println("before TriggerModel")
 	res, err := c.client.GRPCClient.TriggerModel(context.Background(), &req)
-	fmt.Printf("\n\n after TriggerModel res:%v, err:%v \n\n", res, err)
 	if err != nil || res == nil {
 		return nil, err
 	}
 	output := res.GetTaskOutputs()
-	fmt.Printf("\n\n after TriggerModel output:%v \n\n", output)
 	if len(output) <= 0 {
 		return nil, fmt.Errorf("invalid output: %v for model: %s", output, model.Name)
 	}
 	imgClassificationOp := output[0].GetClassification()
-	fmt.Printf("\n\n after TriggerModel imgClassificationOp:%v \n\n", imgClassificationOp)
 	if imgClassificationOp == nil {
 		return nil, fmt.Errorf("invalid output: %v for model: %s", imgClassificationOp, model.Name)
 	}
@@ -58,7 +53,6 @@ func (c *Connection) executeImageClassification(model *Model, inputs []*connecto
 			"score":    {Kind: &structpb.Value_NumberValue{NumberValue: float64(imgClassificationOp.Score)}},
 		},
 	}
-	fmt.Printf("\n\n after TriggerModel inputs[0].StructuredData:%v \n\n", inputs[0].StructuredData)
 	return inputs, nil
 }
 

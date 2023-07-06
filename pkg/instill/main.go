@@ -151,7 +151,6 @@ func (c *Client) sendReq(reqURL, method string, params interface{}, respObj inte
 		err = fmt.Errorf("non-200 status code: %d, while calling URL: %s, response body: %s", res.StatusCode, reqURL, bytes)
 		return
 	}
-	fmt.Printf("200 status code: while calling URL: %s, response body: %s", reqURL, bytes)
 	if err = json.Unmarshal(bytes, &respObj); err != nil {
 		err = fmt.Errorf("error in json decode: %s, while calling URL: %s, response body: %s", err, reqURL, bytes)
 	}
@@ -174,26 +173,22 @@ func (c *Connection) getModel() (res *GetModelRes, err error) {
 	modelID := c.getModelID()
 	serverURL := c.getServerURL()
 	c.client, err = c.NewClient()
-	fmt.Printf("\n in getModel() modelID:%v, serverURL:%v, c.client:%v, err:%v \n", modelID, serverURL, c.client, err)
 	if err != nil {
 		return res, err
 	}
 	reqURL := serverURL + getModelPath + modelID
-	fmt.Printf("\n in getModel() reqURL:%v \n", reqURL)
 	err = c.client.sendReq(reqURL, http.MethodGet, nil, &res)
 	return res, err
 }
 
 func (c *Connection) Execute(inputs []*connectorPB.DataPayload) ([]*connectorPB.DataPayload, error) {
 	res, err := c.getModel()
-	fmt.Printf("\n\n after getModel, res: %v, err: %v \n\n ", res, err)
 	if err != nil || res == nil || res.Model == nil {
 		return inputs, err
 	}
 	if len(inputs) <= 0 || inputs[0] == nil {
 		return inputs, fmt.Errorf("invalid input: %v for model: %s", inputs, res.Model.Name)
 	}
-	fmt.Printf("\n\n res.Model.Task: %v \n\n", res.Model.Task)
 	var result []*connectorPB.DataPayload
 	switch res.Model.Task {
 	case modelPB.Model_TASK_UNSPECIFIED.String():
@@ -217,8 +212,6 @@ func (c *Connection) Execute(inputs []*connectorPB.DataPayload) ([]*connectorPB.
 	default:
 		return inputs, fmt.Errorf("unsupported task: %s", res.Model.Task)
 	}
-	fmt.Printf("\n\n  result: %v, err:%v \n\n ", result, err)
-	fmt.Printf("\n\n results[0]: %v \n\n", *result[0])
 	return result, err
 }
 
