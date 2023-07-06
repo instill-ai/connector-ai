@@ -2,6 +2,7 @@ package instill
 
 import (
 	"context"
+	"encoding/base64"
 	"fmt"
 
 	"google.golang.org/protobuf/types/known/structpb"
@@ -18,7 +19,7 @@ func (c *Connection) executeImageClassification(model *Model, inputs []*connecto
 	if len(dataPayload.Images) <= 0 {
 		return nil, fmt.Errorf("invalid input: %v for model: %s", *dataPayload, model.Name)
 	}
-	base64Str, err := fetchImageFromURL(dataPayload.Images[0])
+	base64Str, err := encodeToBase64(dataPayload.Images[0])
 	fmt.Println("base64Str", base64Str)
 	if err != nil {
 		return nil, fmt.Errorf("invalid image string: %v for model: %s", dataPayload.Images[0], model.Name)
@@ -61,10 +62,10 @@ func (c *Connection) executeImageClassification(model *Model, inputs []*connecto
 	return inputs, nil
 }
 
-func fetchImageFromURL(input []byte) (string, error) {
-	str := string(input)
-	if str == "" {
-		return "", fmt.Errorf("invalid image string: %s", str)
+// encode the bytes to base64 string if not already encoded
+func encodeToBase64(input []byte) (string, error) {
+	if len(input) <= 0 {
+		return "", fmt.Errorf("invalid byte value :%v", input)
 	}
-	return str, nil
+	return base64.StdEncoding.EncodeToString(input), nil
 }
