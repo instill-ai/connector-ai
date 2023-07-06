@@ -137,6 +137,7 @@ func (c *Client) sendReq(reqURL, method string, params interface{}, respObj inte
 		err = fmt.Errorf("non-200 status code: %d, while calling URL: %s, response body: %s", res.StatusCode, reqURL, bytes)
 		return
 	}
+	fmt.Printf("200 status code: while calling URL: %s, response body: %s", reqURL, bytes)
 	if err = json.Unmarshal(bytes, &respObj); err != nil {
 		err = fmt.Errorf("error in json decode: %s, while calling URL: %s, response body: %s", err, reqURL, bytes)
 	}
@@ -159,10 +160,12 @@ func (c *Connection) getModel() (res *GetModelRes, err error) {
 	modelID := c.getModelID()
 	serverURL := c.getServerURL()
 	c.client, err = c.NewClient()
+	fmt.Printf("\n in getModel() modelID:%v, serverURL:%v, c.client:%v, err:%v \n", modelID, serverURL, c.client, err)
 	if err != nil {
 		return res, err
 	}
 	reqURL := serverURL + getModelPath + modelID
+	fmt.Printf("\n in getModel() reqURL:%v \n", reqURL)
 	err = c.client.sendReq(reqURL, http.MethodGet, nil, res)
 	return res, err
 }
