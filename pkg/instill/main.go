@@ -120,16 +120,8 @@ func (c *Connector) CreateConnection(defUid uuid.UUID, config *structpb.Struct, 
 
 // NewClient initializes a new Instill model client
 func (c *Connection) NewClient() (*Client, error) {
-	apiKey := ""
-	serverURL := c.getServerURL()
-	if serverURL == instillCloudHost {
-		apiKey = c.getAPIKey()
-		if apiKey == "" {
-			return nil, fmt.Errorf("api key cannot be empty for instill cloud")
-		}
-	}
-	gRPCCLient, _ := initModelPublicServiceClient(serverURL)
-	return &Client{APIKey: apiKey, HTTPClient: &http.Client{Timeout: reqTimeout}, GRPCClient: gRPCCLient}, nil
+	gRPCCLient, _ := initModelPublicServiceClient(c.getServerURL())
+	return &Client{APIKey: c.getAPIKey(), HTTPClient: &http.Client{Timeout: reqTimeout}, GRPCClient: gRPCCLient}, nil
 }
 
 // sendReq is responsible for making the http request with to given URL, method, and params and unmarshalling the response into given object.

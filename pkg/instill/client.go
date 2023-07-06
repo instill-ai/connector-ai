@@ -15,7 +15,7 @@ import (
 // initModelPublicServiceClient initialises a ModelPublicServiceClient instance
 func initModelPublicServiceClient(serverURL string) (modelPB.ModelPublicServiceClient, *grpc.ClientConn) {
 	var clientDialOpts grpc.DialOption
-	if serverURL == instillCloudHost {
+	if strings.HasPrefix(serverURL, "https://") {
 		clientDialOpts = grpc.WithTransportCredentials(credentials.NewTLS(&tls.Config{}))
 	} else {
 		clientDialOpts = grpc.WithTransportCredentials(insecure.NewCredentials())
