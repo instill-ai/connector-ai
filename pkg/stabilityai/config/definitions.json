@@ -3,13 +3,13 @@
     "uid": "c86a95cc-7d32-4e22-a290-8c699f6705a4",
     "id": "ai-stability-ai",
     "title": "Stability AI",
-    "documentationUrl": "https://www.instill.tech/docs/model-connectors/stability-ai",
+    "documentationUrl": "https://www.instill.tech/docs/vdp/ai-connectors/stability-ai",
     "icon": "stabilityai.svg",
     "iconUrl": "",
     "spec": {
       "connectionSpecification": {
         "$schema": "http://json-schema.org/draft-07/schema#",
-        "title": "Stability AI Model Connector Spec",
+        "title": "Stability AI AI Connector Spec",
         "type": "object",
         "required": [
           "api_token",
@@ -21,12 +21,12 @@
           "api_token": {
             "credential_field": true,
             "title": "API Key",
-            "description": "Access to your API keys can then be managed through Stability AI's Account page",
+            "description": "Fill your Stability AI API key. To find your keys, navigate to your DreamStudio's Account page.",
             "type": "string"
           },
           "task": {
             "title": "Task",
-            "description": "AI task type",
+            "description": "AI task type.",
             "type": "string",
             "enum": [
               "Text to Image"
@@ -34,7 +34,7 @@
           },
           "engine": {
             "title": "Engine",
-            "description": "Engine (model) to use",
+            "description": "Stability AI Engine (model) to be used.",
             "type": "string",
             "default": "stable-diffusion-xl-beta-v2-2-2",
             "enum": [
@@ -46,14 +46,12 @@
               "stable-diffusion-768-v2-1",
               "stable-diffusion-xl-beta-v2-2-2",
               "stable-inpainting-v1-0",
-              "stable-inpainting-512-v2-0",
-              "esrgan-v1-x2plus",
-              "stable-diffusion-x4-latent-upscaler"
+              "stable-inpainting-512-v2-0"
             ]
           }
         }
       },
-      "documentationUrl": "https://www.instill.tech/docs/ai-connectors/stability-ai"
+      "documentationUrl": "https://www.instill.tech/docs/vdp/ai-connectors/stability-ai"
     },
     "public": true,
     "custom": false,
