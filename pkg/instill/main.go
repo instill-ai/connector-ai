@@ -198,23 +198,23 @@ func (c *Connection) Execute(inputs []*connectorPB.DataPayload) ([]*connectorPB.
 	fmt.Printf("res.Model.Task: %v", res.Model.Task)
 	var result []*connectorPB.DataPayload
 	switch res.Model.Task {
-	case modelPB.Model_TASK_UNSPECIFIED:
+	case modelPB.Model_TASK_UNSPECIFIED.String():
 		result, err = c.executeUnspecified(res.Model, inputs)
-	case modelPB.Model_TASK_CLASSIFICATION:
+	case modelPB.Model_TASK_CLASSIFICATION.String():
 		result, err = c.executeImageClassification(res.Model, inputs)
-	case modelPB.Model_TASK_DETECTION:
+	case modelPB.Model_TASK_DETECTION.String():
 		result, err = c.executeObjectDetection(res.Model, inputs)
-	case modelPB.Model_TASK_KEYPOINT:
+	case modelPB.Model_TASK_KEYPOINT.String():
 		result, err = c.executeKeyPointDetection(res.Model, inputs)
-	case modelPB.Model_TASK_OCR:
+	case modelPB.Model_TASK_OCR.String():
 		result, err = c.executeOCR(res.Model, inputs)
-	case modelPB.Model_TASK_INSTANCE_SEGMENTATION:
+	case modelPB.Model_TASK_INSTANCE_SEGMENTATION.String():
 		result, err = c.executeInstanceSegmentation(res.Model, inputs)
-	case modelPB.Model_TASK_SEMANTIC_SEGMENTATION:
+	case modelPB.Model_TASK_SEMANTIC_SEGMENTATION.String():
 		result, err = c.executeSemanticSegmentation(res.Model, inputs)
-	case modelPB.Model_TASK_TEXT_TO_IMAGE:
+	case modelPB.Model_TASK_TEXT_TO_IMAGE.String():
 		result, err = c.executeTextToImage(res.Model, inputs)
-	case modelPB.Model_TASK_TEXT_GENERATION:
+	case modelPB.Model_TASK_TEXT_GENERATION.String():
 		result, err = c.executeTextGeneration(res.Model, inputs)
 	default:
 		return inputs, fmt.Errorf("unsupported task: %s", res.Model.Task)
