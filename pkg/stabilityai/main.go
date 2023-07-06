@@ -3,6 +3,7 @@ package stabilityai
 import (
 	"bytes"
 	_ "embed"
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -172,7 +173,8 @@ func (c *Connection) Execute(inputs []*connectorPB.DataPayload) ([]*connectorPB.
 			// use inputs[i] instead of dataPayload to modify source data
 			inputs[i].Images = make([][]byte, 0, len(images))
 			for _, image := range images {
-				inputs[i].Images = append(dataPayload.Images, []byte(image.Base64))
+				decoded, _ := decodeBase64(image.Base64)
+				inputs[i].Images = append(dataPayload.Images, decoded)
 			}
 		}
 	case imageToImageTask:
@@ -208,7 +210,8 @@ func (c *Connection) Execute(inputs []*connectorPB.DataPayload) ([]*connectorPB.
 			// use inputs[i] instead of dataPayload to modify source data
 			inputs[i].Images = make([][]byte, 0, len(images))
 			for _, image := range images {
-				inputs[i].Images = append(dataPayload.Images, []byte(image.Base64))
+				decoded, _ := decodeBase64(image.Base64)
+				inputs[i].Images = append(dataPayload.Images, decoded)
 			}
 		}
 	default:
@@ -235,4 +238,9 @@ func (c *Connection) GetTaskName() (string, error) {
 		name = modelPB.Model_TASK_UNSPECIFIED
 	}
 	return name.String(), nil
+}
+
+// decode if the string is base64 encoded
+func decodeBase64(input string) ([]byte, error) {
+	return base64.StdEncoding.DecodeString(input)
 }
