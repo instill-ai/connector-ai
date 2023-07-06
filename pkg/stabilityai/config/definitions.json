@@ -12,13 +12,13 @@
         "title": "Stability AI Model Connector Spec",
         "type": "object",
         "required": [
-          "api_key",
+          "api_token",
           "task",
           "engine"
         ],
         "additionalProperties": false,
         "properties": {
-          "api_key": {
+          "api_token": {
             "credential_field": true,
             "title": "API Key",
             "description": "Access to your API keys can then be managed through Stability AI's Account page",

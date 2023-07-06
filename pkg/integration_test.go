@@ -15,9 +15,9 @@ import (
 func TestTemp(t *testing.T) {
 	config := &structpb.Struct{
 		Fields: map[string]*structpb.Value{
-			"api_key": {Kind: &structpb.Value_StringValue{StringValue: "<valid api key>"}},
-			"task":    {Kind: &structpb.Value_StringValue{StringValue: "Text to Image"}},
-			"engine":  {Kind: &structpb.Value_StringValue{StringValue: "stable-diffusion-v1-5"}},
+			"api_token": {Kind: &structpb.Value_StringValue{StringValue: "<valid api key>"}},
+			"task":      {Kind: &structpb.Value_StringValue{StringValue: "Text to Image"}},
+			"engine":    {Kind: &structpb.Value_StringValue{StringValue: "stable-diffusion-v1-5"}},
 		},
 	}
 	in := []*connectorv1alpha.DataPayload{{

@@ -17,7 +17,7 @@
         ],
         "additionalProperties": false,
         "properties": {
-          "api_key": {
+          "api_token": {
             "credential_field": true,
             "title": "API Key",
             "description": "Access to your API keys can then be managed through the Setting page",

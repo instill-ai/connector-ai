@@ -149,7 +149,7 @@ func (c *Client) sendReq(reqURL, method string, params interface{}, respObj inte
 }
 
 func (c *Connection) getAPIKey() string {
-	return fmt.Sprintf("%s", c.config.GetFields()["api_key"].GetStringValue())
+	return fmt.Sprintf("%s", c.config.GetFields()["api_token"].GetStringValue())
 }
 
 func (c *Connection) getServerURL() string {
