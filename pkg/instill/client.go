@@ -3,6 +3,7 @@ package instill
 import (
 	"crypto/tls"
 	"log"
+	"strings"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
@@ -19,7 +20,7 @@ func initModelPublicServiceClient(serverURL string) (modelPB.ModelPublicServiceC
 	} else {
 		clientDialOpts = grpc.WithTransportCredentials(insecure.NewCredentials())
 	}
-
+	serverURL = stripProtocolFromURL(serverURL)
 	clientConn, err := grpc.Dial(serverURL, clientDialOpts)
 	if err != nil {
 		log.Fatal(err.Error())
@@ -27,4 +28,12 @@ func initModelPublicServiceClient(serverURL string) (modelPB.ModelPublicServiceC
 	}
 
 	return modelPB.NewModelPublicServiceClient(clientConn), clientConn
+}
+
+func stripProtocolFromURL(url string) string {
+	index := strings.Index(url, "://")
+	if index > 0 {
+		return url[strings.Index(url, "://")+3:]
+	}
+	return url
 }
