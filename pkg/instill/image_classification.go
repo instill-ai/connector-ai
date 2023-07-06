@@ -2,11 +2,7 @@ package instill
 
 import (
 	"context"
-	"encoding/base64"
 	"fmt"
-	"io/ioutil"
-	"net/http"
-	"net/url"
 
 	"google.golang.org/protobuf/types/known/structpb"
 
@@ -66,23 +62,5 @@ func (c *Connection) executeImageClassification(model *Model, inputs []*connecto
 }
 
 func fetchImageFromURL(input []byte) (string, error) {
-	// Check if the input is a URL
-	s := string(input)
-	_, err := url.ParseRequestURI(s)
-	if err != nil {
-		// Input is not a URL, return it as it is
-		return s, nil
-	}
-	response, err := http.Get(s)
-	if err != nil {
-		return "", err
-	}
-	defer response.Body.Close()
-
-	imageData, err := ioutil.ReadAll(response.Body)
-	if err != nil {
-		return "", err
-	}
-	// Encode the image data to base64
-	return base64.StdEncoding.EncodeToString(imageData), nil
+	return string(input), nil
 }
