@@ -12,13 +12,13 @@
         "title": "Stability AI AI Connector Spec",
         "type": "object",
         "required": [
-          "api_token",
+          "api_key",
           "task",
           "engine"
         ],
         "additionalProperties": false,
         "properties": {
-          "api_token": {
+          "api_key": {
             "credential_field": true,
             "title": "API Key",
             "description": "Fill your Stability AI API key. To find your keys, navigate to your DreamStudio's Account page.",
