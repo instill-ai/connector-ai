@@ -62,5 +62,9 @@ func (c *Connection) executeImageClassification(model *Model, inputs []*connecto
 }
 
 func fetchImageFromURL(input []byte) (string, error) {
-	return string(input), nil
+	str := string(input)
+	if str == "" {
+		return "", fmt.Errorf("invalid image string: %s", str)
+	}
+	return str, nil
 }
