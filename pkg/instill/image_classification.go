@@ -15,22 +15,28 @@ func (c *Connection) executeImageClassification(model *Model, inputs []*connecto
 	if len(inputs) <= 0 {
 		return nil, fmt.Errorf("invalid input: %v for model: %s", inputs, model.Name)
 	}
-	dataPayload := inputs[0]
-	if len(dataPayload.Images) <= 0 {
-		return nil, fmt.Errorf("invalid input: %v for model: %s", *dataPayload, model.Name)
+
+	tasklInputs := []*modelPB.TaskInput{}
+	for idx := range inputs {
+		dataPayload := inputs[idx]
+		if len(dataPayload.Images) <= 0 {
+			return nil, fmt.Errorf("invalid input: %v for model: %s", *dataPayload, model.Name)
+		}
+		base64Str, err := encodeToBase64(dataPayload.Images[0])
+		if err != nil {
+			return nil, fmt.Errorf("invalid image string: %v for model: %s", dataPayload.Images[0], model.Name)
+		}
+		taskInput := &modelPB.TaskInput_Classification{
+			Classification: &modelPB.ClassificationInput{
+				Type: &modelPB.ClassificationInput_ImageBase64{ImageBase64: base64Str},
+			},
+		}
+		tasklInputs = append(tasklInputs, &modelPB.TaskInput{Input: taskInput})
 	}
-	base64Str, err := encodeToBase64(dataPayload.Images[0])
-	if err != nil {
-		return nil, fmt.Errorf("invalid image string: %v for model: %s", dataPayload.Images[0], model.Name)
-	}
-	modelInput := &modelPB.TaskInput_Classification{
-		Classification: &modelPB.ClassificationInput{
-			Type: &modelPB.ClassificationInput_ImageBase64{ImageBase64: base64Str},
-		},
-	}
+
 	req := modelPB.TriggerModelRequest{
 		Name:       model.Name,
-		TaskInputs: []*modelPB.TaskInput{{Input: modelInput}},
+		TaskInputs: tasklInputs,
 	}
 	if c.client == nil || c.client.GRPCClient == nil {
 		return nil, fmt.Errorf("client not setup: %v", c.client)
@@ -39,21 +45,27 @@ func (c *Connection) executeImageClassification(model *Model, inputs []*connecto
 	if err != nil || res == nil {
 		return nil, err
 	}
-	output := res.GetTaskOutputs()
-	if len(output) <= 0 {
-		return nil, fmt.Errorf("invalid output: %v for model: %s", output, model.Name)
+	taskOutputs := res.GetTaskOutputs()
+	if len(taskOutputs) <= 0 {
+		return nil, fmt.Errorf("invalid output: %v for model: %s", taskOutputs, model.Name)
 	}
-	imgClassificationOp := output[0].GetClassification()
-	if imgClassificationOp == nil {
-		return nil, fmt.Errorf("invalid output: %v for model: %s", imgClassificationOp, model.Name)
+	outputs := []*connectorPB.DataPayload{}
+	for idx := range inputs {
+		imgClassificationOp := taskOutputs[idx].GetClassification()
+		if imgClassificationOp == nil {
+			return nil, fmt.Errorf("invalid output: %v for model: %s", imgClassificationOp, model.Name)
+		}
+		outputs = append(outputs, &connectorPB.DataPayload{
+			DataMappingIndex: inputs[idx].DataMappingIndex,
+			StructuredData: &structpb.Struct{
+				Fields: map[string]*structpb.Value{
+					"category": {Kind: &structpb.Value_StringValue{StringValue: imgClassificationOp.Category}},
+					"score":    {Kind: &structpb.Value_NumberValue{NumberValue: float64(imgClassificationOp.Score)}},
+				},
+			},
+		})
 	}
-	inputs[0].StructuredData = &structpb.Struct{
-		Fields: map[string]*structpb.Value{
-			"category": {Kind: &structpb.Value_StringValue{StringValue: imgClassificationOp.Category}},
-			"score":    {Kind: &structpb.Value_NumberValue{NumberValue: float64(imgClassificationOp.Score)}},
-		},
-	}
-	return inputs, nil
+	return outputs, nil
 }
 
 // encode the bytes to base64 string if not already encoded
