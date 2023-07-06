@@ -33,14 +33,17 @@ func (c *Connection) executeObjectDetection(model *Model, inputs []*connectorPB.
 		return nil, fmt.Errorf("client not setup: %v", c.client)
 	}
 	res, err := c.client.GRPCClient.TriggerModel(context.Background(), &req)
+	fmt.Printf("\n\n after TriggerModel res:%v, err%v \n\n", res, err)
 	if err != nil || res == nil {
 		return nil, err
 	}
 	output := res.GetTaskOutputs()
+	fmt.Println(output)
 	if len(output) <= 0 {
 		return nil, fmt.Errorf("invalid output: %v for model: %s", output, model.Name)
 	}
 	objDetectionOutput := output[0].GetDetection()
+	fmt.Println(objDetectionOutput)
 	if objDetectionOutput == nil {
 		return nil, fmt.Errorf("invalid output: %v for model: %s", objDetectionOutput, model.Name)
 	}
@@ -74,5 +77,6 @@ func (c *Connection) executeObjectDetection(model *Model, inputs []*connectorPB.
 			"objects": {Kind: &structpb.Value_ListValue{ListValue: &structpb.ListValue{Values: values}}},
 		},
 	}
+	fmt.Println(inputs[0].StructuredData)
 	return inputs, nil
 }

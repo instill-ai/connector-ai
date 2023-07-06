@@ -185,17 +185,15 @@ func (c *Connection) getModel() (res *GetModelRes, err error) {
 }
 
 func (c *Connection) Execute(inputs []*connectorPB.DataPayload) ([]*connectorPB.DataPayload, error) {
-	fmt.Printf("inputs: %v", inputs)
 	res, err := c.getModel()
-	fmt.Printf("after getModel, res: %v, err: %v", res, err)
+	fmt.Printf("\n\n after getModel, res: %v, err: %v \n\n ", res, err)
 	if err != nil || res == nil || res.Model == nil {
 		return inputs, err
 	}
 	if len(inputs) <= 0 || inputs[0] == nil {
 		return inputs, fmt.Errorf("invalid input: %v for model: %s", inputs, res.Model.Name)
 	}
-	fmt.Printf("input[0]: %v", *inputs[0])
-	fmt.Printf("res.Model.Task: %v", res.Model.Task)
+	fmt.Printf("\n\n res.Model.Task: %v \n\n", res.Model.Task)
 	var result []*connectorPB.DataPayload
 	switch res.Model.Task {
 	case modelPB.Model_TASK_UNSPECIFIED.String():
@@ -219,8 +217,8 @@ func (c *Connection) Execute(inputs []*connectorPB.DataPayload) ([]*connectorPB.
 	default:
 		return inputs, fmt.Errorf("unsupported task: %s", res.Model.Task)
 	}
-	fmt.Printf("result: %v, err:%v", result, err)
-	fmt.Printf("results[0]: %v", *result[0])
+	fmt.Printf("\n\n  result: %v, err:%v \n\n ", result, err)
+	fmt.Printf("\n\n results[0]: %v \n\n", *result[0])
 	return result, err
 }
 
