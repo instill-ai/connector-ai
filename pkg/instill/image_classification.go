@@ -75,3 +75,8 @@ func encodeToBase64(input []byte) (string, error) {
 	}
 	return base64.StdEncoding.EncodeToString(input), nil
 }
+
+// decode the base64 string to bytesp[]
+func decodeFromBase64(b64str string) ([]byte, error) {
+	return base64.StdEncoding.DecodeString(b64str)
+}

@@ -59,7 +59,11 @@ func (c *Connection) executeTextToImage(model *Model, inputs []*connectorPB.Data
 		images := [][]byte{}
 
 		for idx := range textToImgOutput.Images {
-			images = append(images, []byte(textToImgOutput.Images[idx]))
+			image, err := decodeFromBase64(textToImgOutput.Images[idx])
+			if err != nil {
+				return nil, fmt.Errorf("invalid output: %v for model: %s", textToImgOutput, model.Name)
+			}
+			images = append(images, image)
 		}
 
 		outputs = append(outputs, &connectorPB.DataPayload{
