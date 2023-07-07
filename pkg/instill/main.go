@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"strings"
 	"sync"
 	"time"
 
@@ -153,7 +154,17 @@ func (c *Connection) getAPIKey() string {
 }
 
 func (c *Connection) getServerURL() string {
-	return fmt.Sprintf("%s", c.config.GetFields()["server_url"].GetStringValue())
+	serverUrl := fmt.Sprintf("%s", c.config.GetFields()["server_url"].GetStringValue())
+	if strings.HasPrefix(serverUrl, "https://") {
+		if len(strings.Split(serverUrl, ":")) == 2 {
+			serverUrl = serverUrl + ":443"
+		}
+	} else if strings.HasPrefix(serverUrl, "http://") {
+		if len(strings.Split(serverUrl, ":")) == 2 {
+			serverUrl = serverUrl + ":80"
+		}
+	}
+	return serverUrl
 }
 
 func (c *Connection) getModelID() string {
