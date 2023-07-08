@@ -17,7 +17,7 @@ func initModelPublicServiceClient(serverURL string) (modelPB.ModelPublicServiceC
 	var clientDialOpts grpc.DialOption
 
 	if strings.HasPrefix(serverURL, "https://") {
-		clientDialOpts = grpc.WithTransportCredentials(credentials.NewTLS(&tls.Config{InsecureSkipVerify: false}))
+		clientDialOpts = grpc.WithTransportCredentials(credentials.NewTLS(&tls.Config{InsecureSkipVerify: true}))
 	} else {
 		clientDialOpts = grpc.WithTransportCredentials(insecure.NewCredentials())
 	}
