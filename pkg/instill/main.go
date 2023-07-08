@@ -2,6 +2,7 @@ package instill
 
 import (
 	"bytes"
+	"crypto/tls"
 	_ "embed"
 	"encoding/json"
 	"fmt"
@@ -126,6 +127,7 @@ func (c *Connection) NewClient() (*Client, error) {
 
 // sendReq is responsible for making the http request with to given URL, method, and params and unmarshalling the response into given object.
 func (c *Client) sendReq(reqURL, method string, params interface{}, respObj interface{}) (err error) {
+	http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
 	data, _ := json.Marshal(params)
 	req, _ := http.NewRequest(method, reqURL, bytes.NewBuffer(data))
 	if c.APIKey != "" {
