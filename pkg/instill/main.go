@@ -121,15 +121,35 @@ func (c *Connector) CreateConnection(defUid uuid.UUID, config *structpb.Struct, 
 
 // NewClient initializes a new Instill model client
 func (c *Connection) NewClient() (*Client, error) {
+	tr := &http.Transport{
+		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+	}
 	gRPCCLient, _ := initModelPublicServiceClient(c.getServerURL())
-	return &Client{APIKey: c.getAPIKey(), HTTPClient: &http.Client{Timeout: reqTimeout}, GRPCClient: gRPCCLient}, nil
+	return &Client{APIKey: c.getAPIKey(), HTTPClient: &http.Client{Timeout: reqTimeout, Transport: tr}, GRPCClient: gRPCCLient}, nil
 }
 
 // sendReq is responsible for making the http request with to given URL, method, and params and unmarshalling the response into given object.
 func (c *Client) sendReq(reqURL, method string, params interface{}, respObj interface{}) (err error) {
-	http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
-	data, _ := json.Marshal(params)
-	req, _ := http.NewRequest(method, reqURL, bytes.NewBuffer(data))
+
+	var req *http.Request
+	data := []byte{}
+	if params == nil {
+		req, err = http.NewRequest(method, reqURL, nil)
+		if err != nil {
+			return err
+		}
+	} else {
+		data, err = json.Marshal(params)
+		if err != nil {
+			return err
+		}
+
+		req, err = http.NewRequest(method, reqURL, bytes.NewBuffer(data))
+		if err != nil {
+			return err
+		}
+	}
+
 	if c.APIKey != "" {
 		req.Header.Add("Authorization", "Bearer "+c.APIKey)
 	}
