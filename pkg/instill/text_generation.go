@@ -4,6 +4,8 @@ import (
 	"context"
 	"fmt"
 
+	"google.golang.org/grpc/metadata"
+
 	modelPB "github.com/instill-ai/protogen-go/model/model/v1alpha"
 	connectorPB "github.com/instill-ai/protogen-go/vdp/connector/v1alpha"
 )
@@ -45,7 +47,9 @@ func (c *Connection) executeTextGeneration(model *Model, inputs []*connectorPB.D
 		if c.client == nil || c.client.GRPCClient == nil {
 			return nil, fmt.Errorf("client not setup: %v", c.client)
 		}
-		res, err := c.client.GRPCClient.TriggerModel(context.Background(), &req)
+		md := metadata.Pairs("Authorization", fmt.Sprintf("Bearer %s", c.getAPIKey()))
+		ctx := metadata.NewOutgoingContext(context.Background(), md)
+		res, err := c.client.GRPCClient.TriggerModel(ctx, &req)
 		if err != nil || res == nil {
 			return nil, err
 		}
