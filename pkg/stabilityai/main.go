@@ -144,6 +144,8 @@ func (c *Connection) Execute(inputs []*connectorPB.DataPayload) ([]*connectorPB.
 	engine := c.getEngine()
 	task := c.getTask()
 	client := NewClient(c.getAPIKey())
+
+	outputs := []*connectorPB.DataPayload{}
 	switch task {
 	case textToImageTask:
 		for i, dataPayload := range inputs {
@@ -171,11 +173,15 @@ func (c *Connection) Execute(inputs []*connectorPB.DataPayload) ([]*connectorPB.
 				return inputs, err
 			}
 			// use inputs[i] instead of dataPayload to modify source data
-			inputs[i].Images = make([][]byte, 0, len(images))
+			outputImages := make([][]byte, 0, len(images))
 			for _, image := range images {
 				decoded, _ := decodeBase64(image.Base64)
-				inputs[i].Images = append(dataPayload.Images, decoded)
+				outputImages = append(outputImages, decoded)
 			}
+			outputs = append(outputs, &connectorPB.DataPayload{
+				DataMappingIndex: inputs[i].DataMappingIndex,
+				Images:           outputImages,
+			})
 		}
 	case imageToImageTask:
 		for i, dataPayload := range inputs {
@@ -208,16 +214,21 @@ func (c *Connection) Execute(inputs []*connectorPB.DataPayload) ([]*connectorPB.
 				return inputs, err
 			}
 			// use inputs[i] instead of dataPayload to modify source data
-			inputs[i].Images = make([][]byte, 0, len(images))
+			outputImages := make([][]byte, 0, len(images))
 			for _, image := range images {
 				decoded, _ := decodeBase64(image.Base64)
-				inputs[i].Images = append(dataPayload.Images, decoded)
+				outputImages = append(outputImages, decoded)
 			}
+
+			outputs = append(outputs, &connectorPB.DataPayload{
+				DataMappingIndex: inputs[i].DataMappingIndex,
+				Images:           outputImages,
+			})
 		}
 	default:
 		return nil, fmt.Errorf("not supported task: %s", task)
 	}
-	return inputs, nil
+	return outputs, nil
 }
 
 func (c *Connection) Test() (connectorPB.Connector_State, error) {
