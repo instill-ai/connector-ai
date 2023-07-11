@@ -162,11 +162,20 @@ func (c *Connection) Execute(inputs []*connectorPB.DataPayload) ([]*connectorPB.
 				Steps:              uint32(dataPayload.GetMetadata().GetFields()["steps"].GetNumberValue()),
 				StylePreset:        dataPayload.GetMetadata().GetFields()["style_preset"].GetStringValue(),
 				Height:             uint32(dataPayload.GetMetadata().GetFields()["height"].GetNumberValue()),
-				Width:              uint32(dataPayload.GetMetadata().GetFields()["weight"].GetNumberValue()),
+				Width:              uint32(dataPayload.GetMetadata().GetFields()["width"].GetNumberValue()),
+			}
+			weights := dataPayload.GetMetadata().GetFields()["weights"].GetListValue().GetValues()
+			//if no weights are given
+			if weights == nil {
+				weights = []*structpb.Value{}
 			}
 			req.TextPrompts = make([]TextPrompt, 0, len(dataPayload.Texts))
-			for _, t := range dataPayload.Texts {
-				req.TextPrompts = append(req.TextPrompts, TextPrompt{Text: t})
+			var w float32
+			for index, t := range dataPayload.Texts {
+				if len(weights) > index {
+					w = float32(weights[index].GetNumberValue())
+				}
+				req.TextPrompts = append(req.TextPrompts, TextPrompt{Text: t, Weight: w})
 			}
 			images, err := client.GenerateImageFromText(req, engine)
 			if err != nil {
@@ -205,9 +214,18 @@ func (c *Connection) Execute(inputs []*connectorPB.DataPayload) ([]*connectorPB.
 				InitImageMode:      dataPayload.GetMetadata().GetFields()["init_image_mode"].GetStringValue(),
 				ImageStrength:      dataPayload.GetMetadata().GetFields()["image_strength"].GetNumberValue(),
 			}
+			weights := dataPayload.GetMetadata().GetFields()["weights"].GetListValue().GetValues()
+			//if no weights are given
+			if weights == nil {
+				weights = []*structpb.Value{}
+			}
 			req.TextPrompts = make([]TextPrompt, 0, len(dataPayload.Texts))
-			for _, t := range dataPayload.Texts {
-				req.TextPrompts = append(req.TextPrompts, TextPrompt{Text: t})
+			var w float32
+			for index, t := range dataPayload.Texts {
+				if len(weights) > index {
+					w = float32(weights[index].GetNumberValue())
+				}
+				req.TextPrompts = append(req.TextPrompts, TextPrompt{Text: t, Weight: w})
 			}
 			images, err := client.GenerateImageFromImage(req, engine)
 			if err != nil {
