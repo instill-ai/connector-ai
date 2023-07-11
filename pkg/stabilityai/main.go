@@ -166,7 +166,7 @@ func (c *Connection) Execute(inputs []*connectorPB.DataPayload) ([]*connectorPB.
 			}
 			weights := dataPayload.GetMetadata().GetFields()["weights"].GetListValue().GetValues()
 			//if no weights are given
-			if weights == nil || len(weights) == 0 {
+			if weights == nil {
 				weights = []*structpb.Value{}
 			}
 			req.TextPrompts = make([]TextPrompt, 0, len(dataPayload.Texts))
@@ -216,7 +216,7 @@ func (c *Connection) Execute(inputs []*connectorPB.DataPayload) ([]*connectorPB.
 			}
 			weights := dataPayload.GetMetadata().GetFields()["weights"].GetListValue().GetValues()
 			//if no weights are given
-			if weights == nil || len(weights) == 0 {
+			if weights == nil {
 				weights = []*structpb.Value{}
 			}
 			req.TextPrompts = make([]TextPrompt, 0, len(dataPayload.Texts))
