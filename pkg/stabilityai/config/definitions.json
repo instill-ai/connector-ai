@@ -38,6 +38,7 @@
             "type": "string",
             "default": "stable-diffusion-xl-beta-v2-2-2",
             "enum": [
+              "stable-diffusion-xl-1024-v0-9",
               "stable-diffusion-v1",
               "stable-diffusion-v1-5",
               "stable-diffusion-512-v2-0",
