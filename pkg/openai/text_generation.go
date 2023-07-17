@@ -46,28 +46,6 @@ type Usage struct {
 	TotalTokens      int `json:"total_tokens"`
 }
 
-/*
-{
-  "id": "cmpl-uqkvlQyYK7bGYrRHQ0eXlWi7",
-  "object": "text_completion",
-  "created": 1589478378,
-  "model": "text-davinci-003",
-  "choices": [
-    {
-      "text": "\n\nThis is indeed a test",
-      "index": 0,
-      "logprobs": null,
-      "finish_reason": "length"
-    }
-  ],
-  "usage": {
-    "prompt_tokens": 5,
-    "completion_tokens": 7,
-    "total_tokens": 12
-  }
-}
-*/
-
 // GenerateTextCompletion makes a call to the completions API from OpenAI.
 // https://platform.openai.com/docs/api-reference/completions
 func (c *Client) GenerateTextCompletion(req TextCompletionReq) (result TextCompletionResp, err error) {
