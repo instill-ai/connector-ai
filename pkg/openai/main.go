@@ -244,10 +244,10 @@ func (c *Connection) Test() (connectorPB.Connector_State, error) {
 	return connectorPB.Connector_STATE_CONNECTED, nil
 }
 
-func (c *Connection) GetTaskName() (string, error) {
+func (c *Connection) GetTask() (connectorPB.Task, error) {
 	name, ok := taskToNameMap[c.getTask()]
 	if !ok {
 		name = connectorPB.Task_TASK_UNSPECIFIED
 	}
-	return name.String(), nil
+	return name, nil
 }
