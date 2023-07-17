@@ -1,9 +1,8 @@
-package stabilityai
+package openai
 
 import (
 	"bytes"
 	_ "embed"
-	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -23,12 +22,12 @@ import (
 )
 
 const (
-	venderName       = "stabilityAI"
-	host             = "https://api.stability.ai"
-	jsonMimeType     = "application/json"
-	reqTimeout       = time.Second * 60 * 5
-	textToImageTask  = "Text to Image"
-	imageToImageTask = "Image to Image"
+	venderName         = "openAI"
+	host               = "https://api.openai.com"
+	jsonMimeType       = "application/json"
+	reqTimeout         = time.Second * 60 * 5
+	textGenerationTask = "Text Generation"
+	textEmbeddingsTask = "Text Embeddings"
 )
 
 var (
@@ -37,8 +36,8 @@ var (
 	once           sync.Once
 	connector      base.IConnector
 	taskToNameMap  = map[string]modelPB.Model_Task{
-		textToImageTask:  modelPB.Model_TASK_TEXT_TO_IMAGE,
-		imageToImageTask: modelPB.Model_TASK_TEXT_TO_IMAGE,
+		textGenerationTask: modelPB.Model_TASK_TEXT_GENERATION,
+		textEmbeddingsTask: modelPB.Model_TASK_TEXT_GENERATION, //to be changed?
 	}
 )
 
@@ -56,7 +55,7 @@ type Connection struct {
 	config    *structpb.Struct
 }
 
-// Client represents a Stability AI client
+// Client represents a OpenAI client
 type Client struct {
 	APIKey     string
 	HTTPClient HTTPClient
@@ -84,7 +83,6 @@ func Init(logger *zap.Logger, options ConnectorOptions) base.IConnector {
 				logger.Warn(err.Error())
 			}
 		}
-
 	})
 	return connector
 }
@@ -136,111 +134,84 @@ func (c *Connection) getTask() string {
 	return fmt.Sprintf("%s", c.config.GetFields()["task"].GetStringValue())
 }
 
-func (c *Connection) getEngine() string {
-	return fmt.Sprintf("%s", c.config.GetFields()["engine"].GetStringValue())
-}
-
 func (c *Connection) Execute(inputs []*connectorPB.DataPayload) ([]*connectorPB.DataPayload, error) {
-	engine := c.getEngine()
 	task := c.getTask()
 	client := NewClient(c.getAPIKey())
 
 	outputs := []*connectorPB.DataPayload{}
 	switch task {
-	case textToImageTask:
+	case textGenerationTask:
 		for i, dataPayload := range inputs {
 			noOfPrompts := len(dataPayload.Texts)
 			if noOfPrompts <= 0 {
 				return inputs, fmt.Errorf("no text promts given")
 			}
-			req := TextToImageReq{
-				CFGScale:           dataPayload.GetMetadata().GetFields()["cfg_scale"].GetNumberValue(),
-				ClipGuidancePreset: dataPayload.GetMetadata().GetFields()["clip_guidance_preset"].GetStringValue(),
-				Sampler:            dataPayload.GetMetadata().GetFields()["sampler"].GetStringValue(),
-				Samples:            uint32(dataPayload.GetMetadata().GetFields()["samples"].GetNumberValue()),
-				Seed:               uint32(dataPayload.GetMetadata().GetFields()["seed"].GetNumberValue()),
-				Steps:              uint32(dataPayload.GetMetadata().GetFields()["steps"].GetNumberValue()),
-				StylePreset:        dataPayload.GetMetadata().GetFields()["style_preset"].GetStringValue(),
-				Height:             uint32(dataPayload.GetMetadata().GetFields()["height"].GetNumberValue()),
-				Width:              uint32(dataPayload.GetMetadata().GetFields()["width"].GetNumberValue()),
+			req := TextCompletionReq{
+				Prompt:           dataPayload.Texts,
+				Model:            dataPayload.GetMetadata().GetFields()["model"].GetStringValue(),
+				Suffix:           dataPayload.GetMetadata().GetFields()["suffix"].GetStringValue(),
+				MaxTokens:        int(dataPayload.GetMetadata().GetFields()["max_tokens"].GetNumberValue()),
+				Temperature:      float32(dataPayload.GetMetadata().GetFields()["temperature"].GetNumberValue()),
+				TopP:             float32(dataPayload.GetMetadata().GetFields()["top_p"].GetNumberValue()),
+				N:                int(dataPayload.GetMetadata().GetFields()["n"].GetNumberValue()),
+				Stream:           dataPayload.GetMetadata().GetFields()["n"].GetBoolValue(),
+				Logprobs:         int(dataPayload.GetMetadata().GetFields()["logprobs"].GetNumberValue()),
+				Echo:             dataPayload.GetMetadata().GetFields()["echo"].GetBoolValue(),
+				Stop:             dataPayload.GetMetadata().GetFields()["stop"].GetStringValue(),
+				PresencePenalty:  float32(dataPayload.GetMetadata().GetFields()["presence_penalty"].GetNumberValue()),
+				FrequencyPenalty: float32(dataPayload.GetMetadata().GetFields()["frequency_penalty"].GetNumberValue()),
 			}
-			weights := dataPayload.GetMetadata().GetFields()["weights"].GetListValue().GetValues()
-			//if no weights are given
-			if weights == nil {
-				weights = []*structpb.Value{}
-			}
-			req.TextPrompts = make([]TextPrompt, 0, len(dataPayload.Texts))
-			var w float32
-			for index, t := range dataPayload.Texts {
-				if len(weights) > index {
-					w = float32(weights[index].GetNumberValue())
-				}
-				req.TextPrompts = append(req.TextPrompts, TextPrompt{Text: t, Weight: w})
-			}
-			images, err := client.GenerateImageFromText(req, engine)
+			resp, err := client.GenerateTextCompletion(req)
 			if err != nil {
 				return inputs, err
 			}
-			// use inputs[i] instead of dataPayload to modify source data
-			outputImages := make([][]byte, 0, len(images))
-			for _, image := range images {
-				decoded, _ := decodeBase64(image.Base64)
-				outputImages = append(outputImages, decoded)
+			outputTexts := make([]string, 0, len(resp.Choices))
+			for _, c := range resp.Choices {
+				outputTexts = append(outputTexts, c.Text)
 			}
 			outputs = append(outputs, &connectorPB.DataPayload{
 				DataMappingIndex: inputs[i].DataMappingIndex,
-				Images:           outputImages,
+				Texts:            outputTexts,
 			})
 		}
-	case imageToImageTask:
+	case textEmbeddingsTask:
 		for i, dataPayload := range inputs {
 			noOfPrompts := len(dataPayload.Texts)
 			if noOfPrompts <= 0 {
 				return inputs, fmt.Errorf("no text promts given")
 			}
-			noOfImages := len(dataPayload.Images)
-			if noOfImages <= 0 {
-				return inputs, fmt.Errorf("no initial images given")
-			}
-			req := ImageToImageReq{
-				InitImage:          string(dataPayload.Images[0]),
-				CFGScale:           dataPayload.GetMetadata().GetFields()["cfg_scale"].GetNumberValue(),
-				ClipGuidancePreset: dataPayload.GetMetadata().GetFields()["clip_guidance_preset"].GetStringValue(),
-				Sampler:            dataPayload.GetMetadata().GetFields()["sampler"].GetStringValue(),
-				Samples:            uint32(dataPayload.GetMetadata().GetFields()["samples"].GetNumberValue()),
-				Seed:               uint32(dataPayload.GetMetadata().GetFields()["seed"].GetNumberValue()),
-				Steps:              uint32(dataPayload.GetMetadata().GetFields()["steps"].GetNumberValue()),
-				StylePreset:        dataPayload.GetMetadata().GetFields()["style_preset"].GetStringValue(),
-				InitImageMode:      dataPayload.GetMetadata().GetFields()["init_image_mode"].GetStringValue(),
-				ImageStrength:      dataPayload.GetMetadata().GetFields()["image_strength"].GetNumberValue(),
-			}
-			weights := dataPayload.GetMetadata().GetFields()["weights"].GetListValue().GetValues()
-			//if no weights are given
-			if weights == nil {
-				weights = []*structpb.Value{}
-			}
-			req.TextPrompts = make([]TextPrompt, 0, len(dataPayload.Texts))
-			var w float32
-			for index, t := range dataPayload.Texts {
-				if len(weights) > index {
-					w = float32(weights[index].GetNumberValue())
-				}
-				req.TextPrompts = append(req.TextPrompts, TextPrompt{Text: t, Weight: w})
-			}
-			images, err := client.GenerateImageFromImage(req, engine)
+			req := TextEmbeddingsReq{}
+			resp, err := client.GenerateTextEmbeddings(req)
 			if err != nil {
 				return inputs, err
 			}
-			// use inputs[i] instead of dataPayload to modify source data
-			outputImages := make([][]byte, 0, len(images))
-			for _, image := range images {
-				decoded, _ := decodeBase64(image.Base64)
-				outputImages = append(outputImages, decoded)
-			}
-
+			values := make([]*structpb.Value, 0, len(resp.Data))
+			for _, em := range resp.Data {
+				embeddingValues := make([]*structpb.Value, 0, len(em.Embedding))
+				for _, v := range em.Embedding {
+					embeddingValues = append(embeddingValues, &structpb.Value{Kind: &structpb.Value_NumberValue{NumberValue: v}})
+				}
+				obj := &structpb.Value{
+					Kind: &structpb.Value_StructValue{
+						StructValue: &structpb.Struct{
+							Fields: map[string]*structpb.Value{
+								"index":  {Kind: &structpb.Value_NumberValue{NumberValue: float64(em.Index)}},
+								"object": {Kind: &structpb.Value_StringValue{StringValue: em.Object}},
+								"embedding": {Kind: &structpb.Value_ListValue{ListValue: &structpb.ListValue{Values: embeddingValues}},
+								},
+							},
+						},
+					},
+				}
+				values = append(values, obj)
+			},
 			outputs = append(outputs, &connectorPB.DataPayload{
 				DataMappingIndex: inputs[i].DataMappingIndex,
-				Images:           outputImages,
+				StructuredData: &structpb.Struct{
+					Fields: map[string]*structpb.Value{
+						"embeddings": {Kind: &structpb.Value_ListValue{ListValue: &structpb.ListValue{Values: values}}},
+					},
+				},
 			})
 		}
 	default:
@@ -251,11 +222,11 @@ func (c *Connection) Execute(inputs []*connectorPB.DataPayload) ([]*connectorPB.
 
 func (c *Connection) Test() (connectorPB.Connector_State, error) {
 	client := NewClient(c.getAPIKey())
-	engines, err := client.ListEngines()
+	models, err := client.ListModels()
 	if err != nil {
 		return connectorPB.Connector_STATE_ERROR, err
 	}
-	if len(engines) == 0 {
+	if len(models.Data) == 0 {
 		return connectorPB.Connector_STATE_DISCONNECTED, nil
 	}
 	return connectorPB.Connector_STATE_CONNECTED, nil
@@ -267,9 +238,4 @@ func (c *Connection) GetTaskName() (string, error) {
 		name = modelPB.Model_TASK_UNSPECIFIED
 	}
 	return name.String(), nil
-}
-
-// decode if the string is base64 encoded
-func decodeBase64(input string) ([]byte, error) {
-	return base64.StdEncoding.DecodeString(input)
 }
