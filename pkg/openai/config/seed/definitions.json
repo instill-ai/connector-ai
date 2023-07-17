@@ -71,7 +71,7 @@
                   "title": "Model",
                   "description": "OpenAI model to be used.",
                   "type": "string",
-                  "default": "gpt-4",
+                  "default": "gpt-3.5-turbo",
                   "enum": [
                     "gpt-4", 
                     "gpt-4-32k",
