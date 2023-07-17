@@ -36,13 +36,13 @@ func TestStabilityAI(t *testing.T) {
 func TestOpenAI(t *testing.T) {
 	config := &structpb.Struct{
 		Fields: map[string]*structpb.Value{
-			"api_token": {Kind: &structpb.Value_StringValue{StringValue: "<valid api key>"}},
-			"task":      {Kind: &structpb.Value_StringValue{StringValue: "Text to Image"}},
-			"engine":    {Kind: &structpb.Value_StringValue{StringValue: "stable-diffusion-v1-5"}},
+			"api_key": {Kind: &structpb.Value_StringValue{StringValue: "<valid api key>"}},
+			"task":    {Kind: &structpb.Value_StringValue{StringValue: "Text Generation"}},
+			"model":   {Kind: &structpb.Value_StringValue{StringValue: "gpt-3.5-turbo"}},
 		},
 	}
 	in := []*connectorv1alpha.DataPayload{{
-		Texts: []string{"dog", "black"},
+		Texts: []string{"how are you doing?"},
 		Metadata: &structpb.Struct{
 			Fields: map[string]*structpb.Value{},
 		},

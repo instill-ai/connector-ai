@@ -134,6 +134,10 @@ func (c *Connection) getTask() string {
 	return fmt.Sprintf("%s", c.config.GetFields()["task"].GetStringValue())
 }
 
+func (c *Connection) getModel() string {
+	return fmt.Sprintf("%s", c.config.GetFields()["model"].GetStringValue())
+}
+
 func (c *Connection) Execute(inputs []*connectorPB.DataPayload) ([]*connectorPB.DataPayload, error) {
 	task := c.getTask()
 	client := NewClient(c.getAPIKey())
@@ -146,17 +150,18 @@ func (c *Connection) Execute(inputs []*connectorPB.DataPayload) ([]*connectorPB.
 			if noOfPrompts <= 0 {
 				return inputs, fmt.Errorf("no text promts given")
 			}
+			messages := make([]Message, 0, noOfPrompts)
+			for _, t := range dataPayload.Texts {
+				messages = append(messages, Message{Role: "user", Content: t})
+			}
 			req := TextCompletionReq{
-				Prompt:           dataPayload.Texts,
-				Model:            dataPayload.GetMetadata().GetFields()["model"].GetStringValue(),
-				Suffix:           dataPayload.GetMetadata().GetFields()["suffix"].GetStringValue(),
+				Messages:         messages,
+				Model:            c.getModel(),
 				MaxTokens:        int(dataPayload.GetMetadata().GetFields()["max_tokens"].GetNumberValue()),
 				Temperature:      float32(dataPayload.GetMetadata().GetFields()["temperature"].GetNumberValue()),
 				TopP:             float32(dataPayload.GetMetadata().GetFields()["top_p"].GetNumberValue()),
 				N:                int(dataPayload.GetMetadata().GetFields()["n"].GetNumberValue()),
 				Stream:           dataPayload.GetMetadata().GetFields()["n"].GetBoolValue(),
-				Logprobs:         int(dataPayload.GetMetadata().GetFields()["logprobs"].GetNumberValue()),
-				Echo:             dataPayload.GetMetadata().GetFields()["echo"].GetBoolValue(),
 				Stop:             dataPayload.GetMetadata().GetFields()["stop"].GetStringValue(),
 				PresencePenalty:  float32(dataPayload.GetMetadata().GetFields()["presence_penalty"].GetNumberValue()),
 				FrequencyPenalty: float32(dataPayload.GetMetadata().GetFields()["frequency_penalty"].GetNumberValue()),
@@ -167,7 +172,7 @@ func (c *Connection) Execute(inputs []*connectorPB.DataPayload) ([]*connectorPB.
 			}
 			outputTexts := make([]string, 0, len(resp.Choices))
 			for _, c := range resp.Choices {
-				outputTexts = append(outputTexts, c.Text)
+				outputTexts = append(outputTexts, c.Message.Content)
 			}
 			outputs = append(outputs, &connectorPB.DataPayload{
 				DataMappingIndex: inputs[i].DataMappingIndex,
@@ -180,7 +185,10 @@ func (c *Connection) Execute(inputs []*connectorPB.DataPayload) ([]*connectorPB.
 			if noOfPrompts <= 0 {
 				return inputs, fmt.Errorf("no text promts given")
 			}
-			req := TextEmbeddingsReq{}
+			req := TextEmbeddingsReq{
+				Model: c.getModel(),
+				Input: dataPayload.Texts,
+			}
 			resp, err := client.GenerateTextEmbeddings(req)
 			if err != nil {
 				return inputs, err

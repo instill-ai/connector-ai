@@ -5,39 +5,39 @@ import (
 )
 
 const (
-	completionsURL = host + "/v1/completions"
+	completionsURL = host + "/v1/chat/completions"
 )
 
 type TextCompletionReq struct {
-	Model            string   `json:"model"`
-	Prompt           []string `json:"prompt"`
-	Suffix           string   `json:"suffix,omitempty"`
-	MaxTokens        int      `json:"max_tokens,omitempty"`
-	Temperature      float32  `json:"temperature,omitempty"`
-	TopP             float32  `json:"top_p,omitempty"`
-	N                int      `json:"n,omitempty"`
-	Stream           bool     `json:"stream,omitempty"`
-	Logprobs         int      `json:"logprobs,omitempty"`
-	Echo             bool     `json:"echo,omitempty"`
-	Stop             string   `json:"stop,omitempty"`
-	PresencePenalty  float32  `json:"presence_penalty,omitempty"`
-	FrequencyPenalty float32  `json:"frequency_penalty,omitempty"`
+	Model            string    `json:"model"`
+	Messages         []Message `json:"messages"`
+	Temperature      float32   `json:"temperature,omitempty"`
+	TopP             float32   `json:"top_p,omitempty"`
+	N                int       `json:"n,omitempty"`
+	Stream           bool      `json:"stream,omitempty"`
+	Stop             string    `json:"stop,omitempty"`
+	MaxTokens        int       `json:"max_tokens,omitempty"`
+	PresencePenalty  float32   `json:"presence_penalty,omitempty"`
+	FrequencyPenalty float32   `json:"frequency_penalty,omitempty"`
+}
+
+type Message struct {
+	Role    string `json:"role"`
+	Content string `json:"content"`
 }
 
 type TextCompletionResp struct {
 	ID      string    `json:"id"`
 	Object  string    `json:"object"`
 	Created int       `json:"created"`
-	Model   string    `json:"model"`
 	Choices []Choices `json:"choices"`
 	Usage   Usage     `json:"usage"`
 }
 
 type Choices struct {
-	Text         string `json:"text"`
-	Index        int    `json:"index"`
-	Logprobs     any    `json:"logprobs"`
-	FinishReason string `json:"finish_reason"`
+	Index        int     `json:"index"`
+	FinishReason string  `json:"finish_reason"`
+	Message      Message `json:"message"`
 }
 
 type Usage struct {
