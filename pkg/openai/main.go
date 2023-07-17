@@ -103,15 +103,21 @@ func NewClient(apiKey string) Client {
 
 // sendReq is responsible for making the http request with to given URL, method, and params and unmarshalling the response into given object.
 func (c *Client) sendReq(reqURL, method string, params interface{}, respObj interface{}) (err error) {
-	data, _ := json.Marshal(params)
-	req, _ := http.NewRequest(method, reqURL, bytes.NewBuffer(data))
+	var body io.Reader
+	if params != nil {
+		data, _ := json.Marshal(params)
+		body = bytes.NewBuffer(data)
+	} else {
+		body = nil
+	}
+	req, _ := http.NewRequest(method, reqURL, body)
 	req.Header.Add("Content-Type", jsonMimeType)
 	req.Header.Add("Accept", jsonMimeType)
 	req.Header.Add("Authorization", "Bearer "+c.APIKey)
 	http.DefaultClient.Timeout = reqTimeout
 	res, err := c.HTTPClient.Do(req)
 	if err != nil || res == nil {
-		err = fmt.Errorf("error occurred: %v, while calling URL: %s, request body: %s", err, reqURL, data)
+		err = fmt.Errorf("error occurred: %v, while calling URL: %s", err, reqURL)
 		return
 	}
 	defer res.Body.Close()
@@ -161,7 +167,7 @@ func (c *Connection) Execute(inputs []*connectorPB.DataPayload) ([]*connectorPB.
 				Temperature:      float32(dataPayload.GetMetadata().GetFields()["temperature"].GetNumberValue()),
 				TopP:             float32(dataPayload.GetMetadata().GetFields()["top_p"].GetNumberValue()),
 				N:                int(dataPayload.GetMetadata().GetFields()["n"].GetNumberValue()),
-				Stream:           dataPayload.GetMetadata().GetFields()["n"].GetBoolValue(),
+				Stream:           dataPayload.GetMetadata().GetFields()["stream"].GetBoolValue(),
 				Stop:             dataPayload.GetMetadata().GetFields()["stop"].GetStringValue(),
 				PresencePenalty:  float32(dataPayload.GetMetadata().GetFields()["presence_penalty"].GetNumberValue()),
 				FrequencyPenalty: float32(dataPayload.GetMetadata().GetFields()["frequency_penalty"].GetNumberValue()),

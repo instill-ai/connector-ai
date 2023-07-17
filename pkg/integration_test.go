@@ -5,8 +5,10 @@ package pkg
 
 import (
 	"fmt"
+	"net/http"
 	"testing"
 
+	"github.com/instill-ai/connector-ai/pkg/openai"
 	"google.golang.org/protobuf/types/known/structpb"
 
 	connectorv1alpha "github.com/instill-ai/protogen-go/vdp/connector/v1alpha"
@@ -52,4 +54,13 @@ func TestOpenAI(t *testing.T) {
 	fmt.Printf("err:%s", err)
 	op, err := con.Execute(in)
 	fmt.Printf("\n op :%v, err:%s", op, err)
+}
+
+func Test_ListModels(t *testing.T) {
+	c := openai.Client{
+		APIKey:     "<valid api key>",
+		HTTPClient: &http.Client{},
+	}
+	res, err := c.ListModels()
+	fmt.Printf("res: %v, err: %v", res, err)
 }
