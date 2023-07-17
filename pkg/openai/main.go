@@ -17,7 +17,6 @@ import (
 	"github.com/instill-ai/connector/pkg/base"
 	"github.com/instill-ai/connector/pkg/configLoader"
 
-	modelPB "github.com/instill-ai/protogen-go/model/model/v1alpha"
 	connectorPB "github.com/instill-ai/protogen-go/vdp/connector/v1alpha"
 )
 
@@ -35,9 +34,9 @@ var (
 	definitionJSON []byte
 	once           sync.Once
 	connector      base.IConnector
-	taskToNameMap  = map[string]modelPB.Model_Task{
-		textGenerationTask: modelPB.Model_TASK_TEXT_GENERATION,
-		textEmbeddingsTask: modelPB.Model_TASK_TEXT_GENERATION, //to be changed?
+	taskToNameMap  = map[string]connectorPB.Task{
+		textGenerationTask: connectorPB.Task_TASK_TEXT_GENERATION,
+		textEmbeddingsTask: connectorPB.Task_TASK_TEXT_EMBEDDINGS,
 	}
 )
 
@@ -248,7 +247,7 @@ func (c *Connection) Test() (connectorPB.Connector_State, error) {
 func (c *Connection) GetTaskName() (string, error) {
 	name, ok := taskToNameMap[c.getTask()]
 	if !ok {
-		name = modelPB.Model_TASK_UNSPECIFIED
+		name = connectorPB.Task_TASK_UNSPECIFIED
 	}
 	return name.String(), nil
 }
