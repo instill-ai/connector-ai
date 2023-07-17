@@ -62,18 +62,18 @@ type GetModelRes struct {
 }
 
 type Model struct {
-	Name            string           `json:"name"`
-	UID             string           `json:"uid"`
-	ID              string           `json:"id"`
-	Description     string           `json:"description"`
-	ModelDefinition string           `json:"model_definition"`
-	Configuration   any              `json:"configuration"`
-	Task            connectorPB.Task `json:"task"`
-	State           string           `json:"state"`
-	Visibility      string           `json:"visibility"`
-	User            string           `json:"user"`
-	CreateTime      time.Time        `json:"create_time"`
-	UpdateTime      time.Time        `json:"update_time"`
+	Name            string    `json:"name"`
+	UID             string    `json:"uid"`
+	ID              string    `json:"id"`
+	Description     string    `json:"description"`
+	ModelDefinition string    `json:"model_definition"`
+	Configuration   any       `json:"configuration"`
+	Task            string    `json:"task"`
+	State           string    `json:"state"`
+	Visibility      string    `json:"visibility"`
+	User            string    `json:"user"`
+	CreateTime      time.Time `json:"create_time"`
+	UpdateTime      time.Time `json:"update_time"`
 }
 
 // Client represents an Instill Model client
@@ -215,23 +215,23 @@ func (c *Connection) Execute(inputs []*connectorPB.DataPayload) ([]*connectorPB.
 	}
 	var result []*connectorPB.DataPayload
 	switch res.Model.Task {
-	case connectorPB.Task_TASK_UNSPECIFIED:
+	case connectorPB.Task_TASK_UNSPECIFIED.String():
 		result, err = c.executeUnspecified(res.Model, inputs)
-	case connectorPB.Task_TASK_CLASSIFICATION:
+	case connectorPB.Task_TASK_CLASSIFICATION.String():
 		result, err = c.executeImageClassification(res.Model, inputs)
-	case connectorPB.Task_TASK_DETECTION:
+	case connectorPB.Task_TASK_DETECTION.String():
 		result, err = c.executeObjectDetection(res.Model, inputs)
-	case connectorPB.Task_TASK_KEYPOINT:
+	case connectorPB.Task_TASK_KEYPOINT.String():
 		result, err = c.executeKeyPointDetection(res.Model, inputs)
-	case connectorPB.Task_TASK_OCR:
+	case connectorPB.Task_TASK_OCR.String():
 		result, err = c.executeOCR(res.Model, inputs)
-	case connectorPB.Task_TASK_INSTANCE_SEGMENTATION:
+	case connectorPB.Task_TASK_INSTANCE_SEGMENTATION.String():
 		result, err = c.executeInstanceSegmentation(res.Model, inputs)
-	case connectorPB.Task_TASK_SEMANTIC_SEGMENTATION:
+	case connectorPB.Task_TASK_SEMANTIC_SEGMENTATION.String():
 		result, err = c.executeSemanticSegmentation(res.Model, inputs)
-	case connectorPB.Task_TASK_TEXT_TO_IMAGE:
+	case connectorPB.Task_TASK_TEXT_TO_IMAGE.String():
 		result, err = c.executeTextToImage(res.Model, inputs)
-	case connectorPB.Task_TASK_TEXT_GENERATION:
+	case connectorPB.Task_TASK_TEXT_GENERATION.String():
 		result, err = c.executeTextGeneration(res.Model, inputs)
 	default:
 		return inputs, fmt.Errorf("unsupported task: %s", res.Model.Task)
@@ -256,5 +256,9 @@ func (c *Connection) GetTask() (connectorPB.Task, error) {
 	if err != nil || res == nil || res.Model == nil {
 		return connectorPB.Task_TASK_UNSPECIFIED, err
 	}
-	return res.Model.Task, nil
+	task, ok := connectorPB.Task_value[res.Model.Task]
+	if !ok {
+		return connectorPB.Task_TASK_UNSPECIFIED, fmt.Errorf("mapping not found for: %s", res.Model.Task)
+	}
+	return connectorPB.Task(task), nil
 }
