@@ -195,16 +195,15 @@ func (c *Connection) Execute(inputs []*connectorPB.DataPayload) ([]*connectorPB.
 					Kind: &structpb.Value_StructValue{
 						StructValue: &structpb.Struct{
 							Fields: map[string]*structpb.Value{
-								"index":  {Kind: &structpb.Value_NumberValue{NumberValue: float64(em.Index)}},
-								"object": {Kind: &structpb.Value_StringValue{StringValue: em.Object}},
-								"embedding": {Kind: &structpb.Value_ListValue{ListValue: &structpb.ListValue{Values: embeddingValues}},
-								},
+								"index":     {Kind: &structpb.Value_NumberValue{NumberValue: float64(em.Index)}},
+								"object":    {Kind: &structpb.Value_StringValue{StringValue: em.Object}},
+								"embedding": {Kind: &structpb.Value_ListValue{ListValue: &structpb.ListValue{Values: embeddingValues}}},
 							},
 						},
 					},
 				}
 				values = append(values, obj)
-			},
+			}
 			outputs = append(outputs, &connectorPB.DataPayload{
 				DataMappingIndex: inputs[i].DataMappingIndex,
 				StructuredData: &structpb.Struct{
