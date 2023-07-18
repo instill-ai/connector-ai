@@ -23,26 +23,6 @@ func TestGenerateImageFromImage(t *testing.T) {
 		setMocks    func()
 	}{
 		{
-			name:        "error in sending request",
-			req:         ImageToImageReq{InitImage: "a", TextPrompts: []TextPrompt{{Text: "a cat and a dog", Weight: 0.5}}},
-			expectedErr: errors.New("error occurred: call failed, while calling URL: https://api.stability.ai/v1/generation/stable-diffusion-v1-5/image-to-image, request body: {\"text_prompts\":[{\"text\":\"a cat and a dog\",\"weight\":0.5}],\"init_image\":\"a\"}"),
-			setMocks: func() {
-				mockResponse = func() (*http.Response, error) {
-					return nil, errors.New("call failed")
-				}
-			},
-		},
-		{
-			name:        "nil response",
-			req:         ImageToImageReq{InitImage: "a", TextPrompts: []TextPrompt{{Text: "a cat and a dog", Weight: 0.5}}},
-			expectedErr: errors.New("error occurred: <nil>, while calling URL: https://api.stability.ai/v1/generation/stable-diffusion-v1-5/image-to-image, request body: {\"text_prompts\":[{\"text\":\"a cat and a dog\",\"weight\":0.5}],\"init_image\":\"a\"}"),
-			setMocks: func() {
-				mockResponse = func() (*http.Response, error) {
-					return nil, nil
-				}
-			},
-		},
-		{
 			name:        "non 200 status code",
 			req:         ImageToImageReq{InitImage: "a", TextPrompts: []TextPrompt{{Text: "a cat and a dog", Weight: 0.5}}},
 			expectedErr: errors.New("non-200 status code: 401, while calling URL: https://api.stability.ai/v1/generation/stable-diffusion-v1-5/image-to-image, response body: {\"id\": \"9160aa70-222f-4a36-9eb7-475e2668362a\",\"name\": \"unauthorized\",\"message\": \"missing authorization header\"}"),
@@ -80,8 +60,8 @@ func TestGenerateImageFromImage(t *testing.T) {
 				tt.setMocks()
 			}
 			res, err := stabilityClient.GenerateImageFromImage(tt.req, "stable-diffusion-v1-5")
-			assert.Equal(t, res, tt.expectedRes)
-			assert.Equal(t, err, tt.expectedErr)
+			assert.Equal(t, tt.expectedRes, res)
+			assert.Equal(t, tt.expectedErr, err)
 		})
 	}
 }

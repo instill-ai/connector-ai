@@ -11,7 +11,7 @@ import (
 	connectorPB "github.com/instill-ai/protogen-go/vdp/connector/v1alpha"
 )
 
-func (c *Connection) executeOCR(model *Model, inputs []*connectorPB.DataPayload) ([]*connectorPB.DataPayload, error) {
+func (c *Connection) executeOCR(grpcClient modelPB.ModelPublicServiceClient, model *Model, inputs []*connectorPB.DataPayload) ([]*connectorPB.DataPayload, error) {
 	if len(inputs) <= 0 {
 		return nil, fmt.Errorf("invalid input: %v for model: %s", inputs, model.Name)
 	}
@@ -20,7 +20,7 @@ func (c *Connection) executeOCR(model *Model, inputs []*connectorPB.DataPayload)
 	for idx := range inputs {
 		dataPayload := inputs[idx]
 		if len(dataPayload.Images) <= 0 {
-			return nil, fmt.Errorf("invalid input: %v for model: %s", *dataPayload, model.Name)
+			return nil, fmt.Errorf("invalid input: %v for model: %s", dataPayload, model.Name)
 		}
 		base64Str, err := encodeToBase64(dataPayload.Images[0])
 		if err != nil {
@@ -37,12 +37,12 @@ func (c *Connection) executeOCR(model *Model, inputs []*connectorPB.DataPayload)
 			Name:       model.Name,
 			TaskInputs: []*modelPB.TaskInput{{Input: taskInput}},
 		}
-		if c.client == nil || c.client.GRPCClient == nil {
+		if c.client == nil || grpcClient == nil {
 			return nil, fmt.Errorf("client not setup: %v", c.client)
 		}
 		md := metadata.Pairs("Authorization", fmt.Sprintf("Bearer %s", c.getAPIKey()))
 		ctx := metadata.NewOutgoingContext(context.Background(), md)
-		res, err := c.client.GRPCClient.TriggerModel(ctx, &req)
+		res, err := grpcClient.TriggerModel(ctx, &req)
 		if err != nil || res == nil {
 			return nil, err
 		}
