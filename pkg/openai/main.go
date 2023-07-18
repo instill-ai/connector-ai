@@ -115,11 +115,13 @@ func (c *Client) sendReq(reqURL, method string, params interface{}, respObj inte
 	req.Header.Add("Authorization", "Bearer "+c.APIKey)
 	http.DefaultClient.Timeout = reqTimeout
 	res, err := c.HTTPClient.Do(req)
+	if res != nil && res.Body != nil {
+		defer res.Body.Close()
+	}
 	if err != nil || res == nil {
 		err = fmt.Errorf("error occurred: %v, while calling URL: %s", err, reqURL)
 		return
 	}
-	defer res.Body.Close()
 	bytes, _ := io.ReadAll(res.Body)
 	if res.StatusCode != http.StatusOK {
 		err = fmt.Errorf("non-200 status code: %d, while calling URL: %s, response body: %s", res.StatusCode, reqURL, bytes)
@@ -132,15 +134,15 @@ func (c *Client) sendReq(reqURL, method string, params interface{}, respObj inte
 }
 
 func (c *Connection) getAPIKey() string {
-	return fmt.Sprintf("%s", c.config.GetFields()["api_key"].GetStringValue())
+	return c.config.GetFields()["api_key"].GetStringValue()
 }
 
 func (c *Connection) getTask() string {
-	return fmt.Sprintf("%s", c.config.GetFields()["task"].GetStringValue())
+	return c.config.GetFields()["task"].GetStringValue()
 }
 
 func (c *Connection) getModel() string {
-	return fmt.Sprintf("%s", c.config.GetFields()["model"].GetStringValue())
+	return c.config.GetFields()["model"].GetStringValue()
 }
 
 func (c *Connection) Execute(inputs []*connectorPB.DataPayload) ([]*connectorPB.DataPayload, error) {
