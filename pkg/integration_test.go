@@ -8,10 +8,10 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/instill-ai/connector-ai/pkg/openai"
-	"github.com/instill-ai/connector-ai/pkg/stabilityai"
 	"google.golang.org/protobuf/types/known/structpb"
 
+	"github.com/instill-ai/connector-ai/pkg/openai"
+	"github.com/instill-ai/connector-ai/pkg/stabilityai"
 	connectorv1alpha "github.com/instill-ai/protogen-go/vdp/connector/v1alpha"
 )
 
