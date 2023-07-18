@@ -103,7 +103,7 @@ func NewClient(apiKey string) Client {
 
 // sendReq is responsible for making the http request with to given URL, method, and params and unmarshalling the response into given object.
 func (c *Client) sendReq(reqURL, method, contentType string, data io.Reader, respObj interface{}) (err error) {
-	req, err := http.NewRequest(method, reqURL, data)
+	req, _ := http.NewRequest(method, reqURL, data)
 	req.Header.Add("Content-Type", contentType)
 	req.Header.Add("Accept", jsonMimeType)
 	req.Header.Add("Authorization", "Bearer "+c.APIKey)
