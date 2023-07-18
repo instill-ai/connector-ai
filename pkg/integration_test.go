@@ -59,7 +59,7 @@ func TestStabilityAIImageToImage(t *testing.T) {
 	}
 	in := []*connectorv1alpha.DataPayload{{
 		Texts:  []string{"invert colors"},
-		Images: [][]byte{[]byte("<base 64 string here>")},
+		Images: [][]byte{[]byte("<binary image string here>")},
 		Metadata: &structpb.Struct{
 			Fields: map[string]*structpb.Value{},
 		},

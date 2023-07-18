@@ -2,7 +2,6 @@ package stabilityai
 
 import (
 	"bytes"
-	"encoding/base64"
 	"fmt"
 	"mime/multipart"
 	"net/http"
@@ -84,12 +83,11 @@ func writeField(writer *multipart.Writer, key string, value string) {
 	}
 }
 
-func writeImage(writer *multipart.Writer, imgBase64 string) error {
+func writeImage(writer *multipart.Writer, imageData string) error {
 	part, err := writer.CreateFormFile("init_image", "")
 	if err != nil {
 		return err
 	}
-	imageData, _ := base64.StdEncoding.DecodeString(imgBase64)
-	_, err = part.Write(imageData)
+	_, err = part.Write([]byte(imageData))
 	return err
 }
