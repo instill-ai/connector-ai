@@ -20,7 +20,7 @@ func (c *Connection) executeInstanceSegmentation(grpcClient modelPB.ModelPublicS
 	for idx := range inputs {
 		dataPayload := inputs[idx]
 		if len(dataPayload.Images) <= 0 {
-			return nil, fmt.Errorf("invalid input: %v for model: %s", *dataPayload, model.Name)
+			return nil, fmt.Errorf("invalid input: %v for model: %s", dataPayload, model.Name)
 		}
 		base64Str, err := encodeToBase64(dataPayload.Images[0])
 		if err != nil {

@@ -134,15 +134,15 @@ func (c *Client) sendReq(reqURL, method string, params interface{}, respObj inte
 }
 
 func (c *Connection) getAPIKey() string {
-	return fmt.Sprintf("%s", c.config.GetFields()["api_key"].GetStringValue())
+	return c.config.GetFields()["api_key"].GetStringValue()
 }
 
 func (c *Connection) getTask() string {
-	return fmt.Sprintf("%s", c.config.GetFields()["task"].GetStringValue())
+	return c.config.GetFields()["task"].GetStringValue()
 }
 
 func (c *Connection) getModel() string {
-	return fmt.Sprintf("%s", c.config.GetFields()["model"].GetStringValue())
+	return c.config.GetFields()["model"].GetStringValue()
 }
 
 func (c *Connection) Execute(inputs []*connectorPB.DataPayload) ([]*connectorPB.DataPayload, error) {

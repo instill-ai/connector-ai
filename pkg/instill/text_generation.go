@@ -20,7 +20,7 @@ func (c *Connection) executeTextGeneration(grpcClient modelPB.ModelPublicService
 	for idx := range inputs {
 		dataPayload := inputs[idx]
 		if len(dataPayload.Texts) <= 0 {
-			return nil, fmt.Errorf("invalid input: %v for model: %s", *dataPayload, model.Name)
+			return nil, fmt.Errorf("invalid input: %v for model: %s", dataPayload, model.Name)
 		}
 		seed := int64(dataPayload.GetMetadata().GetFields()["seed"].GetNumberValue())
 		outputLen := int64(dataPayload.GetMetadata().GetFields()["output_len"].GetNumberValue())

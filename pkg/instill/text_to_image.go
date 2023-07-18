@@ -19,7 +19,7 @@ func (c *Connection) executeTextToImage(grpcClient modelPB.ModelPublicServiceCli
 	for idx := range inputs {
 		dataPayload := inputs[idx]
 		if len(dataPayload.Texts) <= 0 {
-			return nil, fmt.Errorf("invalid input: %v for model: %s", *dataPayload, model.Name)
+			return nil, fmt.Errorf("invalid input: %v for model: %s", dataPayload, model.Name)
 		}
 		steps := int64(dataPayload.GetMetadata().GetFields()["steps"].GetNumberValue())
 		cfgScale := float32(dataPayload.GetMetadata().GetFields()["cfg_scale"].GetNumberValue())

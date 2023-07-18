@@ -171,11 +171,11 @@ func (c *Client) sendReq(reqURL, method string, params interface{}, respObj inte
 }
 
 func (c *Connection) getAPIKey() string {
-	return fmt.Sprintf("%s", c.config.GetFields()["api_token"].GetStringValue())
+	return c.config.GetFields()["api_token"].GetStringValue()
 }
 
 func (c *Connection) getServerURL() string {
-	serverUrl := fmt.Sprintf("%s", c.config.GetFields()["server_url"].GetStringValue())
+	serverUrl := c.config.GetFields()["server_url"].GetStringValue()
 	if strings.HasPrefix(serverUrl, "https://") {
 		if len(strings.Split(serverUrl, ":")) == 2 {
 			serverUrl = serverUrl + ":443"
@@ -189,7 +189,7 @@ func (c *Connection) getServerURL() string {
 }
 
 func (c *Connection) getModelID() string {
-	return fmt.Sprintf("%s", c.config.GetFields()["model_id"].GetStringValue())
+	return c.config.GetFields()["model_id"].GetStringValue()
 }
 
 func (c *Connection) getModel() (res *GetModelRes, err error) {
