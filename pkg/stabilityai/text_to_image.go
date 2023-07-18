@@ -1,6 +1,8 @@
 package stabilityai
 
 import (
+	"bytes"
+	"encoding/json"
 	"fmt"
 	"net/http"
 )
@@ -49,7 +51,8 @@ func (c *Client) GenerateImageFromText(params TextToImageReq, engine string) (re
 		return nil, fmt.Errorf("no engine selected")
 	}
 	textToImageURL := host + "/v1/generation/" + engine + "/text-to-image"
-	err = c.sendReq(textToImageURL, http.MethodPost, params, &resp)
+	data, _ := json.Marshal(params)
+	err = c.sendReq(textToImageURL, http.MethodPost, jsonMimeType, bytes.NewBuffer(data), &resp)
 	for _, i := range resp.Images {
 		if i.FinishReason == successFinishReason {
 			results = append(results, i)
