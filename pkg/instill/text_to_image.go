@@ -10,7 +10,7 @@ import (
 	connectorPB "github.com/instill-ai/protogen-go/vdp/connector/v1alpha"
 )
 
-func (c *Connection) executeTextToImage(model *Model, inputs []*connectorPB.DataPayload) ([]*connectorPB.DataPayload, error) {
+func (c *Connection) executeTextToImage(grpcClient modelPB.ModelPublicServiceClient, model *Model, inputs []*connectorPB.DataPayload) ([]*connectorPB.DataPayload, error) {
 	if len(inputs) <= 0 {
 		return nil, fmt.Errorf("invalid input: %v for model: %s", inputs, model.Name)
 	}
@@ -41,12 +41,12 @@ func (c *Connection) executeTextToImage(model *Model, inputs []*connectorPB.Data
 			Name:       model.Name,
 			TaskInputs: []*modelPB.TaskInput{{Input: taskInput}},
 		}
-		if c.client == nil || c.client.GRPCClient == nil {
+		if c.client == nil || grpcClient == nil {
 			return nil, fmt.Errorf("client not setup: %v", c.client)
 		}
 		md := metadata.Pairs("Authorization", fmt.Sprintf("Bearer %s", c.getAPIKey()))
 		ctx := metadata.NewOutgoingContext(context.Background(), md)
-		res, err := c.client.GRPCClient.TriggerModel(ctx, &req)
+		res, err := grpcClient.TriggerModel(ctx, &req)
 		if err != nil || res == nil {
 			return nil, err
 		}

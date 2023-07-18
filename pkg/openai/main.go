@@ -115,11 +115,13 @@ func (c *Client) sendReq(reqURL, method string, params interface{}, respObj inte
 	req.Header.Add("Authorization", "Bearer "+c.APIKey)
 	http.DefaultClient.Timeout = reqTimeout
 	res, err := c.HTTPClient.Do(req)
+	if res != nil && res.Body != nil {
+		defer res.Body.Close()
+	}
 	if err != nil || res == nil {
 		err = fmt.Errorf("error occurred: %v, while calling URL: %s", err, reqURL)
 		return
 	}
-	defer res.Body.Close()
 	bytes, _ := io.ReadAll(res.Body)
 	if res.StatusCode != http.StatusOK {
 		err = fmt.Errorf("non-200 status code: %d, while calling URL: %s, response body: %s", res.StatusCode, reqURL, bytes)

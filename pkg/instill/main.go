@@ -19,7 +19,6 @@ import (
 	"github.com/instill-ai/connector/pkg/base"
 	"github.com/instill-ai/connector/pkg/configLoader"
 
-	modelPB "github.com/instill-ai/protogen-go/model/model/v1alpha"
 	connectorPB "github.com/instill-ai/protogen-go/vdp/connector/v1alpha"
 )
 
@@ -80,7 +79,6 @@ type Model struct {
 type Client struct {
 	APIKey     string
 	HTTPClient HTTPClient
-	GRPCClient modelPB.ModelPublicServiceClient
 }
 
 // HTTPClient interface
@@ -124,8 +122,7 @@ func (c *Connection) NewClient() (*Client, error) {
 	tr := &http.Transport{
 		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
 	}
-	gRPCCLient, _ := initModelPublicServiceClient(c.getServerURL())
-	return &Client{APIKey: c.getAPIKey(), HTTPClient: &http.Client{Timeout: reqTimeout, Transport: tr}, GRPCClient: gRPCCLient}, nil
+	return &Client{APIKey: c.getAPIKey(), HTTPClient: &http.Client{Timeout: reqTimeout, Transport: tr}}, nil
 }
 
 // sendReq is responsible for making the http request with to given URL, method, and params and unmarshalling the response into given object.
@@ -155,11 +152,13 @@ func (c *Client) sendReq(reqURL, method string, params interface{}, respObj inte
 	}
 	http.DefaultClient.Timeout = reqTimeout
 	res, err := c.HTTPClient.Do(req)
+	if res != nil && res.Body != nil {
+		defer res.Body.Close()
+	}
 	if err != nil || res == nil {
 		err = fmt.Errorf("error occurred: %v, while calling URL: %s, request body: %s", err, reqURL, data)
 		return
 	}
-	defer res.Body.Close()
 	bytes, _ := io.ReadAll(res.Body)
 	if res.StatusCode != http.StatusOK {
 		err = fmt.Errorf("non-200 status code: %d, while calling URL: %s, response body: %s", res.StatusCode, reqURL, bytes)
@@ -213,26 +212,31 @@ func (c *Connection) Execute(inputs []*connectorPB.DataPayload) ([]*connectorPB.
 	if len(inputs) <= 0 || inputs[0] == nil {
 		return inputs, fmt.Errorf("invalid input: %v for model: %s", inputs, res.Model.Name)
 	}
+
+	gRPCCLient, gRPCCLientConn := initModelPublicServiceClient(c.getServerURL())
+	if gRPCCLientConn != nil {
+		defer gRPCCLientConn.Close()
+	}
 	var result []*connectorPB.DataPayload
 	switch res.Model.Task {
 	case connectorPB.Task_TASK_UNSPECIFIED.String():
-		result, err = c.executeUnspecified(res.Model, inputs)
+		result, err = c.executeUnspecified(gRPCCLient, res.Model, inputs)
 	case connectorPB.Task_TASK_CLASSIFICATION.String():
-		result, err = c.executeImageClassification(res.Model, inputs)
+		result, err = c.executeImageClassification(gRPCCLient, res.Model, inputs)
 	case connectorPB.Task_TASK_DETECTION.String():
-		result, err = c.executeObjectDetection(res.Model, inputs)
+		result, err = c.executeObjectDetection(gRPCCLient, res.Model, inputs)
 	case connectorPB.Task_TASK_KEYPOINT.String():
-		result, err = c.executeKeyPointDetection(res.Model, inputs)
+		result, err = c.executeKeyPointDetection(gRPCCLient, res.Model, inputs)
 	case connectorPB.Task_TASK_OCR.String():
-		result, err = c.executeOCR(res.Model, inputs)
+		result, err = c.executeOCR(gRPCCLient, res.Model, inputs)
 	case connectorPB.Task_TASK_INSTANCE_SEGMENTATION.String():
-		result, err = c.executeInstanceSegmentation(res.Model, inputs)
+		result, err = c.executeInstanceSegmentation(gRPCCLient, res.Model, inputs)
 	case connectorPB.Task_TASK_SEMANTIC_SEGMENTATION.String():
-		result, err = c.executeSemanticSegmentation(res.Model, inputs)
+		result, err = c.executeSemanticSegmentation(gRPCCLient, res.Model, inputs)
 	case connectorPB.Task_TASK_TEXT_TO_IMAGE.String():
-		result, err = c.executeTextToImage(res.Model, inputs)
+		result, err = c.executeTextToImage(gRPCCLient, res.Model, inputs)
 	case connectorPB.Task_TASK_TEXT_GENERATION.String():
-		result, err = c.executeTextGeneration(res.Model, inputs)
+		result, err = c.executeTextGeneration(gRPCCLient, res.Model, inputs)
 	default:
 		return inputs, fmt.Errorf("unsupported task: %s", res.Model.Task)
 	}
