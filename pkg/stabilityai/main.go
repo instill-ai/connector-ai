@@ -1,7 +1,6 @@
 package stabilityai
 
 import (
-	"bytes"
 	_ "embed"
 	"encoding/base64"
 	"encoding/json"
@@ -103,10 +102,9 @@ func NewClient(apiKey string) Client {
 }
 
 // sendReq is responsible for making the http request with to given URL, method, and params and unmarshalling the response into given object.
-func (c *Client) sendReq(reqURL, method string, params interface{}, respObj interface{}) (err error) {
-	data, _ := json.Marshal(params)
-	req, _ := http.NewRequest(method, reqURL, bytes.NewBuffer(data))
-	req.Header.Add("Content-Type", jsonMimeType)
+func (c *Client) sendReq(reqURL, method, contentType string, data io.Reader, respObj interface{}) (err error) {
+	req, _ := http.NewRequest(method, reqURL, data)
+	req.Header.Add("Content-Type", contentType)
 	req.Header.Add("Accept", jsonMimeType)
 	req.Header.Add("Authorization", "Bearer "+c.APIKey)
 	http.DefaultClient.Timeout = reqTimeout
