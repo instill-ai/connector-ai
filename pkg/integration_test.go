@@ -5,6 +5,7 @@ package pkg
 
 import (
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	"testing"
 
@@ -12,20 +13,21 @@ import (
 
 	"github.com/instill-ai/connector-ai/pkg/openai"
 	"github.com/instill-ai/connector-ai/pkg/stabilityai"
+
 	connectorv1alpha "github.com/instill-ai/protogen-go/vdp/connector/v1alpha"
 )
 
 const (
-	stabilityAIKey = "<valid api key>"
+	stabilityAIKey = ""
 	openAIKey      = "<valid api key>"
 )
 
 func TestStabilityAITextToImage(t *testing.T) {
 	config := &structpb.Struct{
 		Fields: map[string]*structpb.Value{
-			"api_token": {Kind: &structpb.Value_StringValue{StringValue: stabilityAIKey}},
-			"task":      {Kind: &structpb.Value_StringValue{StringValue: "Text to Image"}},
-			"engine":    {Kind: &structpb.Value_StringValue{StringValue: "stable-diffusion-v1-5"}},
+			"api_key": {Kind: &structpb.Value_StringValue{StringValue: stabilityAIKey}},
+			"task":    {Kind: &structpb.Value_StringValue{StringValue: "Text to Image"}},
+			"engine":  {Kind: &structpb.Value_StringValue{StringValue: "stable-diffusion-v1-5"}},
 		},
 	}
 	in := []*connectorv1alpha.DataPayload{{
@@ -50,14 +52,14 @@ func Test_ListEngines(t *testing.T) {
 func TestStabilityAIImageToImage(t *testing.T) {
 	config := &structpb.Struct{
 		Fields: map[string]*structpb.Value{
-			"api_token": {Kind: &structpb.Value_StringValue{StringValue: stabilityAIKey}},
-			"task":      {Kind: &structpb.Value_StringValue{StringValue: "Image to Image"}},
-			"engine":    {Kind: &structpb.Value_StringValue{StringValue: "stable-diffusion-v1"}},
+			"api_key": {Kind: &structpb.Value_StringValue{StringValue: stabilityAIKey}},
+			"task":    {Kind: &structpb.Value_StringValue{StringValue: "Image to Image"}},
+			"engine":  {Kind: &structpb.Value_StringValue{StringValue: "stable-diffusion-v1"}},
 		},
 	}
 	in := []*connectorv1alpha.DataPayload{{
-		Texts:  []string{"swap colors"},
-		Images: [][]byte{[]byte("iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII")},
+		Texts:  []string{"invert colors"},
+		Images: [][]byte{[]byte("<base 64 string here>")},
 		Metadata: &structpb.Struct{
 			Fields: map[string]*structpb.Value{},
 		},
@@ -67,6 +69,7 @@ func TestStabilityAIImageToImage(t *testing.T) {
 	fmt.Printf("\n err: %s", err)
 	op, err := con.Execute(in)
 	fmt.Printf("\n op: %v, err: %s", op, err)
+	err = ioutil.WriteFile("image_op.png", op[0].Images[0], 0644)
 }
 
 func TestOpenAI(t *testing.T) {
