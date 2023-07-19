@@ -98,7 +98,10 @@ func (c *Connector) CreateConnection(defUid uuid.UUID, config *structpb.Struct, 
 
 // NewClient initializes a new Stability AI client
 func NewClient(apiKey string) Client {
-	return Client{APIKey: apiKey, HTTPClient: &http.Client{Timeout: reqTimeout}}
+	tr := &http.Transport{
+		DisableKeepAlives: true,
+	}
+	return Client{APIKey: apiKey, HTTPClient: &http.Client{Timeout: reqTimeout, Transport: tr}}
 }
 
 // sendReq is responsible for making the http request with to given URL, method, and params and unmarshalling the response into given object.
