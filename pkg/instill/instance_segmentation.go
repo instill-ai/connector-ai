@@ -63,8 +63,9 @@ func (c *Connection) executeInstanceSegmentation(grpcClient modelPB.ModelPublicS
 				Kind: &structpb.Value_StructValue{
 					StructValue: &structpb.Struct{
 						Fields: map[string]*structpb.Value{
-							"rle":   {Kind: &structpb.Value_StringValue{StringValue: o.Rle}},
-							"score": {Kind: &structpb.Value_NumberValue{NumberValue: float64(o.Score)}},
+							"rle":      {Kind: &structpb.Value_StringValue{StringValue: o.Rle}},
+							"score":    {Kind: &structpb.Value_NumberValue{NumberValue: float64(o.Score)}},
+							"category": {Kind: &structpb.Value_StringValue{StringValue: o.Category}},
 							"bounding_box": {Kind: &structpb.Value_StructValue{
 								StructValue: &structpb.Struct{
 									Fields: map[string]*structpb.Value{

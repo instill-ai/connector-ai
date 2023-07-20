@@ -62,8 +62,8 @@ func (c *Connection) executeTextToImage(grpcClient modelPB.ModelPublicServiceCli
 
 		images := [][]byte{}
 
-		for idx := range textToImgOutput.Images {
-			image, err := decodeFromBase64(textToImgOutput.Images[idx])
+		for imageIdx := range textToImgOutput.Images {
+			image, err := decodeFromBase64(textToImgOutput.Images[imageIdx])
 			if err != nil {
 				return nil, fmt.Errorf("invalid output: %v for model: %s", textToImgOutput, model.Name)
 			}
