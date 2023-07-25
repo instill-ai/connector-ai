@@ -7,8 +7,7 @@
     "icon": "openai.svg",
     "iconUrl": "",
     "spec": {
-      "connectionSpecification": 
-      {
+      "connectionSpecification": {
         "$schema": "http://json-schema.org/draft-07/schema#",
         "title": "OpenAI AI Connector Spec",
         "type": "object",
@@ -36,7 +35,8 @@
             "default": "Text Generation",
             "enum": [
               "Text Generation",
-              "Text Embeddings"
+              "Text Embeddings",
+              "Speech Recognition"
             ]
           }
         },
@@ -46,6 +46,9 @@
           },
           {
             "$ref": "#/definitions/openai-text-embeddings"
+          },
+          {
+            "$ref": "#/definitions/openai-audio-transcriptions"
           }
         ],
         "definitions": {
@@ -73,7 +76,7 @@
                   "type": "string",
                   "default": "gpt-3.5-turbo",
                   "enum": [
-                    "gpt-4", 
+                    "gpt-4",
                     "gpt-4-32k",
                     "gpt-3.5-turbo",
                     "gpt-3.5-turbo-16k"
@@ -138,6 +141,34 @@
                 }
               }
             }
+          },
+          "openai-audio-transcriptions": {
+            "if": {
+              "properties": {
+                "task": {
+                  "const": "Speech Recognition"
+                }
+              },
+              "required": [
+                "task"
+              ]
+            },
+            "then": {
+              "required": [
+                "model"
+              ],
+              "properties": {
+                "model": {
+                  "title": "Model",
+                  "description": "OpenAI model to be used.",
+                  "type": "string",
+                  "default": "whisper-1",
+                  "enum": [
+                    "whisper-1"
+                  ]
+                }
+              }
+            }
           }
         }
       },
@@ -146,11 +177,11 @@
     "public": true,
     "custom": false,
     "vendorAttributes": {
-    "githubIssueLabel": "openai",
-    "license": "MIT",
-    "releaseStage": "alpha",
-    "resourceRequirements": {},
-    "modelType": "api"
+      "githubIssueLabel": "openai",
+      "license": "MIT",
+      "releaseStage": "alpha",
+      "resourceRequirements": {},
+      "modelType": "api"
     }
   }
 ]
