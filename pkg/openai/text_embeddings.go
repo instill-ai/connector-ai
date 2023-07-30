@@ -1,6 +1,10 @@
 package openai
 
-import "net/http"
+import (
+	"bytes"
+	"encoding/json"
+	"net/http"
+)
 
 const (
 	embeddingsURL = host + "/v1/embeddings"
@@ -27,6 +31,7 @@ type Data struct {
 // GenerateTextEmbeddings makes a call to the embeddings API from OpenAI.
 // https://platform.openai.com/docs/api-reference/embeddings
 func (c *Client) GenerateTextEmbeddings(req TextEmbeddingsReq) (result TextEmbeddingsResp, err error) {
-	err = c.sendReq(embeddingsURL, http.MethodPost, req, &result)
+	data, _ := json.Marshal(req)
+	err = c.sendReq(embeddingsURL, http.MethodPost, jsonMimeType, bytes.NewBuffer(data), &result)
 	return result, err
 }

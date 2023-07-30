@@ -1,7 +1,6 @@
 package openai
 
 import (
-	"bytes"
 	_ "embed"
 	"encoding/json"
 	"fmt"
@@ -21,12 +20,13 @@ import (
 )
 
 const (
-	venderName         = "openAI"
-	host               = "https://api.openai.com"
-	jsonMimeType       = "application/json"
-	reqTimeout         = time.Second * 60 * 5
-	textGenerationTask = "Text Generation"
-	textEmbeddingsTask = "Text Embeddings"
+	venderName            = "openAI"
+	host                  = "https://api.openai.com"
+	jsonMimeType          = "application/json"
+	reqTimeout            = time.Second * 60 * 5
+	textGenerationTask    = "Text Generation"
+	textEmbeddingsTask    = "Text Embeddings"
+	speechRecognitionTask = "Speech Recognition"
 )
 
 var (
@@ -37,6 +37,8 @@ var (
 	taskToNameMap  = map[string]connectorPB.Task{
 		textGenerationTask: connectorPB.Task_TASK_TEXT_GENERATION,
 		textEmbeddingsTask: connectorPB.Task_TASK_TEXT_EMBEDDINGS,
+		// TODO: update this once speech recognition task is added to connectorPB
+		speechRecognitionTask: connectorPB.Task_TASK_UNSPECIFIED,
 	}
 )
 
@@ -104,16 +106,10 @@ func NewClient(apiKey string) Client {
 }
 
 // sendReq is responsible for making the http request with to given URL, method, and params and unmarshalling the response into given object.
-func (c *Client) sendReq(reqURL, method string, params interface{}, respObj interface{}) (err error) {
-	var body io.Reader
-	if params != nil {
-		data, _ := json.Marshal(params)
-		body = bytes.NewBuffer(data)
-	} else {
-		body = nil
-	}
-	req, _ := http.NewRequest(method, reqURL, body)
-	req.Header.Add("Content-Type", jsonMimeType)
+// func (c *Client) sendReq(reqURL, method string, params interface{}, respObj interface{}) (err error) {
+func (c *Client) sendReq(reqURL, method, contentType string, data io.Reader, respObj interface{}) (err error) {
+	req, _ := http.NewRequest(method, reqURL, data)
+	req.Header.Add("Content-Type", contentType)
 	req.Header.Add("Accept", jsonMimeType)
 	req.Header.Add("Authorization", "Bearer "+c.APIKey)
 	http.DefaultClient.Timeout = reqTimeout
@@ -158,7 +154,7 @@ func (c *Connection) Execute(inputs []*connectorPB.DataPayload) ([]*connectorPB.
 		for i, dataPayload := range inputs {
 			noOfPrompts := len(dataPayload.Texts)
 			if noOfPrompts <= 0 {
-				return inputs, fmt.Errorf("no text promts given")
+				return inputs, fmt.Errorf("no text prompts given")
 			}
 			messages := make([]Message, 0, noOfPrompts)
 			for _, t := range dataPayload.Texts {
@@ -193,7 +189,7 @@ func (c *Connection) Execute(inputs []*connectorPB.DataPayload) ([]*connectorPB.
 		for i, dataPayload := range inputs {
 			noOfPrompts := len(dataPayload.Texts)
 			if noOfPrompts <= 0 {
-				return inputs, fmt.Errorf("no text promts given")
+				return inputs, fmt.Errorf("no text prompts given")
 			}
 			req := TextEmbeddingsReq{
 				Model: c.getModel(),
@@ -229,6 +225,31 @@ func (c *Connection) Execute(inputs []*connectorPB.DataPayload) ([]*connectorPB.
 						"embeddings": {Kind: &structpb.Value_ListValue{ListValue: &structpb.ListValue{Values: values}}},
 					},
 				},
+			})
+		}
+	case speechRecognitionTask:
+		for i, dataPayload := range inputs {
+			noOfAudios := len(dataPayload.Audios)
+			if noOfAudios <= 0 {
+				return inputs, fmt.Errorf("no audios given")
+			}
+			req := AudioTranscriptionReq{
+				File:        dataPayload.Audios[0],
+				Model:       c.getModel(),
+				Language:    dataPayload.GetMetadata().GetFields()["language"].GetStringValue(),
+				Temperature: dataPayload.GetMetadata().GetFields()["temperature"].GetNumberValue(),
+			}
+			if len(dataPayload.Texts) > 0 {
+				req.Prompt = dataPayload.Texts[0]
+			}
+			resp, err := client.GenerateAudioTranscriptions(req)
+			if err != nil {
+				return inputs, err
+			}
+			outputs = append(outputs, &connectorPB.DataPayload{
+				DataMappingIndex: inputs[i].DataMappingIndex,
+				Texts:            []string{resp.Text},
+				Audios:           dataPayload.Audios,
 			})
 		}
 	default:
