@@ -249,7 +249,6 @@ func (c *Connection) Execute(inputs []*connectorPB.DataPayload) ([]*connectorPB.
 			outputs = append(outputs, &connectorPB.DataPayload{
 				DataMappingIndex: inputs[i].DataMappingIndex,
 				Texts:            []string{resp.Text},
-				Audios:           dataPayload.Audios,
 			})
 		}
 	default:
