@@ -19,6 +19,7 @@ import (
 	"github.com/instill-ai/connector/pkg/base"
 	"github.com/instill-ai/connector/pkg/configLoader"
 
+	commonPB "github.com/instill-ai/protogen-go/common/task/v1alpha"
 	connectorPB "github.com/instill-ai/protogen-go/vdp/connector/v1alpha"
 )
 
@@ -220,23 +221,23 @@ func (c *Connection) Execute(inputs []*connectorPB.DataPayload) ([]*connectorPB.
 	}
 	var result []*connectorPB.DataPayload
 	switch res.Model.Task {
-	case connectorPB.Task_TASK_UNSPECIFIED.String():
+	case commonPB.Task_TASK_UNSPECIFIED.String():
 		result, err = c.executeUnspecified(gRPCCLient, res.Model, inputs)
-	case connectorPB.Task_TASK_CLASSIFICATION.String():
+	case commonPB.Task_TASK_CLASSIFICATION.String():
 		result, err = c.executeImageClassification(gRPCCLient, res.Model, inputs)
-	case connectorPB.Task_TASK_DETECTION.String():
+	case commonPB.Task_TASK_DETECTION.String():
 		result, err = c.executeObjectDetection(gRPCCLient, res.Model, inputs)
-	case connectorPB.Task_TASK_KEYPOINT.String():
+	case commonPB.Task_TASK_KEYPOINT.String():
 		result, err = c.executeKeyPointDetection(gRPCCLient, res.Model, inputs)
-	case connectorPB.Task_TASK_OCR.String():
+	case commonPB.Task_TASK_OCR.String():
 		result, err = c.executeOCR(gRPCCLient, res.Model, inputs)
-	case connectorPB.Task_TASK_INSTANCE_SEGMENTATION.String():
+	case commonPB.Task_TASK_INSTANCE_SEGMENTATION.String():
 		result, err = c.executeInstanceSegmentation(gRPCCLient, res.Model, inputs)
-	case connectorPB.Task_TASK_SEMANTIC_SEGMENTATION.String():
+	case commonPB.Task_TASK_SEMANTIC_SEGMENTATION.String():
 		result, err = c.executeSemanticSegmentation(gRPCCLient, res.Model, inputs)
-	case connectorPB.Task_TASK_TEXT_TO_IMAGE.String():
+	case commonPB.Task_TASK_TEXT_TO_IMAGE.String():
 		result, err = c.executeTextToImage(gRPCCLient, res.Model, inputs)
-	case connectorPB.Task_TASK_TEXT_GENERATION.String():
+	case commonPB.Task_TASK_TEXT_GENERATION.String():
 		result, err = c.executeTextGeneration(gRPCCLient, res.Model, inputs)
 	default:
 		return inputs, fmt.Errorf("unsupported task: %s", res.Model.Task)
@@ -256,14 +257,14 @@ func (c *Connection) Test() (connectorPB.Connector_State, error) {
 	return st, nil
 }
 
-func (c *Connection) GetTask() (connectorPB.Task, error) {
+func (c *Connection) GetTask() (commonPB.Task, error) {
 	res, err := c.getModel()
 	if err != nil || res == nil || res.Model == nil {
-		return connectorPB.Task_TASK_UNSPECIFIED, err
+		return commonPB.Task_TASK_UNSPECIFIED, err
 	}
-	task, ok := connectorPB.Task_value[res.Model.Task]
+	task, ok := commonPB.Task_value[res.Model.Task]
 	if !ok {
-		return connectorPB.Task_TASK_UNSPECIFIED, fmt.Errorf("mapping not found for: %s", res.Model.Task)
+		return commonPB.Task_TASK_UNSPECIFIED, fmt.Errorf("mapping not found for: %s", res.Model.Task)
 	}
-	return connectorPB.Task(task), nil
+	return commonPB.Task(task), nil
 }
