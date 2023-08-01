@@ -16,6 +16,7 @@ import (
 	"github.com/instill-ai/connector/pkg/base"
 	"github.com/instill-ai/connector/pkg/configLoader"
 
+	commonPB "github.com/instill-ai/protogen-go/common/task/v1alpha"
 	connectorPB "github.com/instill-ai/protogen-go/vdp/connector/v1alpha"
 )
 
@@ -34,11 +35,10 @@ var (
 	definitionJSON []byte
 	once           sync.Once
 	connector      base.IConnector
-	taskToNameMap  = map[string]connectorPB.Task{
-		textGenerationTask: connectorPB.Task_TASK_TEXT_GENERATION,
-		textEmbeddingsTask: connectorPB.Task_TASK_TEXT_EMBEDDINGS,
-		// TODO: update this once speech recognition task is added to connectorPB
-		speechRecognitionTask: connectorPB.Task_TASK_UNSPECIFIED,
+	taskToNameMap  = map[string]commonPB.Task{
+		textGenerationTask:    commonPB.Task_TASK_TEXT_GENERATION,
+		textEmbeddingsTask:    commonPB.Task_TASK_TEXT_EMBEDDINGS,
+		speechRecognitionTask: commonPB.Task_TASK_SPEECH_RECOGNITION,
 	}
 )
 
@@ -269,10 +269,10 @@ func (c *Connection) Test() (connectorPB.Connector_State, error) {
 	return connectorPB.Connector_STATE_CONNECTED, nil
 }
 
-func (c *Connection) GetTask() (connectorPB.Task, error) {
+func (c *Connection) GetTask() (commonPB.Task, error) {
 	name, ok := taskToNameMap[c.getTask()]
 	if !ok {
-		name = connectorPB.Task_TASK_UNSPECIFIED
+		name = commonPB.Task_TASK_UNSPECIFIED
 	}
 	return name, nil
 }
