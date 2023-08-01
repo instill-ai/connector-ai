@@ -4,6 +4,7 @@ go 1.19
 
 require (
 	github.com/gofrs/uuid v4.4.0+incompatible
+	github.com/h2non/filetype v1.1.3
 	github.com/instill-ai/connector v0.2.0-alpha.0.20230724051505-16610a2b30d4
 	github.com/instill-ai/protogen-go v0.3.3-alpha.0.20230724032341-29e39edfce64
 	github.com/stretchr/testify v1.8.4

@@ -17,10 +17,17 @@ import (
 	connectorv1alpha "github.com/instill-ai/protogen-go/vdp/connector/v1alpha"
 )
 
-const (
-	stabilityAIKey = ""
+var (
+	stabilityAIKey = "<valid api key>"
 	openAIKey      = "<valid api key>"
 )
+
+func init() {
+	b, _ := ioutil.ReadFile("test_artifacts/open_ai.txt")
+	openAIKey = string(b)
+	b, _ = ioutil.ReadFile("test_artifacts/stability_ai.txt")
+	stabilityAIKey = string(b)
+}
 
 func TestStabilityAITextToImage(t *testing.T) {
 	config := &structpb.Struct{
@@ -57,9 +64,10 @@ func TestStabilityAIImageToImage(t *testing.T) {
 			"engine":  {Kind: &structpb.Value_StringValue{StringValue: "stable-diffusion-v1"}},
 		},
 	}
+	b, _ := ioutil.ReadFile("test_artifacts/image.jpg")
 	in := []*connectorv1alpha.DataPayload{{
 		Texts:  []string{"invert colors"},
-		Images: [][]byte{[]byte("<binary image string here>")},
+		Images: [][]byte{b},
 		Metadata: &structpb.Struct{
 			Fields: map[string]*structpb.Value{},
 		},
@@ -69,10 +77,10 @@ func TestStabilityAIImageToImage(t *testing.T) {
 	fmt.Printf("\n err: %s", err)
 	op, err := con.Execute(in)
 	fmt.Printf("\n op: %v, err: %s", op, err)
-	err = ioutil.WriteFile("image_op.png", op[0].Images[0], 0644)
+	err = ioutil.WriteFile("test_artifacts/image_op.png", op[0].Images[0], 0644)
 }
 
-func TestOpenAI(t *testing.T) {
+func TestOpenAITextGeneration(t *testing.T) {
 	config := &structpb.Struct{
 		Fields: map[string]*structpb.Value{
 			"api_key": {Kind: &structpb.Value_StringValue{StringValue: openAIKey}},
@@ -100,4 +108,26 @@ func Test_ListModels(t *testing.T) {
 	}
 	res, err := c.ListModels()
 	fmt.Printf("res: %v, err: %v", res, err)
+}
+
+func TestOpenAIAudioTranscription(t *testing.T) {
+	config := &structpb.Struct{
+		Fields: map[string]*structpb.Value{
+			"api_key": {Kind: &structpb.Value_StringValue{StringValue: openAIKey}},
+			"task":    {Kind: &structpb.Value_StringValue{StringValue: "Speech Recognition"}},
+			"model":   {Kind: &structpb.Value_StringValue{StringValue: "whisper-1"}},
+		},
+	}
+	b, _ := ioutil.ReadFile("test_artifacts/recording.m4a")
+	in := []*connectorv1alpha.DataPayload{{
+		Audios: [][]byte{b},
+		Metadata: &structpb.Struct{
+			Fields: map[string]*structpb.Value{},
+		},
+	}}
+	c := Init(nil, ConnectorOptions{})
+	con, err := c.CreateConnection(c.ListConnectorDefinitionUids()[2], config, nil)
+	fmt.Printf("err:%s", err)
+	op, err := con.Execute(in)
+	fmt.Printf("\n op :%v, err:%s", op, err)
 }
