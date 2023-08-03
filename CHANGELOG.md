@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.0-alpha](https://github.com/instill-ai/connector-ai/compare/v0.2.0-alpha...v0.3.0-alpha) (2023-08-03)
+
+
+### Miscellaneous Chores
+
+* **release:** release v0.3.0-alpha ([ab217a0](https://github.com/instill-ai/connector-ai/commit/ab217a03ada4aa254bd61889c869e2edbbd12fd6))
+
 ## [0.2.0-alpha](https://github.com/instill-ai/connector-ai/compare/v0.1.0-alpha...v0.2.0-alpha) (2023-07-20)
 
 
