@@ -5,43 +5,34 @@ import (
 	"fmt"
 
 	"google.golang.org/grpc/metadata"
+	"google.golang.org/protobuf/encoding/protojson"
+	"google.golang.org/protobuf/types/known/structpb"
 
 	modelPB "github.com/instill-ai/protogen-go/model/model/v1alpha"
-	connectorPB "github.com/instill-ai/protogen-go/vdp/connector/v1alpha"
 )
 
-func (c *Connection) executeTextGeneration(grpcClient modelPB.ModelPublicServiceClient, model *Model, inputs []*connectorPB.DataPayload) ([]*connectorPB.DataPayload, error) {
+func (c *Connection) executeTextGeneration(grpcClient modelPB.ModelPublicServiceClient, modelName string, inputs []*structpb.Struct) ([]*structpb.Struct, error) {
 	if len(inputs) <= 0 {
-		return nil, fmt.Errorf("invalid input: %v for model: %s", inputs, model.Name)
+		return nil, fmt.Errorf("invalid input: %v for model: %s", inputs, modelName)
 	}
 
-	outputs := []*connectorPB.DataPayload{}
+	outputs := []*structpb.Struct{}
 
-	for idx := range inputs {
-		dataPayload := inputs[idx]
-		if len(dataPayload.Texts) <= 0 {
-			return nil, fmt.Errorf("invalid input: %v for model: %s", dataPayload, model.Name)
+	for _, input := range inputs {
+		inputJson, err := protojson.Marshal(input)
+		if err != nil {
+			return nil, err
 		}
-		seed := int64(dataPayload.GetMetadata().GetFields()["seed"].GetNumberValue())
-		outputLen := int64(dataPayload.GetMetadata().GetFields()["output_len"].GetNumberValue())
-		badWords := dataPayload.GetMetadata().GetFields()["bad_words"].GetStringValue()
-		stopWords := dataPayload.GetMetadata().GetFields()["stop_words"].GetStringValue()
-		topK := int64(dataPayload.GetMetadata().GetFields()["top_k"].GetNumberValue())
+		textGenerationInput := &modelPB.TextGenerationInput{}
+		protojson.Unmarshal(inputJson, textGenerationInput)
 
 		taskInput := &modelPB.TaskInput_TextGeneration{
-			TextGeneration: &modelPB.TextGenerationInput{
-				Prompt:        dataPayload.Texts[0],
-				OutputLen:     &outputLen,
-				BadWordsList:  &badWords,
-				StopWordsList: &stopWords,
-				Topk:          &topK,
-				Seed:          &seed,
-			},
+			TextGeneration: textGenerationInput,
 		}
 
 		// only support batch 1
 		req := modelPB.TriggerModelRequest{
-			Name:       model.Name,
+			Name:       modelName,
 			TaskInputs: []*modelPB.TaskInput{{Input: taskInput}},
 		}
 		if c.client == nil || grpcClient == nil {
@@ -55,17 +46,21 @@ func (c *Connection) executeTextGeneration(grpcClient modelPB.ModelPublicService
 		}
 		taskOutputs := res.GetTaskOutputs()
 		if len(taskOutputs) <= 0 {
-			return nil, fmt.Errorf("invalid output: %v for model: %s", taskOutputs, model.Name)
+			return nil, fmt.Errorf("invalid output: %v for model: %s", taskOutputs, modelName)
 		}
 
 		textGenOutput := taskOutputs[0].GetTextGeneration()
 		if textGenOutput == nil || len(textGenOutput.GetText()) <= 0 {
-			return nil, fmt.Errorf("invalid output: %v for model: %s", textGenOutput, model.Name)
+			return nil, fmt.Errorf("invalid output: %v for model: %s", textGenOutput, modelName)
 		}
-		outputs = append(outputs, &connectorPB.DataPayload{
-			DataMappingIndex: inputs[idx].DataMappingIndex,
-			Texts:            []string{textGenOutput.GetText()},
-		})
+		outputJson, err := protojson.Marshal(textGenOutput)
+		if err != nil {
+			return nil, err
+		}
+		output := &structpb.Struct{}
+		protojson.Unmarshal(outputJson, output)
+		outputs = append(outputs, output)
+
 	}
 	return outputs, nil
 }

@@ -17,7 +17,6 @@ import (
 	"github.com/instill-ai/connector/pkg/base"
 	"github.com/instill-ai/connector/pkg/configLoader"
 
-	commonPB "github.com/instill-ai/protogen-go/common/task/v1alpha"
 	connectorPB "github.com/instill-ai/protogen-go/vdp/connector/v1alpha"
 )
 
@@ -26,19 +25,15 @@ const (
 	host             = "https://api.stability.ai"
 	jsonMimeType     = "application/json"
 	reqTimeout       = time.Second * 60 * 5
-	textToImageTask  = "Text to Image"
-	imageToImageTask = "Image to Image"
+	textToImageTask  = "TASK_TEXT_TO_IMAGE"
+	imageToImageTask = "TASK_IMAGE_TO_IMAGE"
 )
 
 var (
-	//go:embed config/seed/definitions.json
+	//go:embed config/definitions.json
 	definitionJSON []byte
 	once           sync.Once
 	connector      base.IConnector
-	taskToNameMap  = map[string]commonPB.Task{
-		textToImageTask:  commonPB.Task_TASK_TEXT_TO_IMAGE,
-		imageToImageTask: commonPB.Task_TASK_IMAGE_TO_IMAGE,
-	}
 )
 
 type ConnectorOptions struct{}
@@ -51,8 +46,6 @@ type Connector struct {
 type Connection struct {
 	base.BaseConnection
 	connector *Connector
-	defUid    uuid.UUID
-	config    *structpb.Struct
 }
 
 // Client represents a Stability AI client
@@ -89,11 +82,17 @@ func Init(logger *zap.Logger, options ConnectorOptions) base.IConnector {
 }
 
 func (c *Connector) CreateConnection(defUid uuid.UUID, config *structpb.Struct, logger *zap.Logger) (base.IConnection, error) {
+	def, err := c.GetConnectorDefinitionByUid(defUid)
+	if err != nil {
+		return nil, err
+	}
 	return &Connection{
-		BaseConnection: base.BaseConnection{Logger: logger},
-		connector:      c,
-		defUid:         defUid,
-		config:         config,
+		BaseConnection: base.BaseConnection{
+			Logger: logger, DefUid: defUid,
+			Config:     config,
+			Definition: def,
+		},
+		connector: c,
 	}, nil
 }
 
@@ -132,122 +131,142 @@ func (c *Client) sendReq(reqURL, method, contentType string, data io.Reader, res
 }
 
 func (c *Connection) getAPIKey() string {
-	return c.config.GetFields()["api_key"].GetStringValue()
+	return c.Config.GetFields()["api_key"].GetStringValue()
 }
 
-func (c *Connection) getTask() string {
-	return c.config.GetFields()["task"].GetStringValue()
-}
+func (c *Connection) Execute(inputs []*structpb.Struct) ([]*structpb.Struct, error) {
 
-func (c *Connection) getEngine() string {
-	return c.config.GetFields()["engine"].GetStringValue()
-}
-
-func (c *Connection) Execute(inputs []*connectorPB.DataPayload) ([]*connectorPB.DataPayload, error) {
-	engine := c.getEngine()
-	task := c.getTask()
 	client := NewClient(c.getAPIKey())
 
-	outputs := []*connectorPB.DataPayload{}
-	switch task {
-	case textToImageTask:
-		for i, dataPayload := range inputs {
-			noOfPrompts := len(dataPayload.Texts)
+	outputs := []*structpb.Struct{}
+
+	task := inputs[0].GetFields()["task"].GetStringValue()
+	for _, input := range inputs {
+		if input.GetFields()["task"].GetStringValue() != task {
+			return nil, fmt.Errorf("each input should be the same task")
+		}
+	}
+
+	if err := c.ValidateInput(inputs, task); err != nil {
+		return nil, err
+	}
+
+	for _, input := range inputs {
+		switch task {
+		case textToImageTask:
+
+			inputStruct := TextToImageInput{}
+			err := base.ConvertFromStructpb(input, &inputStruct)
+			if err != nil {
+				return nil, err
+			}
+
+			noOfPrompts := len(inputStruct.Prompts)
 			if noOfPrompts <= 0 {
 				return inputs, fmt.Errorf("no text promts given")
 			}
 			req := TextToImageReq{
-				CFGScale:           dataPayload.GetMetadata().GetFields()["cfg_scale"].GetNumberValue(),
-				ClipGuidancePreset: dataPayload.GetMetadata().GetFields()["clip_guidance_preset"].GetStringValue(),
-				Sampler:            dataPayload.GetMetadata().GetFields()["sampler"].GetStringValue(),
-				Samples:            uint32(dataPayload.GetMetadata().GetFields()["samples"].GetNumberValue()),
-				Seed:               uint32(dataPayload.GetMetadata().GetFields()["seed"].GetNumberValue()),
-				Steps:              uint32(dataPayload.GetMetadata().GetFields()["steps"].GetNumberValue()),
-				StylePreset:        dataPayload.GetMetadata().GetFields()["style_preset"].GetStringValue(),
-				Height:             uint32(dataPayload.GetMetadata().GetFields()["height"].GetNumberValue()),
-				Width:              uint32(dataPayload.GetMetadata().GetFields()["width"].GetNumberValue()),
+				CFGScale:           inputStruct.CfgScale,
+				ClipGuidancePreset: inputStruct.ClipGuidancePreset,
+				Sampler:            inputStruct.Sampler,
+				Samples:            inputStruct.Samples,
+				Seed:               inputStruct.Seed,
+				Steps:              inputStruct.Steps,
+				StylePreset:        inputStruct.StylePreset,
+				Height:             inputStruct.Height,
+				Width:              inputStruct.Width,
 			}
-			weights := dataPayload.GetMetadata().GetFields()["weights"].GetListValue().GetValues()
-			//if no weights are given
-			if weights == nil {
-				weights = []*structpb.Value{}
-			}
-			req.TextPrompts = make([]TextPrompt, 0, len(dataPayload.Texts))
-			var w float32
-			for index, t := range dataPayload.Texts {
-				if len(weights) > index {
-					w = float32(weights[index].GetNumberValue())
+
+			req.TextPrompts = make([]TextPrompt, 0, noOfPrompts)
+			var w float64
+			for index, t := range inputStruct.Prompts {
+				if inputStruct.Weights != nil && len(*inputStruct.Weights) > index {
+					w = (*inputStruct.Weights)[index]
 				}
-				req.TextPrompts = append(req.TextPrompts, TextPrompt{Text: t, Weight: w})
+				req.TextPrompts = append(req.TextPrompts, TextPrompt{Text: t, Weight: &w})
 			}
-			images, err := client.GenerateImageFromText(req, engine)
+			images, err := client.GenerateImageFromText(req, inputStruct.Engine)
 			if err != nil {
 				return inputs, err
 			}
-			// use inputs[i] instead of dataPayload to modify source data
-			outputImages := make([][]byte, 0, len(images))
-			for _, image := range images {
-				decoded, _ := decodeBase64(image.Base64)
-				outputImages = append(outputImages, decoded)
+
+			outputStruct := TextToImageOutput{
+				Images: []string{},
+				Seeds:  []uint32{},
 			}
-			outputs = append(outputs, &connectorPB.DataPayload{
-				DataMappingIndex: inputs[i].DataMappingIndex,
-				Images:           outputImages,
-			})
-		}
-	case imageToImageTask:
-		for i, dataPayload := range inputs {
-			noOfPrompts := len(dataPayload.Texts)
+
+			for _, image := range images {
+				outputStruct.Images = append(outputStruct.Images, image.Base64)
+				outputStruct.Seeds = append(outputStruct.Seeds, image.Seed)
+			}
+			output, err := base.ConvertToStructpb(outputStruct)
+			if err != nil {
+				return nil, err
+			}
+
+			outputs = append(outputs, output)
+
+		case imageToImageTask:
+
+			inputStruct := ImageToImageInput{}
+			err := base.ConvertFromStructpb(input, &inputStruct)
+			if err != nil {
+				return nil, err
+			}
+
+			noOfPrompts := len(inputStruct.Prompts)
 			if noOfPrompts <= 0 {
 				return inputs, fmt.Errorf("no text promts given")
 			}
-			noOfImages := len(dataPayload.Images)
-			if noOfImages <= 0 {
-				return inputs, fmt.Errorf("no initial images given")
-			}
+
 			req := ImageToImageReq{
-				InitImage:          string(dataPayload.Images[0]),
-				CFGScale:           dataPayload.GetMetadata().GetFields()["cfg_scale"].GetNumberValue(),
-				ClipGuidancePreset: dataPayload.GetMetadata().GetFields()["clip_guidance_preset"].GetStringValue(),
-				Sampler:            dataPayload.GetMetadata().GetFields()["sampler"].GetStringValue(),
-				Samples:            uint32(dataPayload.GetMetadata().GetFields()["samples"].GetNumberValue()),
-				Seed:               uint32(dataPayload.GetMetadata().GetFields()["seed"].GetNumberValue()),
-				Steps:              uint32(dataPayload.GetMetadata().GetFields()["steps"].GetNumberValue()),
-				StylePreset:        dataPayload.GetMetadata().GetFields()["style_preset"].GetStringValue(),
-				InitImageMode:      dataPayload.GetMetadata().GetFields()["init_image_mode"].GetStringValue(),
-				ImageStrength:      dataPayload.GetMetadata().GetFields()["image_strength"].GetNumberValue(),
+				InitImage:          inputStruct.InitImage,
+				InitImageMode:      inputStruct.InitImageMode,
+				ImageStrength:      inputStruct.ImageStrength,
+				StepScheduleStart:  inputStruct.StepScheduleStart,
+				StepScheduleEnd:    inputStruct.StepScheduleEnd,
+				CFGScale:           inputStruct.CfgScale,
+				ClipGuidancePreset: inputStruct.ClipGuidancePreset,
+				Sampler:            inputStruct.Sampler,
+				Samples:            inputStruct.Samples,
+				Seed:               inputStruct.Seed,
+				Steps:              inputStruct.Steps,
+				StylePreset:        inputStruct.StylePreset,
 			}
-			weights := dataPayload.GetMetadata().GetFields()["weights"].GetListValue().GetValues()
-			//if no weights are given
-			if weights == nil {
-				weights = []*structpb.Value{}
-			}
-			req.TextPrompts = make([]TextPrompt, 0, len(dataPayload.Texts))
-			var w float32
-			for index, t := range dataPayload.Texts {
-				if len(weights) > index {
-					w = float32(weights[index].GetNumberValue())
+
+			req.TextPrompts = make([]TextPrompt, 0, noOfPrompts)
+			var w float64
+			for index, t := range inputStruct.Prompts {
+				if inputStruct.Weights != nil && len(*inputStruct.Weights) > index {
+					w = (*inputStruct.Weights)[index]
 				}
-				req.TextPrompts = append(req.TextPrompts, TextPrompt{Text: t, Weight: w})
+				req.TextPrompts = append(req.TextPrompts, TextPrompt{Text: t, Weight: &w})
 			}
-			images, err := client.GenerateImageFromImage(req, engine)
+			images, err := client.GenerateImageFromImage(req, inputStruct.Engine)
 			if err != nil {
 				return inputs, err
 			}
-			// use inputs[i] instead of dataPayload to modify source data
-			outputImages := make([][]byte, 0, len(images))
-			for _, image := range images {
-				decoded, _ := decodeBase64(image.Base64)
-				outputImages = append(outputImages, decoded)
+			outputStruct := TextToImageOutput{
+				Images: []string{},
+				Seeds:  []uint32{},
 			}
 
-			outputs = append(outputs, &connectorPB.DataPayload{
-				DataMappingIndex: inputs[i].DataMappingIndex,
-				Images:           outputImages,
-			})
+			for _, image := range images {
+				outputStruct.Images = append(outputStruct.Images, image.Base64)
+				outputStruct.Seeds = append(outputStruct.Seeds, image.Seed)
+			}
+			output, err := base.ConvertToStructpb(outputStruct)
+			if err != nil {
+				return nil, err
+			}
+			outputs = append(outputs, output)
+
+		default:
+			return nil, fmt.Errorf("not supported task: %s", task)
 		}
-	default:
-		return nil, fmt.Errorf("not supported task: %s", task)
+	}
+	if err := c.ValidateOutput(outputs, task); err != nil {
+		return nil, err
 	}
 	return outputs, nil
 }
@@ -264,15 +283,7 @@ func (c *Connection) Test() (connectorPB.Connector_State, error) {
 	return connectorPB.Connector_STATE_CONNECTED, nil
 }
 
-func (c *Connection) GetTask() (commonPB.Task, error) {
-	name, ok := taskToNameMap[c.getTask()]
-	if !ok {
-		name = commonPB.Task_TASK_UNSPECIFIED
-	}
-	return name, nil
-}
-
 // decode if the string is base64 encoded
-func decodeBase64(input string) ([]byte, error) {
+func DecodeBase64(input string) ([]byte, error) {
 	return base64.StdEncoding.DecodeString(input)
 }

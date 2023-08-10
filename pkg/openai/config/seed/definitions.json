@@ -3,180 +3,23 @@
     "uid": "9fb6a2cb-bff5-4c69-bc6d-4538dd8e3362",
     "id": "ai-openai",
     "title": "OpenAI",
-    "documentationUrl": "https://www.instill.tech/docs/vdp/ai-connectors/openai",
+    "documentation_url": "https://www.instill.tech/docs/vdp/ai-connectors/openai",
     "icon": "openai.svg",
-    "iconUrl": "",
+    "icon_url": "",
     "spec": {
-      "connectionSpecification": {
-        "$schema": "http://json-schema.org/draft-07/schema#",
-        "title": "OpenAI AI Connector Spec",
-        "type": "object",
-        "required": [
-          "api_key",
-          "task"
-        ],
-        "additionalProperties": true,
-        "properties": {
-          "api_key": {
-            "credential_field": true,
-            "title": "API Key",
-            "description": "Fill your OpenAI API key. To find your keys, visit your OpenAI's API Keys page.",
-            "type": "string"
-          },
-          "organization": {
-            "title": "Organization",
-            "description": "Specify which organization is used for the requests. Usage will count against the specified organization's subscription quota.",
-            "type": "string"
-          },
-          "task": {
-            "title": "Task",
-            "description": "AI task type.",
-            "type": "string",
-            "default": "Text Generation",
-            "enum": [
-              "Text Generation",
-              "Text Embeddings",
-              "Speech Recognition"
-            ]
-          }
-        },
-        "allOf": [
-          {
-            "$ref": "#/definitions/openai-text-generation"
-          },
-          {
-            "$ref": "#/definitions/openai-text-embeddings"
-          },
-          {
-            "$ref": "#/definitions/openai-audio-transcriptions"
-          }
-        ],
-        "definitions": {
-          "openai-text-generation": {
-            "if": {
-              "properties": {
-                "task": {
-                  "const": "Text Generation"
-                }
-              },
-              "required": [
-                "task"
-              ]
-            },
-            "then": {
-              "required": [
-                "model",
-                "temperature",
-                "n"
-              ],
-              "properties": {
-                "model": {
-                  "title": "Model",
-                  "description": "OpenAI model to be used.",
-                  "type": "string",
-                  "default": "gpt-3.5-turbo",
-                  "enum": [
-                    "gpt-4",
-                    "gpt-4-32k",
-                    "gpt-3.5-turbo",
-                    "gpt-3.5-turbo-16k"
-                  ]
-                },
-                "system_message": {
-                  "title": "System message",
-                  "description": "The system message helps set the behavior of the assistant. For example, you can modify the personality of the assistant or provide specific instructions about how it should behave throughout the conversation. By default, the model’s behavior is using a generic message as \"You are a helpful assistant.\"",
-                  "type": "string",
-                  "default": "You are a helpful assistant.",
-                  "maxLength": 2048
-                },
-                "temperature": {
-                  "title": "Temperature",
-                  "description": "What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic. Defaults to 1.",
-                  "type": "number",
-                  "default": 1,
-                  "minimum": 0,
-                  "maximum": 2
-                },
-                "n": {
-                  "title": "Number of text completions",
-                  "description": "How many chat completion choices to generate for each input message.",
-                  "type": "integer",
-                  "default": 1,
-                  "minimum": 1,
-                  "maximum": 5
-                },
-                "max_tokens": {
-                  "title": "Max tokens",
-                  "description": "The maximum number of tokens to generate in the chat completion. If it is not set, meaning no maximum number. The total length of input tokens and generated tokens is limited by the model's context length.",
-                  "type": "integer",
-                  "minimum": 1
-                }
-              }
-            }
-          },
-          "openai-text-embeddings": {
-            "if": {
-              "properties": {
-                "task": {
-                  "const": "Text Embeddings"
-                }
-              },
-              "required": [
-                "task"
-              ]
-            },
-            "then": {
-              "required": [
-                "model"
-              ],
-              "properties": {
-                "model": {
-                  "title": "Model",
-                  "description": "OpenAI model to be used.",
-                  "type": "string",
-                  "default": "text-embedding-ada-002",
-                  "enum": [
-                    "text-embedding-ada-002"
-                  ]
-                }
-              }
-            }
-          },
-          "openai-audio-transcriptions": {
-            "if": {
-              "properties": {
-                "task": {
-                  "const": "Speech Recognition"
-                }
-              },
-              "required": [
-                "task"
-              ]
-            },
-            "then": {
-              "required": [
-                "model"
-              ],
-              "properties": {
-                "model": {
-                  "title": "Model",
-                  "description": "OpenAI model to be used.",
-                  "type": "string",
-                  "default": "whisper-1",
-                  "enum": [
-                    "whisper-1"
-                  ]
-                }
-              }
-            }
-          }
-        }
+      "resource_specification": {
+        "$ref": "connector.json"
       },
-      "documentationUrl": "https://www.instill.tech/docs/vdp/ai-connectors/openai"
+      "component_specification": {
+        "$ref": "component.json"
+      },
+      "openapi_specifications": {
+        "$ref": "openapi.json"
+      }
     },
     "public": true,
     "custom": false,
-    "vendorAttributes": {
+    "vendor_attributes": {
       "githubIssueLabel": "openai",
       "license": "MIT",
       "releaseStage": "alpha",

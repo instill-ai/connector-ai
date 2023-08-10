@@ -1,0 +1,227 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "OpenAI Connector Component Spec",
+  "$defs": {
+    "shared_then": {
+      "type": "object",
+      "required": ["image_base64", "model_id"],
+      "properties": {
+        "image_base64": {
+          "type": "string",
+          "format": "instill-template-image",
+          "$ref": "data.json#/$defs/common/properties/image_base64"
+        },
+        "model_id": {
+          "type": "string",
+          "format": "instill-template-text",
+          "$ref": "data.json#/$defs/common/properties/model_id"
+        }
+      }
+    }
+  },
+  "type": "object",
+  "required": ["task", "model_id"],
+  "properties": {
+    "task": {
+      "title": "Task",
+      "enum": [
+        "TASK_CLASSIFICATION",
+        "TASK_INSTANCE_SEGMENTATION",
+        "TASK_KEYPOINT",
+        "TASK_DETECTION",
+        "TASK_OCR",
+        "TASK_SEMANTIC_SEGMENTATION",
+        "TASK_TEXT_GENERATION",
+        "TASK_TEXT_TO_IMAGE"
+      ],
+      "default": "TASK_CLASSIFICATION"
+    },
+    "model_id": {
+      "type": "string"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "task": {
+            "const": "TASK_CLASSIFICATION"
+          }
+        }
+      },
+      "then": {
+        "$ref": "#/$defs/shared_then"
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "task": {
+            "const": "TASK_INSTANCE_SEGMENTATION"
+          }
+        }
+      },
+      "then": {
+        "$ref": "#/$defs/shared_then"
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "task": {
+            "const": "TASK_KEYPOINT"
+          }
+        }
+      },
+      "then": {
+        "$ref": "#/$defs/shared_then"
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "task": {
+            "const": "TASK_DETECTION"
+          }
+        }
+      },
+      "then": {
+        "$ref": "#/$defs/shared_then"
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "task": {
+            "const": "TASK_OCR"
+          }
+        }
+      },
+      "then": {
+        "$ref": "#/$defs/shared_then"
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "task": {
+            "const": "TASK_SEMANTIC_SEGMENTATION"
+          }
+        }
+      },
+      "then": {
+        "$ref": "#/$defs/shared_then"
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "task": {
+            "const": "TASK_TEXT_GENERATION"
+          }
+        }
+      },
+      "then": {
+        "type": "object",
+        "required": [
+          "model_id",
+          "prompt",
+          "output_len",
+          "bad_words_list",
+          "stop_words_list",
+          "top_k",
+          "seed"
+        ],
+        "properties": {
+          "model_id": {
+            "type": "string",
+            "format": "instill-template-text",
+            "$ref": "data.json#/$defs/common/properties/model_id"
+          },
+          "prompt": {
+            "type": "string",
+            "format": "instill-template-text",
+            "$ref": "data.json#/TASK_TEXT_GENERATION/input/properties/prompt"
+          },
+          "output_len": {
+            "type": "string",
+            "format": "instill-template-integer",
+            "$ref": "data.json#/TASK_TEXT_GENERATION/input/properties/output_len"
+          },
+          "bad_words_list": {
+            "type": "string",
+            "format": "instill-template-text",
+            "$ref": "data.json#/TASK_TEXT_GENERATION/input/properties/bad_words_list"
+          },
+          "stop_words_list": {
+            "type": "string",
+            "format": "instill-template-text",
+            "$ref": "data.json#/TASK_TEXT_GENERATION/input/properties/stop_words_list"
+          },
+          "top_k": {
+            "type": "string",
+            "format": "instill-template-integer",
+            "$ref": "data.json#/TASK_TEXT_GENERATION/input/properties/top_k"
+          },
+          "seed": {
+            "type": "string",
+            "format": "instill-template-integer",
+            "$ref": "data.json#/TASK_TEXT_GENERATION/input/properties/seed"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "task": {
+            "const": "TASK_TEXT_TO_IMAGE"
+          }
+        }
+      },
+      "then": {
+        "type": "object",
+        "required": [
+          "model_id",
+          "prompt",
+          "cfg_scale",
+          "steps",
+          "samples",
+          "seed"
+        ],
+        "properties": {
+          "model_id": {
+            "type": "string",
+            "format": "instill-template-text",
+            "$ref": "data.json#/$defs/common/properties/model_id"
+          },
+          "prompt": {
+            "type": "string",
+            "format": "instill-template-text",
+            "$ref": "data.json#/TASK_TEXT_TO_IMAGE/input/properties/prompt"
+          },
+          "cfg_scale": {
+            "type": "string",
+            "format": "instill-template-number",
+            "$ref": "data.json#/TASK_TEXT_TO_IMAGE/input/properties/cfg_scale"
+          },
+          "steps": {
+            "type": "string",
+            "format": "instill-template-integer",
+            "$ref": "data.json#/TASK_TEXT_TO_IMAGE/input/properties/steps"
+          },
+          "samples": {
+            "type": "string",
+            "format": "instill-template-integer",
+            "$ref": "data.json#/TASK_TEXT_TO_IMAGE/input/properties/samples"
+          },
+          "seed": {
+            "type": "string",
+            "format": "instill-template-integer",
+            "$ref": "data.json#/TASK_TEXT_TO_IMAGE/input/properties/seed"
+          }
+        }
+      }
+    }
+  ]
+}

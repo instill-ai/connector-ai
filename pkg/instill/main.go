@@ -25,21 +25,15 @@ import (
 
 const (
 	venderName   = "instillModel"
-	getModelPath = "/v1alpha/models/"
+	getModelPath = "/v1alpha/models"
 	reqTimeout   = time.Second * 60
 )
 
 var (
-	//go:embed config/seed/definitions.json
-	definitionJSON    []byte
-	once              sync.Once
-	connector         base.IConnector
-	connectorStateMap = map[string]connectorPB.Connector_State{
-		"STATE_UNSPECIFIED": connectorPB.Connector_STATE_UNSPECIFIED,
-		"STATE_OFFLINE":     connectorPB.Connector_STATE_DISCONNECTED,
-		"STATE_ONLINE":      connectorPB.Connector_STATE_CONNECTED,
-		"STATE_ERROR":       connectorPB.Connector_STATE_ERROR,
-	}
+	//go:embed config/definitions.json
+	definitionJSON []byte
+	once           sync.Once
+	connector      base.IConnector
 )
 
 type ConnectorOptions struct{}
@@ -52,28 +46,7 @@ type Connector struct {
 type Connection struct {
 	base.BaseConnection
 	connector *Connector
-	defUid    uuid.UUID
-	config    *structpb.Struct
 	client    *Client
-}
-
-type GetModelRes struct {
-	Model *Model `json:"model"`
-}
-
-type Model struct {
-	Name            string    `json:"name"`
-	UID             string    `json:"uid"`
-	ID              string    `json:"id"`
-	Description     string    `json:"description"`
-	ModelDefinition string    `json:"model_definition"`
-	Configuration   any       `json:"configuration"`
-	Task            string    `json:"task"`
-	State           string    `json:"state"`
-	Visibility      string    `json:"visibility"`
-	User            string    `json:"user"`
-	CreateTime      time.Time `json:"create_time"`
-	UpdateTime      time.Time `json:"update_time"`
 }
 
 // Client represents an Instill Model client
@@ -110,11 +83,17 @@ func Init(logger *zap.Logger, options ConnectorOptions) base.IConnector {
 }
 
 func (c *Connector) CreateConnection(defUid uuid.UUID, config *structpb.Struct, logger *zap.Logger) (base.IConnection, error) {
+	def, err := c.GetConnectorDefinitionByUid(defUid)
+	if err != nil {
+		return nil, err
+	}
 	return &Connection{
-		BaseConnection: base.BaseConnection{Logger: logger},
-		connector:      c,
-		defUid:         defUid,
-		config:         config,
+		BaseConnection: base.BaseConnection{
+			Logger: logger, DefUid: defUid,
+			Config:     config,
+			Definition: def,
+		},
+		connector: c,
 	}, nil
 }
 
@@ -173,11 +152,11 @@ func (c *Client) sendReq(reqURL, method string, params interface{}, respObj inte
 }
 
 func (c *Connection) getAPIKey() string {
-	return c.config.GetFields()["api_token"].GetStringValue()
+	return c.Config.GetFields()["api_token"].GetStringValue()
 }
 
 func (c *Connection) getServerURL() string {
-	serverUrl := c.config.GetFields()["server_url"].GetStringValue()
+	serverUrl := c.Config.GetFields()["server_url"].GetStringValue()
 	if strings.HasPrefix(serverUrl, "https://") {
 		if len(strings.Split(serverUrl, ":")) == 2 {
 			serverUrl = serverUrl + ":443"
@@ -190,81 +169,82 @@ func (c *Connection) getServerURL() string {
 	return serverUrl
 }
 
-func (c *Connection) getModelID() string {
-	return c.config.GetFields()["model_id"].GetStringValue()
-}
-
-func (c *Connection) getModel() (res *GetModelRes, err error) {
-	modelID := c.getModelID()
+func (c *Connection) getModel() (err error) {
 	serverURL := c.getServerURL()
 	c.client, err = c.NewClient()
 	if err != nil {
-		return res, err
+		return err
 	}
-	reqURL := serverURL + getModelPath + modelID
-	err = c.client.sendReq(reqURL, http.MethodGet, nil, &res)
-	return res, err
+	reqURL := serverURL + getModelPath
+	var res interface{}
+	err = c.client.sendReq(reqURL, http.MethodGet, nil, res)
+	return err
 }
 
-func (c *Connection) Execute(inputs []*connectorPB.DataPayload) ([]*connectorPB.DataPayload, error) {
-	res, err := c.getModel()
-	if err != nil || res == nil || res.Model == nil {
-		return inputs, err
+func (c *Connection) Execute(inputs []*structpb.Struct) ([]*structpb.Struct, error) {
+
+	var err error
+	c.client, err = c.NewClient()
+	if err != nil {
+		return nil, err
 	}
+
 	if len(inputs) <= 0 || inputs[0] == nil {
-		return inputs, fmt.Errorf("invalid input: %v for model: %s", inputs, res.Model.Name)
+		return inputs, fmt.Errorf("invalid input")
 	}
 
 	gRPCCLient, gRPCCLientConn := initModelPublicServiceClient(c.getServerURL())
 	if gRPCCLientConn != nil {
 		defer gRPCCLientConn.Close()
 	}
-	var result []*connectorPB.DataPayload
-	switch res.Model.Task {
+
+	task := inputs[0].GetFields()["task"].GetStringValue()
+	for _, input := range inputs {
+		if input.GetFields()["task"].GetStringValue() != task {
+			return nil, fmt.Errorf("each input should be the same task")
+		}
+	}
+
+	if err := c.ValidateInput(inputs, task); err != nil {
+		return nil, err
+	}
+
+	modelName := fmt.Sprintf("models/%s", inputs[0].GetFields()["model_id"].GetStringValue())
+
+	var result []*structpb.Struct
+	switch task {
 	case commonPB.Task_TASK_UNSPECIFIED.String():
-		result, err = c.executeUnspecified(gRPCCLient, res.Model, inputs)
+		result, err = c.executeUnspecified(gRPCCLient, modelName, inputs)
 	case commonPB.Task_TASK_CLASSIFICATION.String():
-		result, err = c.executeImageClassification(gRPCCLient, res.Model, inputs)
+		result, err = c.executeImageClassification(gRPCCLient, modelName, inputs)
 	case commonPB.Task_TASK_DETECTION.String():
-		result, err = c.executeObjectDetection(gRPCCLient, res.Model, inputs)
+		result, err = c.executeObjectDetection(gRPCCLient, modelName, inputs)
 	case commonPB.Task_TASK_KEYPOINT.String():
-		result, err = c.executeKeyPointDetection(gRPCCLient, res.Model, inputs)
+		result, err = c.executeKeyPointDetection(gRPCCLient, modelName, inputs)
 	case commonPB.Task_TASK_OCR.String():
-		result, err = c.executeOCR(gRPCCLient, res.Model, inputs)
+		result, err = c.executeOCR(gRPCCLient, modelName, inputs)
 	case commonPB.Task_TASK_INSTANCE_SEGMENTATION.String():
-		result, err = c.executeInstanceSegmentation(gRPCCLient, res.Model, inputs)
+		result, err = c.executeInstanceSegmentation(gRPCCLient, modelName, inputs)
 	case commonPB.Task_TASK_SEMANTIC_SEGMENTATION.String():
-		result, err = c.executeSemanticSegmentation(gRPCCLient, res.Model, inputs)
+		result, err = c.executeSemanticSegmentation(gRPCCLient, modelName, inputs)
 	case commonPB.Task_TASK_TEXT_TO_IMAGE.String():
-		result, err = c.executeTextToImage(gRPCCLient, res.Model, inputs)
+		result, err = c.executeTextToImage(gRPCCLient, modelName, inputs)
 	case commonPB.Task_TASK_TEXT_GENERATION.String():
-		result, err = c.executeTextGeneration(gRPCCLient, res.Model, inputs)
+		result, err = c.executeTextGeneration(gRPCCLient, modelName, inputs)
 	default:
-		return inputs, fmt.Errorf("unsupported task: %s", res.Model.Task)
+		return inputs, fmt.Errorf("unsupported task: %s", task)
+	}
+	if err := c.ValidateOutput(result, task); err != nil {
+		return nil, err
 	}
 	return result, err
 }
 
 func (c *Connection) Test() (connectorPB.Connector_State, error) {
-	res, err := c.getModel()
-	if err != nil || res == nil || res.Model == nil {
-		return connectorPB.Connector_STATE_UNSPECIFIED, err
-	}
-	st, ok := connectorStateMap[res.Model.State]
-	if !ok {
-		return connectorPB.Connector_STATE_UNSPECIFIED, fmt.Errorf("mapping not found for: %v", res.Model.State)
-	}
-	return st, nil
-}
-
-func (c *Connection) GetTask() (commonPB.Task, error) {
-	res, err := c.getModel()
-	if err != nil || res == nil || res.Model == nil {
-		return commonPB.Task_TASK_UNSPECIFIED, err
-	}
-	task, ok := commonPB.Task_value[res.Model.Task]
-	if !ok {
-		return commonPB.Task_TASK_UNSPECIFIED, fmt.Errorf("mapping not found for: %s", res.Model.Task)
-	}
-	return commonPB.Task(task), nil
+	// err := c.getModel()
+	// if err != nil {
+	// 	return connectorPB.Connector_STATE_ERROR, nil
+	// }
+	// TODO: add api_token validation endpoint in Base
+	return connectorPB.Connector_STATE_CONNECTED, nil
 }

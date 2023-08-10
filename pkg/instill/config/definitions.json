@@ -1,0 +1,1344 @@
+[
+  {
+    "uid": "ddcf42c3-4c30-4c65-9585-25f1c89b2b48",
+    "id": "ai-instill-model",
+    "title": "Instill Model",
+    "documentation_url": "https://www.instill.tech/docs/vdp/ai-connectors/instill-model",
+    "icon": "instillmodel.svg",
+    "icon_url": "",
+    "spec": {
+      "resource_specification": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "title": "Instill Model Connector Spec",
+        "type": "object",
+        "required": [
+          "api_token"
+        ],
+        "additionalProperties": true,
+        "properties": {
+          "api_token": {
+            "credential_field": true,
+            "title": "API Token",
+            "description": "To access models on Instill Cloud, enter your Instill Cloud API Token. You can find your tokens by visiting your Instill Cloud's Settings > API Tokens page. Leave this field empty to access models on your local Instill Model.",
+            "type": "string"
+          },
+          "server_url": {
+            "title": "Server URL",
+            "description": "Base URL for the Instill Model API. To access models on Instill Cloud, use the base URL `https://api-model.instill.tech`. To access models on your local Instill Model, use the base URL `http://localhost:9080`.",
+            "type": "string",
+            "default": "https://api-model.instill.tech"
+          }
+        }
+      },
+      "component_specification": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "title": "OpenAI Connector Component Spec",
+        "$defs": {
+          "shared_then": {
+            "type": "object",
+            "required": [
+              "image_base64",
+              "model_id"
+            ],
+            "properties": {
+              "image_base64": {
+                "type": "string",
+                "format": "instill-template-image"
+              },
+              "model_id": {
+                "title": "Model ID",
+                "description": "ID of the Instill Model model to be used.",
+                "type": "string",
+                "format": "instill-template-text"
+              }
+            }
+          }
+        },
+        "type": "object",
+        "required": [
+          "task",
+          "model_id"
+        ],
+        "properties": {
+          "task": {
+            "title": "Task",
+            "enum": [
+              "TASK_CLASSIFICATION",
+              "TASK_INSTANCE_SEGMENTATION",
+              "TASK_KEYPOINT",
+              "TASK_DETECTION",
+              "TASK_OCR",
+              "TASK_SEMANTIC_SEGMENTATION",
+              "TASK_TEXT_GENERATION",
+              "TASK_TEXT_TO_IMAGE"
+            ],
+            "default": "TASK_CLASSIFICATION"
+          },
+          "model_id": {
+            "type": "string"
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "task": {
+                  "const": "TASK_CLASSIFICATION"
+                }
+              }
+            },
+            "then": {
+              "type": "object",
+              "required": [
+                "image_base64",
+                "model_id"
+              ],
+              "properties": {
+                "image_base64": {
+                  "type": "string",
+                  "format": "instill-template-image"
+                },
+                "model_id": {
+                  "title": "Model ID",
+                  "description": "ID of the Instill Model model to be used.",
+                  "type": "string",
+                  "format": "instill-template-text"
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "task": {
+                  "const": "TASK_INSTANCE_SEGMENTATION"
+                }
+              }
+            },
+            "then": {
+              "type": "object",
+              "required": [
+                "image_base64",
+                "model_id"
+              ],
+              "properties": {
+                "image_base64": {
+                  "type": "string",
+                  "format": "instill-template-image"
+                },
+                "model_id": {
+                  "title": "Model ID",
+                  "description": "ID of the Instill Model model to be used.",
+                  "type": "string",
+                  "format": "instill-template-text"
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "task": {
+                  "const": "TASK_KEYPOINT"
+                }
+              }
+            },
+            "then": {
+              "type": "object",
+              "required": [
+                "image_base64",
+                "model_id"
+              ],
+              "properties": {
+                "image_base64": {
+                  "type": "string",
+                  "format": "instill-template-image"
+                },
+                "model_id": {
+                  "title": "Model ID",
+                  "description": "ID of the Instill Model model to be used.",
+                  "type": "string",
+                  "format": "instill-template-text"
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "task": {
+                  "const": "TASK_DETECTION"
+                }
+              }
+            },
+            "then": {
+              "type": "object",
+              "required": [
+                "image_base64",
+                "model_id"
+              ],
+              "properties": {
+                "image_base64": {
+                  "type": "string",
+                  "format": "instill-template-image"
+                },
+                "model_id": {
+                  "title": "Model ID",
+                  "description": "ID of the Instill Model model to be used.",
+                  "type": "string",
+                  "format": "instill-template-text"
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "task": {
+                  "const": "TASK_OCR"
+                }
+              }
+            },
+            "then": {
+              "type": "object",
+              "required": [
+                "image_base64",
+                "model_id"
+              ],
+              "properties": {
+                "image_base64": {
+                  "type": "string",
+                  "format": "instill-template-image"
+                },
+                "model_id": {
+                  "title": "Model ID",
+                  "description": "ID of the Instill Model model to be used.",
+                  "type": "string",
+                  "format": "instill-template-text"
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "task": {
+                  "const": "TASK_SEMANTIC_SEGMENTATION"
+                }
+              }
+            },
+            "then": {
+              "type": "object",
+              "required": [
+                "image_base64",
+                "model_id"
+              ],
+              "properties": {
+                "image_base64": {
+                  "type": "string",
+                  "format": "instill-template-image"
+                },
+                "model_id": {
+                  "title": "Model ID",
+                  "description": "ID of the Instill Model model to be used.",
+                  "type": "string",
+                  "format": "instill-template-text"
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "task": {
+                  "const": "TASK_TEXT_GENERATION"
+                }
+              }
+            },
+            "then": {
+              "type": "object",
+              "required": [
+                "model_id",
+                "prompt",
+                "output_len",
+                "bad_words_list",
+                "stop_words_list",
+                "top_k",
+                "seed"
+              ],
+              "properties": {
+                "model_id": {
+                  "title": "Model ID",
+                  "description": "ID of the Instill Model model to be used.",
+                  "type": "string",
+                  "format": "instill-template-text"
+                },
+                "prompt": {
+                  "type": "string",
+                  "format": "instill-template-text"
+                },
+                "output_len": {
+                  "type": "string",
+                  "format": "instill-template-integer"
+                },
+                "bad_words_list": {
+                  "type": "string",
+                  "format": "instill-template-text"
+                },
+                "stop_words_list": {
+                  "type": "string",
+                  "format": "instill-template-text"
+                },
+                "top_k": {
+                  "type": "string",
+                  "format": "instill-template-integer"
+                },
+                "seed": {
+                  "type": "string",
+                  "format": "instill-template-integer"
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "task": {
+                  "const": "TASK_TEXT_TO_IMAGE"
+                }
+              }
+            },
+            "then": {
+              "type": "object",
+              "required": [
+                "model_id",
+                "prompt",
+                "cfg_scale",
+                "steps",
+                "samples",
+                "seed"
+              ],
+              "properties": {
+                "model_id": {
+                  "title": "Model ID",
+                  "description": "ID of the Instill Model model to be used.",
+                  "type": "string",
+                  "format": "instill-template-text"
+                },
+                "prompt": {
+                  "type": "string",
+                  "format": "instill-template-text"
+                },
+                "cfg_scale": {
+                  "type": "string",
+                  "format": "instill-template-number"
+                },
+                "steps": {
+                  "type": "string",
+                  "format": "instill-template-integer"
+                },
+                "samples": {
+                  "type": "string",
+                  "format": "instill-template-integer"
+                },
+                "seed": {
+                  "type": "string",
+                  "format": "instill-template-integer"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "openapi_specifications": {
+        "TASK_CLASSIFICATION": {
+          "openapi": "3.0.0",
+          "info": {
+            "version": "1.0.0",
+            "title": "Instill-Model Connector Openapi"
+          },
+          "paths": {
+            "/execute": {
+              "post": {
+                "requestBody": {
+                  "required": true,
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "inputs": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "allOf": [
+                                {
+                                  "properties": {
+                                    "task": {
+                                      "const": "TASK_CLASSIFICATION"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "object",
+                                  "required": [
+                                    "image_base64",
+                                    "model_id"
+                                  ],
+                                  "properties": {
+                                    "image_base64": {
+                                      "type": "string"
+                                    },
+                                    "model_id": {
+                                      "title": "Model ID",
+                                      "description": "ID of the Instill Model model to be used.",
+                                      "type": "string"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "responses": {
+                  "200": {
+                    "description": "",
+                    "content": {
+                      "application/json": {
+                        "schema": {
+                          "type": "object",
+                          "properties": {
+                            "outputs": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "classification": {
+                                    "type": "object",
+                                    "format": "classification",
+                                    "additionalProperties": false,
+                                    "required": [
+                                      "category",
+                                      "score"
+                                    ],
+                                    "properties": {
+                                      "category": {
+                                        "description": "The predicted category of the input",
+                                        "type": "string"
+                                      },
+                                      "score": {
+                                        "description": "The confidence score of the predicted category of the input",
+                                        "type": "number"
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "TASK_INSTANCE_SEGMENTATION": {
+          "openapi": "3.0.0",
+          "info": {
+            "version": "1.0.0",
+            "title": "Instill-Model Connector Openapi"
+          },
+          "paths": {
+            "/execute": {
+              "post": {
+                "requestBody": {
+                  "required": true,
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "inputs": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "allOf": [
+                                {
+                                  "properties": {
+                                    "task": {
+                                      "const": "TASK_INSTANCE_SEGMENTATION"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "object",
+                                  "required": [
+                                    "image_base64",
+                                    "model_id"
+                                  ],
+                                  "properties": {
+                                    "image_base64": {
+                                      "type": "string"
+                                    },
+                                    "model_id": {
+                                      "title": "Model ID",
+                                      "description": "ID of the Instill Model model to be used.",
+                                      "type": "string"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "responses": {
+                  "200": {
+                    "description": "",
+                    "content": {
+                      "application/json": {
+                        "schema": {
+                          "type": "object",
+                          "properties": {
+                            "outputs": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "instance_segmentation": {
+                                    "type": "object",
+                                    "format": "instance_segmentation",
+                                    "additionalProperties": false,
+                                    "required": [
+                                      "objects"
+                                    ],
+                                    "properties": {
+                                      "objects": {
+                                        "description": "A list of detected instance bounding boxes",
+                                        "type": "array",
+                                        "items": {
+                                          "type": "object",
+                                          "required": [
+                                            "rle",
+                                            "boundingBox",
+                                            "category",
+                                            "score"
+                                          ],
+                                          "properties": {
+                                            "rle": {
+                                              "description": "Run Length Encoding (RLE) of instance mask within the bounding box",
+                                              "type": "string"
+                                            },
+                                            "boundingBox": {
+                                              "type": "object",
+                                              "format": "bounding_box",
+                                              "description": "The detected bounding box in (left, top, width, height) format",
+                                              "additionalProperties": false,
+                                              "required": [
+                                                "left",
+                                                "top",
+                                                "width",
+                                                "height"
+                                              ],
+                                              "properties": {
+                                                "left": {
+                                                  "description": "Bounding box left x-axis value",
+                                                  "type": "number"
+                                                },
+                                                "top": {
+                                                  "description": "Bounding box top y-axis value",
+                                                  "type": "number"
+                                                },
+                                                "width": {
+                                                  "description": "Bounding box width value",
+                                                  "type": "number"
+                                                },
+                                                "height": {
+                                                  "description": "Bounding box height value",
+                                                  "type": "number"
+                                                }
+                                              }
+                                            },
+                                            "category": {
+                                              "description": "The predicted category of the bounding box",
+                                              "type": "string"
+                                            },
+                                            "score": {
+                                              "description": "The confidence score of the predicted instance object",
+                                              "type": "number"
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "TASK_KEYPOINT": {
+          "openapi": "3.0.0",
+          "info": {
+            "version": "1.0.0",
+            "title": "Instill-Model Connector Openapi"
+          },
+          "paths": {
+            "/execute": {
+              "post": {
+                "requestBody": {
+                  "required": true,
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "inputs": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "allOf": [
+                                {
+                                  "properties": {
+                                    "task": {
+                                      "const": "TASK_KEYPOINT"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "object",
+                                  "required": [
+                                    "image_base64",
+                                    "model_id"
+                                  ],
+                                  "properties": {
+                                    "image_base64": {
+                                      "type": "string"
+                                    },
+                                    "model_id": {
+                                      "title": "Model ID",
+                                      "description": "ID of the Instill Model model to be used.",
+                                      "type": "string"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "responses": {
+                  "200": {
+                    "description": "",
+                    "content": {
+                      "application/json": {
+                        "schema": {
+                          "type": "object",
+                          "properties": {
+                            "outputs": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "keypoint": {
+                                    "type": "object",
+                                    "format": "keypoint",
+                                    "additionalProperties": false,
+                                    "required": [
+                                      "objects"
+                                    ],
+                                    "properties": {
+                                      "objects": {
+                                        "description": "A list of keypoint objects, a keypoint object includes all the pre-defined keypoints of a detected object",
+                                        "type": "array",
+                                        "items": {
+                                          "type": "object",
+                                          "required": [
+                                            "keypoints",
+                                            "score",
+                                            "bounding_box"
+                                          ],
+                                          "properties": {
+                                            "keypoints": {
+                                              "description": "A keypoint group is composed of a list of pre-defined keypoints of a detected object",
+                                              "type": "array",
+                                              "items": {
+                                                "type": "object",
+                                                "required": [
+                                                  "x",
+                                                  "y",
+                                                  "v"
+                                                ],
+                                                "properties": {
+                                                  "x": {
+                                                    "description": "x coordinate of the keypoint",
+                                                    "type": "number"
+                                                  },
+                                                  "y": {
+                                                    "description": "y coordinate of the keypoint",
+                                                    "type": "number"
+                                                  },
+                                                  "v": {
+                                                    "description": "visibility score of the keypoint",
+                                                    "type": "number"
+                                                  }
+                                                }
+                                              }
+                                            },
+                                            "score": {
+                                              "description": "The confidence score of the predicted object",
+                                              "type": "number"
+                                            },
+                                            "bounding_box": {
+                                              "type": "object",
+                                              "format": "bounding_box",
+                                              "description": "The detected bounding box in (left, top, width, height) format",
+                                              "additionalProperties": false,
+                                              "required": [
+                                                "left",
+                                                "top",
+                                                "width",
+                                                "height"
+                                              ],
+                                              "properties": {
+                                                "left": {
+                                                  "description": "Bounding box left x-axis value",
+                                                  "type": "number"
+                                                },
+                                                "top": {
+                                                  "description": "Bounding box top y-axis value",
+                                                  "type": "number"
+                                                },
+                                                "width": {
+                                                  "description": "Bounding box width value",
+                                                  "type": "number"
+                                                },
+                                                "height": {
+                                                  "description": "Bounding box height value",
+                                                  "type": "number"
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "TASK_DETECTION": {
+          "openapi": "3.0.0",
+          "info": {
+            "version": "1.0.0",
+            "title": "Instill-Model Connector Openapi"
+          },
+          "paths": {
+            "/execute": {
+              "post": {
+                "requestBody": {
+                  "required": true,
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "inputs": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "allOf": [
+                                {
+                                  "properties": {
+                                    "task": {
+                                      "const": "TASK_DETECTION"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "object",
+                                  "required": [
+                                    "image_base64",
+                                    "model_id"
+                                  ],
+                                  "properties": {
+                                    "image_base64": {
+                                      "type": "string"
+                                    },
+                                    "model_id": {
+                                      "title": "Model ID",
+                                      "description": "ID of the Instill Model model to be used.",
+                                      "type": "string"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "responses": {
+                  "200": {
+                    "description": "",
+                    "content": {
+                      "application/json": {
+                        "schema": {
+                          "type": "object",
+                          "properties": {
+                            "outputs": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "detection": {
+                                    "type": "object",
+                                    "format": "detection",
+                                    "additionalProperties": false,
+                                    "required": [
+                                      "objects"
+                                    ],
+                                    "properties": {
+                                      "objects": {
+                                        "description": "A list of detected objects",
+                                        "type": "array",
+                                        "items": {
+                                          "type": "object",
+                                          "additionalProperties": false,
+                                          "required": [
+                                            "bounding_box",
+                                            "category",
+                                            "score"
+                                          ],
+                                          "properties": {
+                                            "bounding_box": {
+                                              "type": "object",
+                                              "format": "bounding_box",
+                                              "description": "The detected bounding box in (left, top, width, height) format",
+                                              "additionalProperties": false,
+                                              "required": [
+                                                "left",
+                                                "top",
+                                                "width",
+                                                "height"
+                                              ],
+                                              "properties": {
+                                                "left": {
+                                                  "description": "Bounding box left x-axis value",
+                                                  "type": "number"
+                                                },
+                                                "top": {
+                                                  "description": "Bounding box top y-axis value",
+                                                  "type": "number"
+                                                },
+                                                "width": {
+                                                  "description": "Bounding box width value",
+                                                  "type": "number"
+                                                },
+                                                "height": {
+                                                  "description": "Bounding box height value",
+                                                  "type": "number"
+                                                }
+                                              }
+                                            },
+                                            "category": {
+                                              "description": "The predicted category of the bounding box",
+                                              "type": "string"
+                                            },
+                                            "score": {
+                                              "description": "The confidence score of the predicted category of the bounding box",
+                                              "type": "number"
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "TASK_OCR": {
+          "openapi": "3.0.0",
+          "info": {
+            "version": "1.0.0",
+            "title": "Instill-Model Connector Openapi"
+          },
+          "paths": {
+            "/execute": {
+              "post": {
+                "requestBody": {
+                  "required": true,
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "inputs": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "allOf": [
+                                {
+                                  "properties": {
+                                    "task": {
+                                      "const": "TASK_OCR"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "object",
+                                  "required": [
+                                    "image_base64",
+                                    "model_id"
+                                  ],
+                                  "properties": {
+                                    "image_base64": {
+                                      "type": "string"
+                                    },
+                                    "model_id": {
+                                      "title": "Model ID",
+                                      "description": "ID of the Instill Model model to be used.",
+                                      "type": "string"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "responses": {
+                  "200": {
+                    "description": "",
+                    "content": {
+                      "application/json": {
+                        "schema": {
+                          "type": "object",
+                          "properties": {
+                            "outputs": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "ocr": {
+                                    "type": "object",
+                                    "format": "ocr",
+                                    "additionalProperties": false,
+                                    "required": [
+                                      "objects"
+                                    ],
+                                    "properties": {
+                                      "objects": {
+                                        "description": "A list of detected bounding boxes",
+                                        "type": "array",
+                                        "items": {
+                                          "type": "object",
+                                          "required": [
+                                            "boundingBox",
+                                            "text",
+                                            "score"
+                                          ],
+                                          "properties": {
+                                            "boundingBox": {
+                                              "type": "object",
+                                              "format": "bounding_box",
+                                              "description": "The detected bounding box in (left, top, width, height) format",
+                                              "additionalProperties": false,
+                                              "required": [
+                                                "left",
+                                                "top",
+                                                "width",
+                                                "height"
+                                              ],
+                                              "properties": {
+                                                "left": {
+                                                  "description": "Bounding box left x-axis value",
+                                                  "type": "number"
+                                                },
+                                                "top": {
+                                                  "description": "Bounding box top y-axis value",
+                                                  "type": "number"
+                                                },
+                                                "width": {
+                                                  "description": "Bounding box width value",
+                                                  "type": "number"
+                                                },
+                                                "height": {
+                                                  "description": "Bounding box height value",
+                                                  "type": "number"
+                                                }
+                                              }
+                                            },
+                                            "text": {
+                                              "description": "Text string recognised per bounding box",
+                                              "type": "string"
+                                            },
+                                            "score": {
+                                              "description": "The confidence score of the predicted object",
+                                              "type": "number"
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "TASK_SEMANTIC_SEGMENTATION": {
+          "openapi": "3.0.0",
+          "info": {
+            "version": "1.0.0",
+            "title": "Instill-Model Connector Openapi"
+          },
+          "paths": {
+            "/execute": {
+              "post": {
+                "requestBody": {
+                  "required": true,
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "inputs": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "allOf": [
+                                {
+                                  "properties": {
+                                    "task": {
+                                      "const": "TASK_SEMANTIC_SEGMENTATION"
+                                    }
+                                  }
+                                },
+                                {
+                                  "type": "object",
+                                  "required": [
+                                    "image_base64",
+                                    "model_id"
+                                  ],
+                                  "properties": {
+                                    "image_base64": {
+                                      "type": "string"
+                                    },
+                                    "model_id": {
+                                      "title": "Model ID",
+                                      "description": "ID of the Instill Model model to be used.",
+                                      "type": "string"
+                                    }
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "responses": {
+                  "200": {
+                    "description": "",
+                    "content": {
+                      "application/json": {
+                        "schema": {
+                          "type": "object",
+                          "properties": {
+                            "outputs": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "semantic_segmentation": {
+                                    "type": "object",
+                                    "format": "semantic_segmentation",
+                                    "additionalProperties": false,
+                                    "required": [
+                                      "stuffs"
+                                    ],
+                                    "properties": {
+                                      "stuffs": {
+                                        "description": "A list of RLE binary masks",
+                                        "type": "array",
+                                        "items": {
+                                          "type": "object",
+                                          "required": [
+                                            "rle",
+                                            "category"
+                                          ],
+                                          "properties": {
+                                            "rle": {
+                                              "description": "Run Length Encoding (RLE) of each stuff mask within the image",
+                                              "type": "string"
+                                            },
+                                            "category": {
+                                              "description": "Category text string corresponding to each stuff mask",
+                                              "type": "string"
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "TASK_TEXT_GENERATION": {
+          "openapi": "3.0.0",
+          "info": {
+            "version": "1.0.0",
+            "title": "Instill-Model Connector Openapi"
+          },
+          "paths": {
+            "/execute": {
+              "post": {
+                "requestBody": {
+                  "required": true,
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "inputs": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "required": [
+                                "task",
+                                "prompt",
+                                "model_id"
+                              ],
+                              "properties": {
+                                "task": {
+                                  "const": "TASK_TEXT_GENERATION"
+                                },
+                                "model_id": {
+                                  "title": "Model ID",
+                                  "description": "ID of the Instill Model model to be used.",
+                                  "type": "string"
+                                },
+                                "prompt": {
+                                  "type": "string"
+                                },
+                                "output_len": {
+                                  "type": "integer"
+                                },
+                                "bad_words_list": {
+                                  "type": "string"
+                                },
+                                "stop_words_list": {
+                                  "type": "string"
+                                },
+                                "top_k": {
+                                  "type": "integer"
+                                },
+                                "seed": {
+                                  "type": "integer"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "responses": {
+                  "200": {
+                    "description": "",
+                    "content": {
+                      "application/json": {
+                        "schema": {
+                          "type": "object",
+                          "properties": {
+                            "outputs": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "text": {
+                                    "type": "string"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "TASK_TEXT_TO_IMAGE": {
+          "openapi": "3.0.0",
+          "info": {
+            "version": "1.0.0",
+            "title": "Instill-Model Connector Openapi"
+          },
+          "paths": {
+            "/execute": {
+              "post": {
+                "requestBody": {
+                  "required": true,
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "inputs": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "required": [
+                                "task",
+                                "prompt",
+                                "model_id"
+                              ],
+                              "properties": {
+                                "task": {
+                                  "const": "TASK_TEXT_TO_IMAGE"
+                                },
+                                "model_id": {
+                                  "title": "Model ID",
+                                  "description": "ID of the Instill Model model to be used.",
+                                  "type": "string"
+                                },
+                                "prompt": {
+                                  "type": "string"
+                                },
+                                "cfg_scale": {
+                                  "type": "number"
+                                },
+                                "steps": {
+                                  "type": "integer"
+                                },
+                                "samples": {
+                                  "type": "integer"
+                                },
+                                "seed": {
+                                  "type": "integer"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "responses": {
+                  "200": {
+                    "description": "",
+                    "content": {
+                      "application/json": {
+                        "schema": {
+                          "type": "object",
+                          "properties": {
+                            "outputs": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "images": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "string"
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "public": true,
+    "custom": false,
+    "vendor_attributes": {
+      "githubIssueLabel": "instill-model",
+      "license": "MIT",
+      "releaseStage": "alpha",
+      "resourceRequirements": {},
+      "modelType": "api"
+    }
+  }
+]

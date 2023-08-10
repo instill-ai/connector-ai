@@ -1,0 +1,200 @@
+{
+  "$defs": {
+    "common": {
+      "type": "object",
+      "required": ["image_base64", "model_id"],
+      "properties": {
+        "image_base64": {
+          "type": "string"
+        },
+        "model_id": {
+          "title": "Model ID",
+          "description": "ID of the Instill Model model to be used.",
+          "type": "string"
+        }
+      }
+    }
+  },
+  "TASK_CLASSIFICATION": {
+    "input": {
+      "type": "object",
+      "allOf": [
+        { "properties": { "task": { "const": "TASK_CLASSIFICATION" } } },
+        { "$ref": "#/$defs/common" }
+      ]
+    },
+    "output": {
+      "type": "object",
+      "properties": {
+        "classification": {
+          "$ref": "https://raw.githubusercontent.com/instill-ai/connector/component_centric_refactor/shared_schema.json#/$defs/instill_types/classification"
+        }
+      }
+    }
+  },
+  "TASK_INSTANCE_SEGMENTATION": {
+    "input": {
+      "type": "object",
+      "allOf": [
+        { "properties": { "task": { "const": "TASK_INSTANCE_SEGMENTATION" } } },
+        { "$ref": "#/$defs/common" }
+      ]
+    },
+    "output": {
+      "type": "object",
+      "properties": {
+        "instance_segmentation": {
+          "$ref": "https://raw.githubusercontent.com/instill-ai/connector/component_centric_refactor/shared_schema.json#/$defs/instill_types/instance_segmentation"
+        }
+      }
+    }
+  },
+  "TASK_KEYPOINT": {
+    "input": {
+      "type": "object",
+      "allOf": [
+        { "properties": { "task": { "const": "TASK_KEYPOINT" } } },
+        { "$ref": "#/$defs/common" }
+      ]
+    },
+    "output": {
+      "type": "object",
+      "properties": {
+        "keypoint": {
+          "$ref": "https://raw.githubusercontent.com/instill-ai/connector/component_centric_refactor/shared_schema.json#/$defs/instill_types/keypoint"
+        }
+      }
+    }
+  },
+  "TASK_DETECTION": {
+    "input": {
+      "type": "object",
+      "allOf": [
+        { "properties": { "task": { "const": "TASK_DETECTION" } } },
+        { "$ref": "#/$defs/common" }
+      ]
+    },
+    "output": {
+      "type": "object",
+      "properties": {
+        "detection": {
+          "$ref": "https://raw.githubusercontent.com/instill-ai/connector/component_centric_refactor/shared_schema.json#/$defs/instill_types/detection"
+        }
+      }
+    }
+  },
+  "TASK_OCR": {
+    "input": {
+      "type": "object",
+      "allOf": [
+        { "properties": { "task": { "const": "TASK_OCR" } } },
+        { "$ref": "#/$defs/common" }
+      ]
+    },
+    "output": {
+      "type": "object",
+      "properties": {
+        "ocr": {
+          "$ref": "https://raw.githubusercontent.com/instill-ai/connector/component_centric_refactor/shared_schema.json#/$defs/instill_types/ocr"
+        }
+      }
+    }
+  },
+  "TASK_SEMANTIC_SEGMENTATION": {
+    "input": {
+      "type": "object",
+      "allOf": [
+        { "properties": { "task": { "const": "TASK_SEMANTIC_SEGMENTATION" } } },
+        { "$ref": "#/$defs/common" }
+      ]
+    },
+    "output": {
+      "type": "object",
+      "properties": {
+        "semantic_segmentation": {
+          "$ref": "https://raw.githubusercontent.com/instill-ai/connector/component_centric_refactor/shared_schema.json#/$defs/instill_types/semantic_segmentation"
+        }
+      }
+    }
+  },
+  "TASK_TEXT_GENERATION": {
+    "input": {
+      "type": "object",
+      "required": ["task", "prompt", "model_id"],
+      "properties": {
+        "task": { "const": "TASK_TEXT_GENERATION" },
+        "model_id": {
+          "title": "Model ID",
+          "description": "ID of the Instill Model model to be used.",
+          "type": "string"
+        },
+        "prompt": {
+          "type": "string"
+        },
+        "output_len": {
+          "type": "integer"
+        },
+        "bad_words_list": {
+          "type": "string"
+        },
+        "stop_words_list": {
+          "type": "string"
+        },
+        "top_k": {
+          "type": "integer"
+        },
+        "seed": {
+          "type": "integer"
+        }
+      }
+    },
+    "output": {
+      "type": "object",
+      "properties": {
+        "text": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "TASK_TEXT_TO_IMAGE": {
+    "input": {
+      "type": "object",
+      "required": ["task", "prompt", "model_id"],
+      "properties": {
+        "task": { "const": "TASK_TEXT_TO_IMAGE" },
+        "model_id": {
+          "title": "Model ID",
+          "description": "ID of the Instill Model model to be used.",
+          "type": "string"
+        },
+        "prompt": {
+          "type": "string"
+        },
+        "cfg_scale": {
+          "type": "number"
+        },
+        "steps": {
+          "type": "integer"
+        },
+        "samples": {
+          "type": "integer"
+        },
+        "seed": {
+          "type": "integer"
+        }
+      }
+    },
+    "output": {
+      "type": "object",
+      "properties": {
+        "images": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

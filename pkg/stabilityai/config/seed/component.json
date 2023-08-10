@@ -1,0 +1,162 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Stability AI Connector Component Spec",
+  "type": "object",
+  "required": ["task"],
+  "properties": {
+    "task": {
+      "title": "Task",
+      "enum": ["TASK_TEXT_TO_IMAGE", "TASK_IMAGE_TO_IMAGE"],
+      "default": "TASK_TEXT_TO_IMAGE"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "task": {
+            "const": "TASK_TEXT_TO_IMAGE"
+          }
+        }
+      },
+      "then": {
+        "type": "object",
+        "required": ["prompts", "engine"],
+        "properties": {
+          "prompts": {
+            "type": "string",
+            "format": "instill-template-text-array",
+            "$ref": "data.json#/TASK_TEXT_TO_IMAGE/input/properties/prompts"
+          },
+          "weights": {
+            "type": "string",
+            "format": "instill-template-number-array",
+            "$ref": "data.json#/TASK_TEXT_TO_IMAGE/input/properties/weights"
+          },
+          "engine": {
+            "$ref": "data.json#/TASK_TEXT_TO_IMAGE/input/properties/engine"
+          },
+          "height": {
+            "type": "string",
+            "format": "instill-template-integer",
+            "$ref": "data.json#/TASK_TEXT_TO_IMAGE/input/properties/height"
+          },
+          "width": {
+            "type": "string",
+            "format": "instill-template-integer",
+            "$ref": "data.json#/TASK_TEXT_TO_IMAGE/input/properties/width"
+          },
+          "cfg_scale": {
+            "type": "string",
+            "format": "instill-template-number",
+            "$ref": "data.json#/TASK_TEXT_TO_IMAGE/input/properties/cfg_scale"
+          },
+          "clip_guidance_preset": {
+            "$ref": "data.json#/TASK_TEXT_TO_IMAGE/input/properties/clip_guidance_preset"
+          },
+          "sampler": {
+            "$ref": "data.json#/TASK_TEXT_TO_IMAGE/input/properties/sampler"
+          },
+          "samples": {
+            "type": "string",
+            "format": "instill-template-integer",
+            "$ref": "data.json#/TASK_TEXT_TO_IMAGE/input/properties/samples"
+          },
+          "seed": {
+            "type": "string",
+            "format": "instill-template-integer",
+            "$ref": "data.json#/TASK_TEXT_TO_IMAGE/input/properties/seed"
+          },
+          "steps": {
+            "type": "string",
+            "format": "instill-template-integer",
+            "$ref": "data.json#/TASK_TEXT_TO_IMAGE/input/properties/steps"
+          },
+          "style_preset": {
+            "$ref": "data.json#/TASK_TEXT_TO_IMAGE/input/properties/style_preset"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "task": {
+            "const": "TASK_IMAGE_TO_IMAGE"
+          }
+        }
+      },
+      "then": {
+        "type": "object",
+        "required": ["prompts", "engine", "init_image"],
+        "properties": {
+          "prompts": {
+            "type": "string",
+            "format": "instill-template-text-array",
+            "$ref": "data.json#/TASK_IMAGE_TO_IMAGE/input/properties/prompts"
+          },
+          "weights": {
+            "type": "string",
+            "format": "instill-template-number-array",
+            "$ref": "data.json#/TASK_IMAGE_TO_IMAGE/input/properties/weights"
+          },
+          "init_image": {
+            "type": "string",
+            "format": "instill-template-image",
+            "$ref": "data.json#/TASK_IMAGE_TO_IMAGE/input/properties/init_image"
+          },
+          "engine": {
+            "$ref": "data.json#/TASK_IMAGE_TO_IMAGE/input/properties/engine"
+          },
+          "init_image_mode": {
+            "$ref": "data.json#/TASK_IMAGE_TO_IMAGE/input/properties/init_image_mode"
+          },
+          "image_strength": {
+            "type": "string",
+            "format": "instill-template-number",
+            "$ref": "data.json#/TASK_IMAGE_TO_IMAGE/input/properties/image_strength"
+          },
+          "step_schedule_start": {
+            "type": "string",
+            "format": "instill-template-number",
+            "$ref": "data.json#/TASK_IMAGE_TO_IMAGE/input/properties/step_schedule_start"
+          },
+          "step_schedule_end": {
+            "type": "string",
+            "format": "instill-template-number",
+            "$ref": "data.json#/TASK_IMAGE_TO_IMAGE/input/properties/step_schedule_end"
+          },
+          "cfg_scale": {
+            "type": "string",
+            "format": "instill-template-number",
+            "$ref": "data.json#/TASK_IMAGE_TO_IMAGE/input/properties/cfg_scale"
+          },
+          "clip_guidance_preset": {
+            "$ref": "data.json#/TASK_IMAGE_TO_IMAGE/input/properties/clip_guidance_preset"
+          },
+          "sampler": {
+            "$ref": "data.json#/TASK_IMAGE_TO_IMAGE/input/properties/sampler"
+          },
+          "samples": {
+            "type": "string",
+            "format": "instill-template-integer",
+            "$ref": "data.json#/TASK_IMAGE_TO_IMAGE/input/properties/samples"
+          },
+          "seed": {
+            "type": "string",
+            "format": "instill-template-integer",
+            "$ref": "data.json#/TASK_IMAGE_TO_IMAGE/input/properties/seed"
+          },
+          "steps": {
+            "type": "string",
+            "format": "instill-template-integer",
+            "$ref": "data.json#/TASK_IMAGE_TO_IMAGE/input/properties/steps"
+          },
+          "style_preset": {
+            "$ref": "data.json#/TASK_IMAGE_TO_IMAGE/input/properties/style_preset"
+          }
+        }
+      }
+    }
+  ]
+}

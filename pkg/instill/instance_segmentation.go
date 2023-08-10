@@ -5,36 +5,33 @@ import (
 	"fmt"
 
 	"google.golang.org/grpc/metadata"
+	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/types/known/structpb"
 
 	modelPB "github.com/instill-ai/protogen-go/model/model/v1alpha"
-	connectorPB "github.com/instill-ai/protogen-go/vdp/connector/v1alpha"
 )
 
-func (c *Connection) executeInstanceSegmentation(grpcClient modelPB.ModelPublicServiceClient, model *Model, inputs []*connectorPB.DataPayload) ([]*connectorPB.DataPayload, error) {
+func (c *Connection) executeInstanceSegmentation(grpcClient modelPB.ModelPublicServiceClient, modelName string, inputs []*structpb.Struct) ([]*structpb.Struct, error) {
 	if len(inputs) <= 0 {
-		return nil, fmt.Errorf("invalid input: %v for model: %s", inputs, model.Name)
+		return nil, fmt.Errorf("invalid input: %v for model: %s", inputs, modelName)
 	}
 
 	tasklInputs := []*modelPB.TaskInput{}
-	for idx := range inputs {
-		dataPayload := inputs[idx]
-		if len(dataPayload.Images) <= 0 {
-			return nil, fmt.Errorf("invalid input: %v for model: %s", dataPayload, model.Name)
-		}
-		base64Str, err := encodeToBase64(dataPayload.Images[0])
+	for _, input := range inputs {
+		inputJson, err := protojson.Marshal(input)
 		if err != nil {
-			return nil, fmt.Errorf("invalid image string: %v for model: %s", dataPayload.Images[0], model.Name)
+			return nil, err
 		}
+		segmentationInput := &modelPB.InstanceSegmentationInput{}
+		protojson.Unmarshal(inputJson, segmentationInput)
+
 		taskInput := &modelPB.TaskInput_InstanceSegmentation{
-			InstanceSegmentation: &modelPB.InstanceSegmentationInput{
-				Type: &modelPB.InstanceSegmentationInput_ImageBase64{ImageBase64: base64Str},
-			},
+			InstanceSegmentation: segmentationInput,
 		}
 		tasklInputs = append(tasklInputs, &modelPB.TaskInput{Input: taskInput})
 	}
 	req := modelPB.TriggerModelRequest{
-		Name:       model.Name,
+		Name:       modelName,
 		TaskInputs: tasklInputs,
 	}
 	if c.client == nil || grpcClient == nil {
@@ -48,49 +45,23 @@ func (c *Connection) executeInstanceSegmentation(grpcClient modelPB.ModelPublicS
 	}
 	taskOutputs := res.GetTaskOutputs()
 	if len(taskOutputs) <= 0 {
-		return nil, fmt.Errorf("invalid output: %v for model: %s", taskOutputs, model.Name)
+		return nil, fmt.Errorf("invalid output: %v for model: %s", taskOutputs, modelName)
 	}
 
-	outputs := []*connectorPB.DataPayload{}
+	outputs := []*structpb.Struct{}
 	for idx := range inputs {
 		instanceSegmentationOp := taskOutputs[idx].GetInstanceSegmentation()
 		if instanceSegmentationOp == nil {
-			return nil, fmt.Errorf("invalid output: %v for model: %s", instanceSegmentationOp, model.Name)
+			return nil, fmt.Errorf("invalid output: %v for model: %s", instanceSegmentationOp, modelName)
 		}
-		values := make([]*structpb.Value, 0, len(instanceSegmentationOp.Objects))
-		for _, o := range instanceSegmentationOp.Objects {
-			obj := &structpb.Value{
-				Kind: &structpb.Value_StructValue{
-					StructValue: &structpb.Struct{
-						Fields: map[string]*structpb.Value{
-							"rle":      {Kind: &structpb.Value_StringValue{StringValue: o.Rle}},
-							"score":    {Kind: &structpb.Value_NumberValue{NumberValue: float64(o.Score)}},
-							"category": {Kind: &structpb.Value_StringValue{StringValue: o.Category}},
-							"bounding_box": {Kind: &structpb.Value_StructValue{
-								StructValue: &structpb.Struct{
-									Fields: map[string]*structpb.Value{
-										"top":    {Kind: &structpb.Value_NumberValue{NumberValue: float64(o.BoundingBox.Top)}},
-										"left":   {Kind: &structpb.Value_NumberValue{NumberValue: float64(o.BoundingBox.Left)}},
-										"width":  {Kind: &structpb.Value_NumberValue{NumberValue: float64(o.BoundingBox.Width)}},
-										"height": {Kind: &structpb.Value_NumberValue{NumberValue: float64(o.BoundingBox.Height)}},
-									},
-								},
-							},
-							},
-						},
-					},
-				},
-			}
-			values = append(values, obj)
+		outputJson, err := protojson.Marshal(instanceSegmentationOp)
+		if err != nil {
+			return nil, err
 		}
-		outputs = append(outputs, &connectorPB.DataPayload{
-			DataMappingIndex: inputs[idx].DataMappingIndex,
-			StructuredData: &structpb.Struct{
-				Fields: map[string]*structpb.Value{
-					"objects": {Kind: &structpb.Value_ListValue{ListValue: &structpb.ListValue{Values: values}}},
-				},
-			},
-		})
+		output := &structpb.Struct{}
+		protojson.Unmarshal(outputJson, output)
+		outputs = append(outputs, output)
+
 	}
 
 	return outputs, nil
