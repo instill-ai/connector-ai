@@ -10,17 +10,30 @@ const (
 	completionsURL = host + "/v1/chat/completions"
 )
 
+type TextCompletionInput struct {
+	Prompt        string   `json:"prompt"`
+	Model         string   `json:"model"`
+	SystemMessage *string  `json:"system_message,omitempty"`
+	Temperature   *float32 `json:"temperature,omitempty"`
+	N             *int     `json:"n,omitempty"`
+	MaxTokens     *int     `json:"max_tokens,omitempty"`
+}
+
+type TextCompletionOutput struct {
+	Texts []string `json:"texts"`
+}
+
 type TextCompletionReq struct {
 	Model            string    `json:"model"`
 	Messages         []Message `json:"messages"`
-	Temperature      float32   `json:"temperature,omitempty"`
-	TopP             float32   `json:"top_p,omitempty"`
-	N                int       `json:"n,omitempty"`
-	Stream           bool      `json:"stream,omitempty"`
-	Stop             string    `json:"stop,omitempty"`
-	MaxTokens        int       `json:"max_tokens,omitempty"`
-	PresencePenalty  float32   `json:"presence_penalty,omitempty"`
-	FrequencyPenalty float32   `json:"frequency_penalty,omitempty"`
+	Temperature      *float32  `json:"temperature,omitempty"`
+	TopP             *float32  `json:"top_p,omitempty"`
+	N                *int      `json:"n,omitempty"`
+	Stream           *bool     `json:"stream,omitempty"`
+	Stop             *string   `json:"stop,omitempty"`
+	MaxTokens        *int      `json:"max_tokens,omitempty"`
+	PresencePenalty  *float32  `json:"presence_penalty,omitempty"`
+	FrequencyPenalty *float32  `json:"frequency_penalty,omitempty"`
 }
 
 type Message struct {

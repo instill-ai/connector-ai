@@ -1,0 +1,104 @@
+{
+  "TASK_TEXT_TO_IMAGE": {
+    "openapi": "3.0.0",
+    "info": {
+      "version": "1.0.0",
+      "title": "Stability AI Connector Openapi"
+    },
+    "paths": {
+      "/execute": {
+        "post": {
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "inputs": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "data.json#/TASK_TEXT_TO_IMAGE/input"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "outputs": {
+                        "type": "array",
+                        "items": {
+                          "$ref": "data.json#/TASK_TEXT_TO_IMAGE/output"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "TASK_IMAGE_TO_IMAGE": {
+    "openapi": "3.0.0",
+    "info": {
+      "version": "1.0.0",
+      "title": "Stability AI Connector Openapi"
+    },
+    "paths": {
+      "/execute": {
+        "post": {
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "inputs": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "data.json#/TASK_IMAGE_TO_IMAGE/input"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "outputs": {
+                        "type": "array",
+                        "items": {
+                          "$ref": "data.json#/TASK_IMAGE_TO_IMAGE/output"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

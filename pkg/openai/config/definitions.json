@@ -1,0 +1,566 @@
+[
+  {
+    "uid": "9fb6a2cb-bff5-4c69-bc6d-4538dd8e3362",
+    "id": "ai-openai",
+    "title": "OpenAI",
+    "documentation_url": "https://www.instill.tech/docs/vdp/ai-connectors/openai",
+    "icon": "openai.svg",
+    "icon_url": "",
+    "spec": {
+      "resource_specification": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "title": "OpenAI AI Connector Spec",
+        "type": "object",
+        "required": [
+          "api_key"
+        ],
+        "additionalProperties": true,
+        "properties": {
+          "api_key": {
+            "credential_field": true,
+            "title": "API Key",
+            "description": "Fill your OpenAI API key. To find your keys, visit your OpenAI's API Keys page.",
+            "type": "string"
+          },
+          "organization": {
+            "title": "Organization",
+            "description": "Specify which organization is used for the requests. Usage will count against the specified organization's subscription quota.",
+            "type": "string"
+          }
+        }
+      },
+      "component_specification": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "title": "OpenAI Connector Component Spec",
+        "type": "object",
+        "required": [
+          "task"
+        ],
+        "properties": {
+          "task": {
+            "title": "Task",
+            "enum": [
+              "TASK_TEXT_GENERATION",
+              "TASK_TEXT_EMBEDDINGS",
+              "TASK_SPEECH_RECOGNITION"
+            ],
+            "default": "TASK_TEXT_GENERATION"
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "task": {
+                  "const": "TASK_TEXT_GENERATION"
+                }
+              }
+            },
+            "then": {
+              "type": "object",
+              "required": [
+                "prompt",
+                "model"
+              ],
+              "properties": {
+                "prompt": {
+                  "type": "string",
+                  "format": "instill-template-text"
+                },
+                "model": {
+                  "description": "ID of the model to use. See the [model endpoint compatibility](/docs/models/model-endpoint-compatibility) table for details on which models work with the Chat API.",
+                  "example": "gpt-3.5-turbo",
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "string",
+                      "enum": [
+                        "gpt-4",
+                        "gpt-4-0314",
+                        "gpt-4-0613",
+                        "gpt-4-32k",
+                        "gpt-4-32k-0314",
+                        "gpt-4-32k-0613",
+                        "gpt-3.5-turbo",
+                        "gpt-3.5-turbo-16k",
+                        "gpt-3.5-turbo-0301",
+                        "gpt-3.5-turbo-0613",
+                        "gpt-3.5-turbo-16k-0613"
+                      ]
+                    }
+                  ],
+                  "x-oaiTypeLabel": "string",
+                  "type": "string",
+                  "format": "instill-template-text"
+                },
+                "system_message": {
+                  "title": "System message",
+                  "description": "The system message helps set the behavior of the assistant. For example, you can modify the personality of the assistant or provide specific instructions about how it should behave throughout the conversation. By default, the model\u2019s behavior is using a generic message as \"You are a helpful assistant.\"",
+                  "type": "string",
+                  "default": "You are a helpful assistant.",
+                  "maxLength": 2048,
+                  "format": "instill-template-text"
+                },
+                "temperature": {
+                  "type": "string",
+                  "minimum": 0,
+                  "maximum": 2,
+                  "default": 1,
+                  "example": 1,
+                  "nullable": true,
+                  "description": "What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic.\n\nWe generally recommend altering this or `top_p` but not both.\n",
+                  "format": "instill-template-number"
+                },
+                "n": {
+                  "type": "string",
+                  "minimum": 1,
+                  "maximum": 128,
+                  "default": 1,
+                  "example": 1,
+                  "nullable": true,
+                  "description": "How many chat completion choices to generate for each input message.",
+                  "format": "instill-template-integer"
+                },
+                "max_tokens": {
+                  "description": "The maximum number of [tokens](/tokenizer) to generate in the chat completion.\n\nThe total length of input tokens and generated tokens is limited by the model's context length. [Example Python code](https://github.com/openai/openai-cookbook/blob/main/examples/How_to_count_tokens_with_tiktoken.ipynb) for counting tokens.\n",
+                  "default": "inf",
+                  "type": "string",
+                  "format": "instill-template-integer"
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "task": {
+                  "const": "TASK_TEXT_EMBEDDINGS"
+                }
+              }
+            },
+            "then": {
+              "type": "object",
+              "required": [
+                "text",
+                "model"
+              ],
+              "properties": {
+                "text": {
+                  "type": "string",
+                  "format": "instill-template-text"
+                },
+                "model": {
+                  "description": "ID of the model to use. You can use the [List models](/docs/api-reference/models/list) API to see all of your available models, or see our [Model overview](/docs/models/overview) for descriptions of them.\n",
+                  "example": "text-embedding-ada-002",
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "string",
+                      "enum": [
+                        "text-embedding-ada-002"
+                      ]
+                    }
+                  ],
+                  "x-oaiTypeLabel": "string",
+                  "type": "string",
+                  "format": "instill-template-text"
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "task": {
+                  "const": "TASK_SPEECH_RECOGNITION"
+                }
+              }
+            },
+            "then": {
+              "type": "object",
+              "required": [
+                "audio",
+                "model"
+              ],
+              "properties": {
+                "audio": {
+                  "description": "The audio file object (not file name) to transcribe, in one of these formats: mp3, mp4, mpeg, mpga, m4a, wav, or webm.\n",
+                  "type": "string",
+                  "x-oaiTypeLabel": "file",
+                  "format": "instill-template-audio"
+                },
+                "model": {
+                  "description": "ID of the model to use. Only `whisper-1` is currently available.\n",
+                  "example": "whisper-1",
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "string",
+                      "enum": [
+                        "whisper-1"
+                      ]
+                    }
+                  ],
+                  "x-oaiTypeLabel": "string",
+                  "type": "string",
+                  "format": "instill-template-string"
+                },
+                "temperature": {
+                  "description": "The sampling temperature, between 0 and 1. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic. If set to 0, the model will use [log probability](https://en.wikipedia.org/wiki/Log_probability) to automatically increase the temperature until certain thresholds are hit.\n",
+                  "type": "string",
+                  "default": 0,
+                  "format": "instill-template-number"
+                },
+                "language": {
+                  "description": "The language of the input audio. Supplying the input language in [ISO-639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) format will improve accuracy and latency.\n",
+                  "type": "string",
+                  "format": "instill-template-text"
+                },
+                "prompt": {
+                  "description": "An optional text to guide the model's style or continue a previous audio segment. The [prompt](/docs/guides/speech-to-text/prompting) should match the audio language.\n",
+                  "type": "string",
+                  "format": "instill-template-text"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "openapi_specifications": {
+        "TASK_TEXT_GENERATION": {
+          "openapi": "3.0.0",
+          "info": {
+            "version": "1.0.0",
+            "title": "OpenAI Connector Openapi"
+          },
+          "paths": {
+            "/execute": {
+              "post": {
+                "requestBody": {
+                  "required": true,
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "inputs": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "required": [
+                                "task",
+                                "model",
+                                "prompt"
+                              ],
+                              "properties": {
+                                "task": {
+                                  "const": "TASK_TEXT_GENERATION"
+                                },
+                                "prompt": {
+                                  "type": "string"
+                                },
+                                "model": {
+                                  "description": "ID of the model to use. See the [model endpoint compatibility](/docs/models/model-endpoint-compatibility) table for details on which models work with the Chat API.",
+                                  "example": "gpt-3.5-turbo",
+                                  "anyOf": [
+                                    {
+                                      "type": "string"
+                                    },
+                                    {
+                                      "type": "string",
+                                      "enum": [
+                                        "gpt-4",
+                                        "gpt-4-0314",
+                                        "gpt-4-0613",
+                                        "gpt-4-32k",
+                                        "gpt-4-32k-0314",
+                                        "gpt-4-32k-0613",
+                                        "gpt-3.5-turbo",
+                                        "gpt-3.5-turbo-16k",
+                                        "gpt-3.5-turbo-0301",
+                                        "gpt-3.5-turbo-0613",
+                                        "gpt-3.5-turbo-16k-0613"
+                                      ]
+                                    }
+                                  ],
+                                  "x-oaiTypeLabel": "string"
+                                },
+                                "system_message": {
+                                  "title": "System message",
+                                  "description": "The system message helps set the behavior of the assistant. For example, you can modify the personality of the assistant or provide specific instructions about how it should behave throughout the conversation. By default, the model\u2019s behavior is using a generic message as \"You are a helpful assistant.\"",
+                                  "type": "string",
+                                  "default": "You are a helpful assistant.",
+                                  "maxLength": 2048
+                                },
+                                "temperature": {
+                                  "type": "number",
+                                  "minimum": 0,
+                                  "maximum": 2,
+                                  "default": 1,
+                                  "example": 1,
+                                  "nullable": true,
+                                  "description": "What sampling temperature to use, between 0 and 2. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic.\n\nWe generally recommend altering this or `top_p` but not both.\n"
+                                },
+                                "n": {
+                                  "type": "integer",
+                                  "minimum": 1,
+                                  "maximum": 128,
+                                  "default": 1,
+                                  "example": 1,
+                                  "nullable": true,
+                                  "description": "How many chat completion choices to generate for each input message."
+                                },
+                                "max_tokens": {
+                                  "description": "The maximum number of [tokens](/tokenizer) to generate in the chat completion.\n\nThe total length of input tokens and generated tokens is limited by the model's context length. [Example Python code](https://github.com/openai/openai-cookbook/blob/main/examples/How_to_count_tokens_with_tiktoken.ipynb) for counting tokens.\n",
+                                  "default": "inf",
+                                  "type": "integer"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "responses": {
+                  "200": {
+                    "description": "",
+                    "content": {
+                      "application/json": {
+                        "schema": {
+                          "type": "object",
+                          "properties": {
+                            "outputs": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "texts": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "string"
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "TASK_TEXT_EMBEDDINGS": {
+          "openapi": "3.0.0",
+          "info": {
+            "version": "1.0.0",
+            "title": "OpenAI Connector Openapi"
+          },
+          "paths": {
+            "/execute": {
+              "post": {
+                "requestBody": {
+                  "required": true,
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "inputs": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "required": [
+                                "task",
+                                "text",
+                                "model"
+                              ],
+                              "properties": {
+                                "task": {
+                                  "const": "TASK_TEXT_EMBEDDINGS"
+                                },
+                                "text": {
+                                  "type": "string"
+                                },
+                                "model": {
+                                  "description": "ID of the model to use. You can use the [List models](/docs/api-reference/models/list) API to see all of your available models, or see our [Model overview](/docs/models/overview) for descriptions of them.\n",
+                                  "example": "text-embedding-ada-002",
+                                  "anyOf": [
+                                    {
+                                      "type": "string"
+                                    },
+                                    {
+                                      "type": "string",
+                                      "enum": [
+                                        "text-embedding-ada-002"
+                                      ]
+                                    }
+                                  ],
+                                  "x-oaiTypeLabel": "string"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "responses": {
+                  "200": {
+                    "description": "",
+                    "content": {
+                      "application/json": {
+                        "schema": {
+                          "type": "object",
+                          "properties": {
+                            "outputs": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "embedding": {
+                                    "type": "array",
+                                    "format": "embedding",
+                                    "items": {
+                                      "type": "number"
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "TASK_SPEECH_RECOGNITION": {
+          "openapi": "3.0.0",
+          "info": {
+            "version": "1.0.0",
+            "title": "OpenAI Connector Openapi"
+          },
+          "paths": {
+            "/execute": {
+              "post": {
+                "requestBody": {
+                  "required": true,
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "inputs": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "required": [
+                                "task",
+                                "audio",
+                                "model"
+                              ],
+                              "properties": {
+                                "task": {
+                                  "const": "TASK_SPEECH_RECOGNITION"
+                                },
+                                "audio": {
+                                  "description": "The audio file object (not file name) to transcribe, in one of these formats: mp3, mp4, mpeg, mpga, m4a, wav, or webm.\n",
+                                  "type": "string",
+                                  "x-oaiTypeLabel": "file",
+                                  "format": "binary"
+                                },
+                                "model": {
+                                  "description": "ID of the model to use. Only `whisper-1` is currently available.\n",
+                                  "example": "whisper-1",
+                                  "anyOf": [
+                                    {
+                                      "type": "string"
+                                    },
+                                    {
+                                      "type": "string",
+                                      "enum": [
+                                        "whisper-1"
+                                      ]
+                                    }
+                                  ],
+                                  "x-oaiTypeLabel": "string"
+                                },
+                                "temperature": {
+                                  "description": "The sampling temperature, between 0 and 1. Higher values like 0.8 will make the output more random, while lower values like 0.2 will make it more focused and deterministic. If set to 0, the model will use [log probability](https://en.wikipedia.org/wiki/Log_probability) to automatically increase the temperature until certain thresholds are hit.\n",
+                                  "type": "number",
+                                  "default": 0
+                                },
+                                "language": {
+                                  "description": "The language of the input audio. Supplying the input language in [ISO-639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) format will improve accuracy and latency.\n",
+                                  "type": "string"
+                                },
+                                "prompt": {
+                                  "description": "An optional text to guide the model's style or continue a previous audio segment. The [prompt](/docs/guides/speech-to-text/prompting) should match the audio language.\n",
+                                  "type": "string"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "responses": {
+                  "200": {
+                    "description": "",
+                    "content": {
+                      "application/json": {
+                        "schema": {
+                          "type": "object",
+                          "properties": {
+                            "outputs": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "text": {
+                                    "type": "string"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "public": true,
+    "custom": false,
+    "vendor_attributes": {
+      "githubIssueLabel": "openai",
+      "license": "MIT",
+      "releaseStage": "alpha",
+      "resourceRequirements": {},
+      "modelType": "api"
+    }
+  }
+]

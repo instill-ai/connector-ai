@@ -1,0 +1,193 @@
+{
+  "TASK_TEXT_TO_IMAGE": {
+    "input": {
+      "type": "object",
+      "required": ["prompts"],
+      "additionalProperties": false,
+      "properties": {
+        "task": {
+          "const": "TASK_TEXT_TO_IMAGE"
+        },
+        "prompts": {
+          "type": "array",
+          "description": "An array of prompts to use for generation.",
+          "items": {
+            "$ref": "stabilityai.json#/components/schemas/TextPrompt/properties/text"
+          },
+          "minItems": 1
+        },
+        "weights": {
+          "type": "array",
+          "description": "An array of weights to use for generation.",
+          "items": {
+            "$ref": "stabilityai.json#/components/schemas/TextPrompt/properties/weight"
+          },
+          "minItems": 1
+        },
+        "engine": {
+          "title": "Engine",
+          "description": "Stability AI Engine (model) to be used.",
+          "anyOf": [
+            {
+              "default": "stable-diffusion-xl-1024-v1-0",
+              "enum": [
+                "stable-diffusion-xl-1024-v1-0",
+                "stable-diffusion-xl-1024-v0-9",
+                "stable-diffusion-v1",
+                "stable-diffusion-v1-5",
+                "stable-diffusion-512-v2-0",
+                "stable-diffusion-768-v2-0",
+                "stable-diffusion-512-v2-1",
+                "stable-diffusion-768-v2-1",
+                "stable-diffusion-xl-beta-v2-2-2",
+                "stable-inpainting-v1-0",
+                "stable-inpainting-512-v2-0"
+              ]
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "height": {
+          "$ref": "stabilityai.json#/components/schemas/DiffuseImageHeight"
+        },
+        "width": {
+          "$ref": "stabilityai.json#/components/schemas/DiffuseImageWidth"
+        },
+        "cfg_scale": {
+          "$ref": "stabilityai.json#/components/schemas/CfgScale"
+        },
+        "clip_guidance_preset": {
+          "$ref": "stabilityai.json#/components/schemas/ClipGuidancePreset"
+        },
+        "sampler": {
+          "$ref": "stabilityai.json#/components/schemas/Sampler"
+        },
+        "samples": {
+          "$ref": "stabilityai.json#/components/schemas/Samples"
+        },
+        "seed": {
+          "$ref": "stabilityai.json#/components/schemas/Seed"
+        },
+        "steps": {
+          "$ref": "stabilityai.json#/components/schemas/Steps"
+        },
+        "style_preset": {
+          "$ref": "stabilityai.json#/components/schemas/StylePreset"
+        }
+      }
+    },
+    "output": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["images", "seeds"],
+      "properties": {
+        "images": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "seeds": {
+          "type": "array",
+          "items": {
+            "$ref": "stabilityai.json#/components/schemas/Image/properties/seed"
+          }
+        }
+      }
+    }
+  },
+  "TASK_IMAGE_TO_IMAGE": {
+    "input": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["prompts"],
+      "properties": {
+        "task": {
+          "const": "TASK_IMAGE_TO_IMAGE"
+        },
+        "prompts": {
+          "type": "array",
+          "description": "An array of prompts to use for generation.",
+          "items": {
+            "$ref": "stabilityai.json#/components/schemas/TextPrompt/properties/text"
+          },
+          "minItems": 1
+        },
+        "weights": {
+          "type": "array",
+          "description": "An array of weights to use for generation.",
+          "items": {
+            "$ref": "stabilityai.json#/components/schemas/TextPrompt/properties/weight"
+          },
+          "minItems": 1
+        },
+        "init_image": {
+          "$ref": "stabilityai.json#/components/schemas/InitImage"
+        },
+        "engine": {
+          "title": "Engine",
+          "description": "Stability AI Engine (model) to be used.",
+          "anyOf": [
+            {
+              "default": "stable-diffusion-xl-1024-v1-0",
+              "enum": [
+                "stable-diffusion-xl-1024-v1-0",
+                "stable-diffusion-xl-1024-v0-9",
+                "stable-diffusion-v1",
+                "stable-diffusion-v1-5",
+                "stable-diffusion-512-v2-0",
+                "stable-diffusion-768-v2-0",
+                "stable-diffusion-512-v2-1",
+                "stable-diffusion-768-v2-1",
+                "stable-diffusion-xl-beta-v2-2-2",
+                "stable-inpainting-v1-0",
+                "stable-inpainting-512-v2-0"
+              ]
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "init_image_mode": {
+          "$ref": "stabilityai.json#/components/schemas/InitImageMode"
+        },
+        "image_strength": {
+          "$ref": "stabilityai.json#/components/schemas/InitImageStrength"
+        },
+        "step_schedule_start": {
+          "$ref": "stabilityai.json#/components/schemas/StepScheduleStart"
+        },
+        "step_schedule_end": {
+          "$ref": "stabilityai.json#/components/schemas/StepScheduleEnd"
+        },
+        "cfg_scale": {
+          "$ref": "stabilityai.json#/components/schemas/CfgScale"
+        },
+        "clip_guidance_preset": {
+          "$ref": "stabilityai.json#/components/schemas/ClipGuidancePreset"
+        },
+        "sampler": {
+          "$ref": "stabilityai.json#/components/schemas/Sampler"
+        },
+        "samples": {
+          "$ref": "stabilityai.json#/components/schemas/Samples"
+        },
+        "seed": {
+          "$ref": "stabilityai.json#/components/schemas/Seed"
+        },
+        "steps": {
+          "$ref": "stabilityai.json#/components/schemas/Steps"
+        },
+        "style_preset": {
+          "$ref": "stabilityai.json#/components/schemas/StylePreset"
+        }
+      }
+    },
+    "output": {
+      "$ref": "#/TASK_TEXT_TO_IMAGE/output"
+    }
+  }
+}

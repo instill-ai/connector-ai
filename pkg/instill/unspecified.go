@@ -4,12 +4,12 @@ import (
 	"fmt"
 
 	modelPB "github.com/instill-ai/protogen-go/model/model/v1alpha"
-	connectorPB "github.com/instill-ai/protogen-go/vdp/connector/v1alpha"
+	"google.golang.org/protobuf/types/known/structpb"
 )
 
-func (c *Connection) executeUnspecified(grpcClient modelPB.ModelPublicServiceClient, model *Model, inputs []*connectorPB.DataPayload) ([]*connectorPB.DataPayload, error) {
+func (c *Connection) executeUnspecified(grpcClient modelPB.ModelPublicServiceClient, modelName string, inputs []*structpb.Struct) ([]*structpb.Struct, error) {
 	if len(inputs) <= 0 {
-		return nil, fmt.Errorf("invalid input: %v for model: %s", inputs, model.Name)
+		return nil, fmt.Errorf("invalid input: %v for model: %s", inputs, modelName)
 	}
 	//TODO: figure out what to do here?
 	/*

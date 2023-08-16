@@ -2,41 +2,41 @@ package instill
 
 import (
 	"context"
-	"encoding/base64"
 	"fmt"
 
 	"google.golang.org/grpc/metadata"
+	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/types/known/structpb"
 
 	modelPB "github.com/instill-ai/protogen-go/model/model/v1alpha"
-	connectorPB "github.com/instill-ai/protogen-go/vdp/connector/v1alpha"
 )
 
-func (c *Connection) executeImageClassification(grpcClient modelPB.ModelPublicServiceClient, model *Model, inputs []*connectorPB.DataPayload) ([]*connectorPB.DataPayload, error) {
+func (c *Connection) executeImageClassification(grpcClient modelPB.ModelPublicServiceClient, modelName string, inputs []*structpb.Struct) ([]*structpb.Struct, error) {
 	if len(inputs) <= 0 {
-		return nil, fmt.Errorf("invalid input: %v for model: %s", inputs, model.Name)
+		return nil, fmt.Errorf("invalid input: %v for model: %s", inputs, modelName)
 	}
 
 	tasklInputs := []*modelPB.TaskInput{}
-	for idx := range inputs {
-		dataPayload := inputs[idx]
-		if len(dataPayload.Images) <= 0 {
-			return nil, fmt.Errorf("invalid input: %v for model: %s", dataPayload, model.Name)
-		}
-		base64Str, err := encodeToBase64(dataPayload.Images[0])
+	for _, input := range inputs {
+
+		inputJson, err := protojson.Marshal(input)
 		if err != nil {
-			return nil, fmt.Errorf("invalid image string: %v for model: %s", dataPayload.Images[0], model.Name)
+			return nil, err
 		}
+		classificationInput := &modelPB.ClassificationInput{}
+		err = protojson.Unmarshal(inputJson, classificationInput)
+		if err != nil {
+			return nil, err
+		}
+
 		taskInput := &modelPB.TaskInput_Classification{
-			Classification: &modelPB.ClassificationInput{
-				Type: &modelPB.ClassificationInput_ImageBase64{ImageBase64: base64Str},
-			},
+			Classification: classificationInput,
 		}
 		tasklInputs = append(tasklInputs, &modelPB.TaskInput{Input: taskInput})
 	}
 
 	req := modelPB.TriggerModelRequest{
-		Name:       model.Name,
+		Name:       modelName,
 		TaskInputs: tasklInputs,
 	}
 	if c.client == nil || grpcClient == nil {
@@ -50,36 +50,24 @@ func (c *Connection) executeImageClassification(grpcClient modelPB.ModelPublicSe
 	}
 	taskOutputs := res.GetTaskOutputs()
 	if len(taskOutputs) <= 0 {
-		return nil, fmt.Errorf("invalid output: %v for model: %s", taskOutputs, model.Name)
+		return nil, fmt.Errorf("invalid output: %v for model: %s", taskOutputs, modelName)
 	}
-	outputs := []*connectorPB.DataPayload{}
+	outputs := []*structpb.Struct{}
 	for idx := range inputs {
 		imgClassificationOp := taskOutputs[idx].GetClassification()
 		if imgClassificationOp == nil {
-			return nil, fmt.Errorf("invalid output: %v for model: %s", imgClassificationOp, model.Name)
+			return nil, fmt.Errorf("invalid output: %v for model: %s", imgClassificationOp, modelName)
 		}
-		outputs = append(outputs, &connectorPB.DataPayload{
-			DataMappingIndex: inputs[idx].DataMappingIndex,
-			StructuredData: &structpb.Struct{
-				Fields: map[string]*structpb.Value{
-					"category": {Kind: &structpb.Value_StringValue{StringValue: imgClassificationOp.Category}},
-					"score":    {Kind: &structpb.Value_NumberValue{NumberValue: float64(imgClassificationOp.Score)}},
-				},
-			},
-		})
+		outputJson, err := protojson.Marshal(imgClassificationOp)
+		if err != nil {
+			return nil, err
+		}
+		output := &structpb.Struct{}
+		err = protojson.Unmarshal(outputJson, output)
+		if err != nil {
+			return nil, err
+		}
+		outputs = append(outputs, output)
 	}
 	return outputs, nil
-}
-
-// encode the bytes to base64 string if not already encoded
-func encodeToBase64(input []byte) (string, error) {
-	if len(input) <= 0 {
-		return "", fmt.Errorf("invalid byte value :%v", input)
-	}
-	return base64.StdEncoding.EncodeToString(input), nil
-}
-
-// decode the base64 string to bytesp[]
-func decodeFromBase64(b64str string) ([]byte, error) {
-	return base64.StdEncoding.DecodeString(b64str)
 }

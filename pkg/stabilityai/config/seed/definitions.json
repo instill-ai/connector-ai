@@ -3,68 +3,23 @@
     "uid": "c86a95cc-7d32-4e22-a290-8c699f6705a4",
     "id": "ai-stability-ai",
     "title": "Stability AI",
-    "documentationUrl": "https://www.instill.tech/docs/vdp/ai-connectors/stability-ai",
+    "documentation_url": "https://www.instill.tech/docs/vdp/ai-connectors/stability-ai",
     "icon": "stabilityai.svg",
-    "iconUrl": "",
+    "icon_url": "",
     "spec": {
-      "connectionSpecification": {
-        "$schema": "http://json-schema.org/draft-07/schema#",
-        "title": "Stability AI AI Connector Spec",
-        "type": "object",
-        "required": [
-          "api_key",
-          "task",
-          "engine"
-        ],
-        "additionalProperties": false,
-        "properties": {
-          "api_key": {
-            "credential_field": true,
-            "title": "API Key",
-            "description": "Fill your Stability AI API key. To find your keys, navigate to your DreamStudio's Account page.",
-            "type": "string"
-          },
-          "task": {
-            "title": "Task",
-            "description": "AI task type.",
-            "type": "string",
-            "enum": [
-              "Text to Image",
-              "Image to Image"
-            ]
-          },
-          "engine": {
-            "title": "Engine",
-            "description": "Stability AI Engine (model) to be used.",
-            "type": "string",
-            "default": "stable-diffusion-xl-beta-v2-2-2",
-            "enum": [
-              "stable-diffusion-xl-1024-v1-0",
-              "stable-diffusion-xl-1024-v0-9",
-              "stable-diffusion-v1",
-              "stable-diffusion-v1-5",
-              "stable-diffusion-512-v2-0",
-              "stable-diffusion-768-v2-0",
-              "stable-diffusion-512-v2-1",
-              "stable-diffusion-768-v2-1",
-              "stable-diffusion-xl-beta-v2-2-2",
-              "stable-inpainting-v1-0",
-              "stable-inpainting-512-v2-0"
-            ]
-          }
-        }
+      "resource_specification": {
+        "$ref": "connector.json"
       },
-      "documentationUrl": "https://www.instill.tech/docs/vdp/ai-connectors/stability-ai"
+      "component_specification": {
+        "$ref": "component.json"
+      },
+      "openapi_specifications": {
+        "$ref": "openapi.json"
+      }
     },
     "public": true,
     "custom": false,
     "tombstone": false,
-    "vendorAttributes": {
-      "githubIssueLabel": "stability-ai",
-      "license": "MIT",
-      "releaseStage": "alpha",
-      "resourceRequirements": {},
-      "modelType": "api"
-    }
+    "vendor_attributes": {}
   }
 ]

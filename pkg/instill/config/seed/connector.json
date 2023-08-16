@@ -1,0 +1,21 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Instill Model Connector Spec",
+  "type": "object",
+  "required": ["api_token"],
+  "additionalProperties": true,
+  "properties": {
+    "api_token": {
+      "credential_field": true,
+      "title": "API Token",
+      "description": "To access models on Instill Cloud, enter your Instill Cloud API Token. You can find your tokens by visiting your Instill Cloud's Settings > API Tokens page. Leave this field empty to access models on your local Instill Model.",
+      "type": "string"
+    },
+    "server_url": {
+      "title": "Server URL",
+      "description": "Base URL for the Instill Model API. To access models on Instill Cloud, use the base URL `https://api-model.instill.tech`. To access models on your local Instill Model, use the base URL `http://localhost:9080`.",
+      "type": "string",
+      "default": "https://api-model.instill.tech"
+    }
+  }
+}

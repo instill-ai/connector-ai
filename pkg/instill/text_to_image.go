@@ -5,40 +5,36 @@ import (
 	"fmt"
 
 	"google.golang.org/grpc/metadata"
+	"google.golang.org/protobuf/encoding/protojson"
+	"google.golang.org/protobuf/types/known/structpb"
 
 	modelPB "github.com/instill-ai/protogen-go/model/model/v1alpha"
-	connectorPB "github.com/instill-ai/protogen-go/vdp/connector/v1alpha"
 )
 
-func (c *Connection) executeTextToImage(grpcClient modelPB.ModelPublicServiceClient, model *Model, inputs []*connectorPB.DataPayload) ([]*connectorPB.DataPayload, error) {
+func (c *Connection) executeTextToImage(grpcClient modelPB.ModelPublicServiceClient, modelName string, inputs []*structpb.Struct) ([]*structpb.Struct, error) {
 	if len(inputs) <= 0 {
-		return nil, fmt.Errorf("invalid input: %v for model: %s", inputs, model.Name)
+		return nil, fmt.Errorf("invalid input: %v for model: %s", inputs, modelName)
 	}
 
-	outputs := []*connectorPB.DataPayload{}
-	for idx := range inputs {
-		dataPayload := inputs[idx]
-		if len(dataPayload.Texts) <= 0 {
-			return nil, fmt.Errorf("invalid input: %v for model: %s", dataPayload, model.Name)
+	outputs := []*structpb.Struct{}
+	for _, input := range inputs {
+		inputJson, err := protojson.Marshal(input)
+		if err != nil {
+			return nil, err
 		}
-		steps := int64(dataPayload.GetMetadata().GetFields()["steps"].GetNumberValue())
-		cfgScale := float32(dataPayload.GetMetadata().GetFields()["cfg_scale"].GetNumberValue())
-		seed := int64(dataPayload.GetMetadata().GetFields()["seed"].GetNumberValue())
-		samples := int64(dataPayload.GetMetadata().GetFields()["samples"].GetNumberValue())
+		textToImageInput := &modelPB.TextToImageInput{}
+		err = protojson.Unmarshal(inputJson, textToImageInput)
+		if err != nil {
+			return nil, err
+		}
 
 		taskInput := &modelPB.TaskInput_TextToImage{
-			TextToImage: &modelPB.TextToImageInput{
-				Prompt:   inputs[idx].Texts[0],
-				Steps:    &steps,
-				CfgScale: &cfgScale,
-				Seed:     &seed,
-				Samples:  &samples,
-			},
+			TextToImage: textToImageInput,
 		}
 
 		// only support batch 1
 		req := modelPB.TriggerModelRequest{
-			Name:       model.Name,
+			Name:       modelName,
 			TaskInputs: []*modelPB.TaskInput{{Input: taskInput}},
 		}
 		if c.client == nil || grpcClient == nil {
@@ -52,28 +48,24 @@ func (c *Connection) executeTextToImage(grpcClient modelPB.ModelPublicServiceCli
 		}
 		taskOutputs := res.GetTaskOutputs()
 		if len(taskOutputs) <= 0 {
-			return nil, fmt.Errorf("invalid output: %v for model: %s", taskOutputs, model.Name)
+			return nil, fmt.Errorf("invalid output: %v for model: %s", taskOutputs, modelName)
 		}
 
 		textToImgOutput := taskOutputs[0].GetTextToImage()
 		if textToImgOutput == nil || len(textToImgOutput.Images) <= 0 {
-			return nil, fmt.Errorf("invalid output: %v for model: %s", textToImgOutput, model.Name)
+			return nil, fmt.Errorf("invalid output: %v for model: %s", textToImgOutput, modelName)
 		}
 
-		images := [][]byte{}
-
-		for imageIdx := range textToImgOutput.Images {
-			image, err := decodeFromBase64(textToImgOutput.Images[imageIdx])
-			if err != nil {
-				return nil, fmt.Errorf("invalid output: %v for model: %s", textToImgOutput, model.Name)
-			}
-			images = append(images, image)
+		outputJson, err := protojson.Marshal(textToImgOutput)
+		if err != nil {
+			return nil, err
 		}
-
-		outputs = append(outputs, &connectorPB.DataPayload{
-			DataMappingIndex: inputs[idx].DataMappingIndex,
-			Images:           images,
-		})
+		output := &structpb.Struct{}
+		err = protojson.Unmarshal(outputJson, output)
+		if err != nil {
+			return nil, err
+		}
+		outputs = append(outputs, output)
 	}
 	return outputs, nil
 }

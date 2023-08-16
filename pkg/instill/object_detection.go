@@ -5,35 +5,38 @@ import (
 	"fmt"
 
 	"google.golang.org/grpc/metadata"
+	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/types/known/structpb"
 
 	modelPB "github.com/instill-ai/protogen-go/model/model/v1alpha"
-	connectorPB "github.com/instill-ai/protogen-go/vdp/connector/v1alpha"
 )
 
-func (c *Connection) executeObjectDetection(grpcClient modelPB.ModelPublicServiceClient, model *Model, inputs []*connectorPB.DataPayload) ([]*connectorPB.DataPayload, error) {
+func (c *Connection) executeObjectDetection(grpcClient modelPB.ModelPublicServiceClient, modelName string, inputs []*structpb.Struct) ([]*structpb.Struct, error) {
 	if len(inputs) <= 0 {
-		return nil, fmt.Errorf("invalid input: %v for model: %s", inputs, model.Name)
+		return nil, fmt.Errorf("invalid input: %v for model: %s", inputs, modelName)
 	}
 
 	tasklInputs := []*modelPB.TaskInput{}
-	for idx := range inputs {
-		dataPayload := inputs[idx]
-		if len(dataPayload.Images) <= 0 {
-			return nil, fmt.Errorf("invalid input: %v for model: %s", dataPayload, model.Name)
-		}
-		base64Str, err := encodeToBase64(dataPayload.Images[0])
+	for _, input := range inputs {
+		inputJson, err := protojson.Marshal(input)
 		if err != nil {
-			return nil, fmt.Errorf("invalid image string: %v for model: %s", dataPayload.Images[0], model.Name)
+			return nil, err
 		}
+
+		detectionInput := &modelPB.DetectionInput{}
+		err = protojson.Unmarshal(inputJson, detectionInput)
+		if err != nil {
+			return nil, err
+		}
+
 		modelInput := &modelPB.TaskInput_Detection{
-			Detection: &modelPB.DetectionInput{Type: &modelPB.DetectionInput_ImageBase64{ImageBase64: base64Str}},
+			Detection: detectionInput,
 		}
 		tasklInputs = append(tasklInputs, &modelPB.TaskInput{Input: modelInput})
 	}
 
 	req := modelPB.TriggerModelRequest{
-		Name:       model.Name,
+		Name:       modelName,
 		TaskInputs: tasklInputs,
 	}
 	if c.client == nil || grpcClient == nil {
@@ -49,48 +52,25 @@ func (c *Connection) executeObjectDetection(grpcClient modelPB.ModelPublicServic
 
 	taskOutputs := res.GetTaskOutputs()
 	if len(taskOutputs) <= 0 {
-		return nil, fmt.Errorf("invalid output: %v for model: %s", taskOutputs, model.Name)
+		return nil, fmt.Errorf("invalid output: %v for model: %s", taskOutputs, modelName)
 	}
 
-	outputs := []*connectorPB.DataPayload{}
+	outputs := []*structpb.Struct{}
 	for idx := range inputs {
 		objDetectionOutput := taskOutputs[idx].GetDetection()
 		if objDetectionOutput == nil {
-			return nil, fmt.Errorf("invalid output: %v for model: %s", objDetectionOutput, model.Name)
+			return nil, fmt.Errorf("invalid output: %v for model: %s", objDetectionOutput, modelName)
 		}
-		values := make([]*structpb.Value, 0, len(objDetectionOutput.Objects))
-		for _, o := range objDetectionOutput.Objects {
-			obj := &structpb.Value{
-				Kind: &structpb.Value_StructValue{
-					StructValue: &structpb.Struct{
-						Fields: map[string]*structpb.Value{
-							"category": {Kind: &structpb.Value_StringValue{StringValue: o.Category}},
-							"score":    {Kind: &structpb.Value_NumberValue{NumberValue: float64(o.Score)}},
-							"bounding_box": {Kind: &structpb.Value_StructValue{
-								StructValue: &structpb.Struct{
-									Fields: map[string]*structpb.Value{
-										"top":    {Kind: &structpb.Value_NumberValue{NumberValue: float64(o.BoundingBox.Top)}},
-										"left":   {Kind: &structpb.Value_NumberValue{NumberValue: float64(o.BoundingBox.Left)}},
-										"width":  {Kind: &structpb.Value_NumberValue{NumberValue: float64(o.BoundingBox.Width)}},
-										"height": {Kind: &structpb.Value_NumberValue{NumberValue: float64(o.BoundingBox.Height)}},
-									},
-								},
-							},
-							},
-						},
-					},
-				},
-			}
-			values = append(values, obj)
+		outputJson, err := protojson.Marshal(objDetectionOutput)
+		if err != nil {
+			return nil, err
 		}
-		outputs = append(outputs, &connectorPB.DataPayload{
-			DataMappingIndex: inputs[idx].DataMappingIndex,
-			StructuredData: &structpb.Struct{
-				Fields: map[string]*structpb.Value{
-					"objects": {Kind: &structpb.Value_ListValue{ListValue: &structpb.ListValue{Values: values}}},
-				},
-			},
-		})
+		output := &structpb.Struct{}
+		err = protojson.Unmarshal(outputJson, output)
+		if err != nil {
+			return nil, err
+		}
+		outputs = append(outputs, output)
 
 	}
 

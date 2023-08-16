@@ -5,34 +5,36 @@ import (
 	"fmt"
 
 	"google.golang.org/grpc/metadata"
+	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/types/known/structpb"
 
 	modelPB "github.com/instill-ai/protogen-go/model/model/v1alpha"
-	connectorPB "github.com/instill-ai/protogen-go/vdp/connector/v1alpha"
 )
 
-func (c *Connection) executeKeyPointDetection(grpcClient modelPB.ModelPublicServiceClient, model *Model, inputs []*connectorPB.DataPayload) ([]*connectorPB.DataPayload, error) {
+func (c *Connection) executeKeyPointDetection(grpcClient modelPB.ModelPublicServiceClient, modelName string, inputs []*structpb.Struct) ([]*structpb.Struct, error) {
 	if len(inputs) <= 0 {
-		return nil, fmt.Errorf("invalid input: %v for model: %s", inputs, model.Name)
+		return nil, fmt.Errorf("invalid input: %v for model: %s", inputs, modelName)
 	}
 	tasklInputs := []*modelPB.TaskInput{}
-	for idx := range inputs {
-		dataPayload := inputs[idx]
-		if len(dataPayload.Images) <= 0 {
-			return nil, fmt.Errorf("invalid input: %v for model: %s", dataPayload, model.Name)
-		}
-		base64Str, err := encodeToBase64(dataPayload.Images[0])
+	for _, input := range inputs {
+		inputJson, err := protojson.Marshal(input)
 		if err != nil {
-			return nil, fmt.Errorf("invalid image string: %v for model: %s", dataPayload.Images[0], model.Name)
+			return nil, err
 		}
+		keypointInput := &modelPB.KeypointInput{}
+		err = protojson.Unmarshal(inputJson, keypointInput)
+		if err != nil {
+			return nil, err
+		}
+
 		taskInput := &modelPB.TaskInput_Keypoint{
-			Keypoint: &modelPB.KeypointInput{Type: &modelPB.KeypointInput_ImageBase64{ImageBase64: base64Str}},
+			Keypoint: keypointInput,
 		}
 		tasklInputs = append(tasklInputs, &modelPB.TaskInput{Input: taskInput})
 	}
 
 	req := modelPB.TriggerModelRequest{
-		Name:       model.Name,
+		Name:       modelName,
 		TaskInputs: tasklInputs,
 	}
 	if c.client == nil || grpcClient == nil {
@@ -46,63 +48,24 @@ func (c *Connection) executeKeyPointDetection(grpcClient modelPB.ModelPublicServ
 	}
 	taskOutputs := res.GetTaskOutputs()
 	if len(taskOutputs) <= 0 {
-		return nil, fmt.Errorf("invalid output: %v for model: %s", taskOutputs, model.Name)
+		return nil, fmt.Errorf("invalid output: %v for model: %s", taskOutputs, modelName)
 	}
-	outputs := []*connectorPB.DataPayload{}
+	outputs := []*structpb.Struct{}
 	for idx := range inputs {
 		keyPointOutput := taskOutputs[idx].GetKeypoint()
 		if keyPointOutput == nil {
-			return nil, fmt.Errorf("invalid output: %v for model: %s", keyPointOutput, model.Name)
+			return nil, fmt.Errorf("invalid output: %v for model: %s", keyPointOutput, modelName)
 		}
-		values := make([]*structpb.Value, 0, len(keyPointOutput.Objects))
-		for _, o := range keyPointOutput.Objects {
-			keyPoints := make([]*structpb.Value, 0, len(o.Keypoints))
-			for _, k := range o.Keypoints {
-				kp := &structpb.Value{
-					Kind: &structpb.Value_StructValue{
-						StructValue: &structpb.Struct{
-							Fields: map[string]*structpb.Value{
-								"v": {Kind: &structpb.Value_NumberValue{NumberValue: float64(k.V)}},
-								"x": {Kind: &structpb.Value_NumberValue{NumberValue: float64(k.X)}},
-								"y": {Kind: &structpb.Value_NumberValue{NumberValue: float64(k.Y)}},
-							},
-						},
-					},
-				}
-				keyPoints = append(keyPoints, kp)
-			}
-			obj := &structpb.Value{
-				Kind: &structpb.Value_StructValue{
-					StructValue: &structpb.Struct{
-						Fields: map[string]*structpb.Value{
-							"score":     {Kind: &structpb.Value_NumberValue{NumberValue: float64(o.Score)}},
-							"keypoints": {Kind: &structpb.Value_ListValue{ListValue: &structpb.ListValue{Values: keyPoints}}},
-							"bounding_box": {Kind: &structpb.Value_StructValue{
-								StructValue: &structpb.Struct{
-									Fields: map[string]*structpb.Value{
-										"top":    {Kind: &structpb.Value_NumberValue{NumberValue: float64(o.BoundingBox.Top)}},
-										"left":   {Kind: &structpb.Value_NumberValue{NumberValue: float64(o.BoundingBox.Left)}},
-										"width":  {Kind: &structpb.Value_NumberValue{NumberValue: float64(o.BoundingBox.Width)}},
-										"height": {Kind: &structpb.Value_NumberValue{NumberValue: float64(o.BoundingBox.Height)}},
-									},
-								},
-							},
-							},
-						},
-					},
-				},
-			}
-			values = append(values, obj)
+		outputJson, err := protojson.Marshal(keyPointOutput)
+		if err != nil {
+			return nil, err
 		}
-
-		outputs = append(outputs, &connectorPB.DataPayload{
-			DataMappingIndex: inputs[idx].DataMappingIndex,
-			StructuredData: &structpb.Struct{
-				Fields: map[string]*structpb.Value{
-					"objects": {Kind: &structpb.Value_ListValue{ListValue: &structpb.ListValue{Values: values}}},
-				},
-			},
-		})
+		output := &structpb.Struct{}
+		err = protojson.Unmarshal(outputJson, output)
+		if err != nil {
+			return nil, err
+		}
+		outputs = append(outputs, output)
 
 	}
 

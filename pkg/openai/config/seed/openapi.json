@@ -1,0 +1,155 @@
+{
+  "TASK_TEXT_GENERATION": {
+    "openapi": "3.0.0",
+    "info": {
+      "version": "1.0.0",
+      "title": "OpenAI Connector Openapi"
+    },
+    "paths": {
+      "/execute": {
+        "post": {
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "inputs": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "data.json#/TASK_TEXT_GENERATION/input"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "outputs": {
+                        "type": "array",
+                        "items": {
+                          "$ref": "data.json#/TASK_TEXT_GENERATION/output"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "TASK_TEXT_EMBEDDINGS": {
+    "openapi": "3.0.0",
+    "info": {
+      "version": "1.0.0",
+      "title": "OpenAI Connector Openapi"
+    },
+    "paths": {
+      "/execute": {
+        "post": {
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "inputs": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "data.json#/TASK_TEXT_EMBEDDINGS/input"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "outputs": {
+                        "type": "array",
+                        "items": {
+                          "$ref": "data.json#/TASK_TEXT_EMBEDDINGS/output"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "TASK_SPEECH_RECOGNITION": {
+    "openapi": "3.0.0",
+    "info": {
+      "version": "1.0.0",
+      "title": "OpenAI Connector Openapi"
+    },
+    "paths": {
+      "/execute": {
+        "post": {
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "inputs": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "data.json#/TASK_SPEECH_RECOGNITION/input"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "outputs": {
+                        "type": "array",
+                        "items": {
+                          "$ref": "data.json#/TASK_SPEECH_RECOGNITION/output"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

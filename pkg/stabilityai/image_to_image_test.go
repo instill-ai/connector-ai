@@ -2,6 +2,7 @@ package stabilityai
 
 import (
 	"bytes"
+	"encoding/base64"
 	"errors"
 	"io"
 	"net/http"
@@ -15,6 +16,7 @@ func TestGenerateImageFromImage(t *testing.T) {
 	mockClient := &MockHTTPClient{}
 	stabilityClient := Client{APIKey: "test_key", HTTPClient: mockClient}
 
+	weight := 0.5
 	tests := []struct {
 		name        string
 		req         ImageToImageReq
@@ -24,7 +26,7 @@ func TestGenerateImageFromImage(t *testing.T) {
 	}{
 		{
 			name:        "non 200 status code",
-			req:         ImageToImageReq{InitImage: "a", TextPrompts: []TextPrompt{{Text: "a cat and a dog", Weight: 0.5}}},
+			req:         ImageToImageReq{InitImage: base64.StdEncoding.EncodeToString([]byte("a")), TextPrompts: []TextPrompt{{Text: "a cat and a dog", Weight: &weight}}},
 			expectedErr: errors.New("non-200 status code: 401, while calling URL: https://api.stability.ai/v1/generation/stable-diffusion-v1-5/image-to-image, response body: {\"id\": \"9160aa70-222f-4a36-9eb7-475e2668362a\",\"name\": \"unauthorized\",\"message\": \"missing authorization header\"}"),
 			setMocks: func() {
 				mockResponse = func() (*http.Response, error) {
@@ -34,7 +36,7 @@ func TestGenerateImageFromImage(t *testing.T) {
 		},
 		{
 			name:        "json unmarshal error invalid response",
-			req:         ImageToImageReq{InitImage: "a", TextPrompts: []TextPrompt{{Text: "a cat and a dog", Weight: 0.5}}},
+			req:         ImageToImageReq{InitImage: base64.StdEncoding.EncodeToString([]byte("a")), TextPrompts: []TextPrompt{{Text: "a cat and a dog", Weight: &weight}}},
 			expectedErr: errors.New("error in json decode: unexpected end of JSON input, while calling URL: https://api.stability.ai/v1/generation/stable-diffusion-v1-5/image-to-image, response body: {"),
 			setMocks: func() {
 				mockResponse = func() (*http.Response, error) {
@@ -44,7 +46,7 @@ func TestGenerateImageFromImage(t *testing.T) {
 		},
 		{
 			name:        "valid response",
-			req:         ImageToImageReq{InitImage: "a", TextPrompts: []TextPrompt{{Text: "a cat and a dog", Weight: 0.5}}},
+			req:         ImageToImageReq{InitImage: base64.StdEncoding.EncodeToString([]byte("a")), TextPrompts: []TextPrompt{{Text: "a cat and a dog", Weight: &weight}}},
 			expectedRes: []Image{{Base64: "a", Seed: 1234, FinishReason: "SUCCESS"}},
 			setMocks: func() {
 				mockResponse = func() (*http.Response, error) {

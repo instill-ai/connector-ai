@@ -1,0 +1,111 @@
+{
+  "TASK_SPEECH_RECOGNITION": {
+    "input": {
+      "type": "object",
+      "required": [
+        "task", "audio", "model"
+      ],
+      "properties": {
+        "task": {
+          "const": "TASK_SPEECH_RECOGNITION"
+        },
+        "audio": {
+          "$ref": "openai.json#/components/schemas/CreateTranscriptionRequest/properties/file"
+        },
+        "model": {
+          "$ref": "openai.json#/components/schemas/CreateTranscriptionRequest/properties/model"
+        },
+        "temperature": {
+          "$ref": "openai.json#/components/schemas/CreateTranscriptionRequest/properties/temperature"
+        },
+        "language": {
+          "$ref": "openai.json#/components/schemas/CreateTranscriptionRequest/properties/language"
+        },
+        "prompt": {
+          "$ref": "openai.json#/components/schemas/CreateTranscriptionRequest/properties/prompt"
+        }
+      }
+    },
+    "output": {
+      "type": "object",
+      "properties": {
+        "text": {
+          "$ref": "openai.json#/components/schemas/CreateTranscriptionResponse/properties/text"
+        }
+      }
+    }
+  },
+  "TASK_TEXT_EMBEDDINGS": {
+    "input": {
+      "type": "object",
+      "required": [
+        "task", "text", "model"
+      ],
+      "properties": {
+        "task": {
+          "const": "TASK_TEXT_EMBEDDINGS"
+        },
+        "text": {
+          "type": "string"
+        },
+        "model": {
+          "$ref": "openai.json#/components/schemas/CreateEmbeddingRequest/properties/model"
+        }
+      }
+    },
+    "output": {
+      "type": "object",
+      "properties": {
+        "embedding": {
+          "$ref": "https://raw.githubusercontent.com/instill-ai/connector/622978a8ce8b5c4f2242afad7e5ba7d4d18cab27/shared_schema.json#/$defs/instill_types/embedding"
+        }
+      }
+    }
+  },
+  "TASK_TEXT_GENERATION": {
+    "input": {
+      "type": "object",
+      "required": [
+        "task", "model", "prompt"
+      ],
+      "properties": {
+        "task": {
+          "const": "TASK_TEXT_GENERATION"
+        },
+        "prompt": {
+          "type": "string"
+        },
+        "model": {
+          "$ref": "openai.json#/components/schemas/CreateChatCompletionRequest/properties/model"
+        },
+        "system_message": {
+          "title": "System message",
+          "description": "The system message helps set the behavior of the assistant. For example, you can modify the personality of the assistant or provide specific instructions about how it should behave throughout the conversation. By default, the model’s behavior is using a generic message as \"You are a helpful assistant.\"",
+          "type": "string",
+          "default": "You are a helpful assistant.",
+          "maxLength": 2048
+        },
+        "temperature": {
+          "$ref": "openai.json#/components/schemas/CreateChatCompletionRequest/properties/temperature"
+        },
+        "n": {
+          "$ref": "openai.json#/components/schemas/CreateChatCompletionRequest/properties/n"
+        },
+        "max_tokens": {
+          "$ref": "openai.json#/components/schemas/CreateChatCompletionRequest/properties/max_tokens"
+        }
+      }
+    },
+    "output": {
+      "type": "object",
+      "properties": {
+        "texts": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
