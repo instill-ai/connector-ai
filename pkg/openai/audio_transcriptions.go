@@ -21,10 +21,6 @@ type AudioTranscriptionInput struct {
 	Language    *string  `json:"language,omitempty"`
 }
 
-type AudioTranscriptionOutput struct {
-	Text string `json:"text"`
-}
-
 type AudioTranscriptionReq struct {
 	File        []byte   `json:"file"`
 	Model       string   `json:"model"`

@@ -24,7 +24,10 @@ func (c *Connection) executeObjectDetection(grpcClient modelPB.ModelPublicServic
 		}
 
 		detectionInput := &modelPB.DetectionInput{}
-		protojson.Unmarshal(inputJson, detectionInput)
+		err = protojson.Unmarshal(inputJson, detectionInput)
+		if err != nil {
+			return nil, err
+		}
 
 		modelInput := &modelPB.TaskInput_Detection{
 			Detection: detectionInput,
@@ -63,7 +66,10 @@ func (c *Connection) executeObjectDetection(grpcClient modelPB.ModelPublicServic
 			return nil, err
 		}
 		output := &structpb.Struct{}
-		protojson.Unmarshal(outputJson, output)
+		err = protojson.Unmarshal(outputJson, output)
+		if err != nil {
+			return nil, err
+		}
 		outputs = append(outputs, output)
 
 	}

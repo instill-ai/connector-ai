@@ -26,8 +26,7 @@ func TestGenerateImageFromText(t *testing.T) {
 	mockClient := &MockHTTPClient{}
 	stabilityClient := Client{APIKey: "test_key", HTTPClient: mockClient}
 
-	var weight float64
-	weight = 0.5
+	weight := 0.5
 	tests := []struct {
 		name        string
 		req         TextToImageReq

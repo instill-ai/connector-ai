@@ -23,7 +23,10 @@ func (c *Connection) executeOCR(grpcClient modelPB.ModelPublicServiceClient, mod
 			return nil, err
 		}
 		ocrInput := &modelPB.OcrInput{}
-		protojson.Unmarshal(inputJson, ocrInput)
+		err = protojson.Unmarshal(inputJson, ocrInput)
+		if err != nil {
+			return nil, err
+		}
 
 		taskInput := &modelPB.TaskInput_Ocr{
 			Ocr: ocrInput,
@@ -57,7 +60,10 @@ func (c *Connection) executeOCR(grpcClient modelPB.ModelPublicServiceClient, mod
 			return nil, err
 		}
 		output := &structpb.Struct{}
-		protojson.Unmarshal(outputJson, output)
+		err = protojson.Unmarshal(outputJson, output)
+		if err != nil {
+			return nil, err
+		}
 		outputs = append(outputs, output)
 	}
 	return outputs, nil

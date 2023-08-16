@@ -24,7 +24,10 @@ func (c *Connection) executeTextGeneration(grpcClient modelPB.ModelPublicService
 			return nil, err
 		}
 		textGenerationInput := &modelPB.TextGenerationInput{}
-		protojson.Unmarshal(inputJson, textGenerationInput)
+		err = protojson.Unmarshal(inputJson, textGenerationInput)
+		if err != nil {
+			return nil, err
+		}
 
 		taskInput := &modelPB.TaskInput_TextGeneration{
 			TextGeneration: textGenerationInput,
@@ -58,7 +61,10 @@ func (c *Connection) executeTextGeneration(grpcClient modelPB.ModelPublicService
 			return nil, err
 		}
 		output := &structpb.Struct{}
-		protojson.Unmarshal(outputJson, output)
+		err = protojson.Unmarshal(outputJson, output)
+		if err != nil {
+			return nil, err
+		}
 		outputs = append(outputs, output)
 
 	}

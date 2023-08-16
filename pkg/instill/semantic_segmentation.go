@@ -22,7 +22,10 @@ func (c *Connection) executeSemanticSegmentation(grpcClient modelPB.ModelPublicS
 			return nil, err
 		}
 		semanticSegmentationInput := &modelPB.SemanticSegmentationInput{}
-		protojson.Unmarshal(inputJson, semanticSegmentationInput)
+		err = protojson.Unmarshal(inputJson, semanticSegmentationInput)
+		if err != nil {
+			return nil, err
+		}
 
 		taskInput := &modelPB.TaskInput_SemanticSegmentation{
 			SemanticSegmentation: semanticSegmentationInput,
@@ -60,7 +63,10 @@ func (c *Connection) executeSemanticSegmentation(grpcClient modelPB.ModelPublicS
 			return nil, err
 		}
 		output := &structpb.Struct{}
-		protojson.Unmarshal(outputJson, output)
+		err = protojson.Unmarshal(outputJson, output)
+		if err != nil {
+			return nil, err
+		}
 		outputs = append(outputs, output)
 	}
 	return outputs, nil

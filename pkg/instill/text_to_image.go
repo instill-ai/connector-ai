@@ -23,7 +23,10 @@ func (c *Connection) executeTextToImage(grpcClient modelPB.ModelPublicServiceCli
 			return nil, err
 		}
 		textToImageInput := &modelPB.TextToImageInput{}
-		protojson.Unmarshal(inputJson, textToImageInput)
+		err = protojson.Unmarshal(inputJson, textToImageInput)
+		if err != nil {
+			return nil, err
+		}
 
 		taskInput := &modelPB.TaskInput_TextToImage{
 			TextToImage: textToImageInput,
@@ -58,7 +61,10 @@ func (c *Connection) executeTextToImage(grpcClient modelPB.ModelPublicServiceCli
 			return nil, err
 		}
 		output := &structpb.Struct{}
-		protojson.Unmarshal(outputJson, output)
+		err = protojson.Unmarshal(outputJson, output)
+		if err != nil {
+			return nil, err
+		}
 		outputs = append(outputs, output)
 	}
 	return outputs, nil

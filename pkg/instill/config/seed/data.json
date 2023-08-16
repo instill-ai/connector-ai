@@ -27,7 +27,7 @@
       "type": "object",
       "properties": {
         "classification": {
-          "$ref": "https://raw.githubusercontent.com/instill-ai/connector/component_centric_refactor/shared_schema.json#/$defs/instill_types/classification"
+          "$ref": "https://raw.githubusercontent.com/instill-ai/connector/622978a8ce8b5c4f2242afad7e5ba7d4d18cab27/shared_schema.json#/$defs/instill_types/classification"
         }
       }
     }
@@ -44,7 +44,7 @@
       "type": "object",
       "properties": {
         "instance_segmentation": {
-          "$ref": "https://raw.githubusercontent.com/instill-ai/connector/component_centric_refactor/shared_schema.json#/$defs/instill_types/instance_segmentation"
+          "$ref": "https://raw.githubusercontent.com/instill-ai/connector/622978a8ce8b5c4f2242afad7e5ba7d4d18cab27/shared_schema.json#/$defs/instill_types/instance_segmentation"
         }
       }
     }
@@ -61,7 +61,7 @@
       "type": "object",
       "properties": {
         "keypoint": {
-          "$ref": "https://raw.githubusercontent.com/instill-ai/connector/component_centric_refactor/shared_schema.json#/$defs/instill_types/keypoint"
+          "$ref": "https://raw.githubusercontent.com/instill-ai/connector/622978a8ce8b5c4f2242afad7e5ba7d4d18cab27/shared_schema.json#/$defs/instill_types/keypoint"
         }
       }
     }
@@ -78,7 +78,7 @@
       "type": "object",
       "properties": {
         "detection": {
-          "$ref": "https://raw.githubusercontent.com/instill-ai/connector/component_centric_refactor/shared_schema.json#/$defs/instill_types/detection"
+          "$ref": "https://raw.githubusercontent.com/instill-ai/connector/622978a8ce8b5c4f2242afad7e5ba7d4d18cab27/shared_schema.json#/$defs/instill_types/detection"
         }
       }
     }
@@ -95,7 +95,7 @@
       "type": "object",
       "properties": {
         "ocr": {
-          "$ref": "https://raw.githubusercontent.com/instill-ai/connector/component_centric_refactor/shared_schema.json#/$defs/instill_types/ocr"
+          "$ref": "https://raw.githubusercontent.com/instill-ai/connector/622978a8ce8b5c4f2242afad7e5ba7d4d18cab27/shared_schema.json#/$defs/instill_types/ocr"
         }
       }
     }
@@ -112,7 +112,7 @@
       "type": "object",
       "properties": {
         "semantic_segmentation": {
-          "$ref": "https://raw.githubusercontent.com/instill-ai/connector/component_centric_refactor/shared_schema.json#/$defs/instill_types/semantic_segmentation"
+          "$ref": "https://raw.githubusercontent.com/instill-ai/connector/622978a8ce8b5c4f2242afad7e5ba7d4d18cab27/shared_schema.json#/$defs/instill_types/semantic_segmentation"
         }
       }
     }

@@ -57,7 +57,7 @@
       "type": "object",
       "properties": {
         "embedding": {
-          "$ref": "https://raw.githubusercontent.com/instill-ai/connector/component_centric_refactor/shared_schema.json#/$defs/instill_types/embedding"
+          "$ref": "https://raw.githubusercontent.com/instill-ai/connector/622978a8ce8b5c4f2242afad7e5ba7d4d18cab27/shared_schema.json#/$defs/instill_types/embedding"
         }
       }
     }

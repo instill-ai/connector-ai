@@ -18,7 +18,6 @@ import (
 	"github.com/instill-ai/connector/pkg/base"
 	"github.com/instill-ai/connector/pkg/configLoader"
 
-	commonPB "github.com/instill-ai/protogen-go/common/task/v1alpha"
 	connectorPB "github.com/instill-ai/protogen-go/vdp/connector/v1alpha"
 )
 
@@ -37,11 +36,6 @@ var (
 	definitionJSON []byte
 	once           sync.Once
 	connector      base.IConnector
-	taskToNameMap  = map[string]commonPB.Task{
-		textGenerationTask:    commonPB.Task_TASK_TEXT_GENERATION,
-		textEmbeddingsTask:    commonPB.Task_TASK_TEXT_EMBEDDINGS,
-		speechRecognitionTask: commonPB.Task_TASK_SPEECH_RECOGNITION,
-	}
 )
 
 type ConnectorOptions struct{}
@@ -198,7 +192,10 @@ func (c *Connection) Execute(inputs []*structpb.Struct) ([]*structpb.Struct, err
 				return nil, err
 			}
 			output := structpb.Struct{}
-			protojson.Unmarshal(outputJson, &output)
+			err = protojson.Unmarshal(outputJson, &output)
+			if err != nil {
+				return nil, err
+			}
 			outputs = append(outputs, &output)
 
 		case textEmbeddingsTask:
@@ -252,10 +249,8 @@ func (c *Connection) Execute(inputs []*structpb.Struct) ([]*structpb.Struct, err
 			if err != nil {
 				return inputs, err
 			}
-			outputStruct := AudioTranscriptionOutput{
-				Text: resp.Text,
-			}
-			output, err := base.ConvertToStructpb(outputStruct)
+
+			output, err := base.ConvertToStructpb(resp)
 			if err != nil {
 				return nil, err
 			}

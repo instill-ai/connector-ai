@@ -22,7 +22,10 @@ func (c *Connection) executeKeyPointDetection(grpcClient modelPB.ModelPublicServ
 			return nil, err
 		}
 		keypointInput := &modelPB.KeypointInput{}
-		protojson.Unmarshal(inputJson, keypointInput)
+		err = protojson.Unmarshal(inputJson, keypointInput)
+		if err != nil {
+			return nil, err
+		}
 
 		taskInput := &modelPB.TaskInput_Keypoint{
 			Keypoint: keypointInput,
@@ -58,7 +61,10 @@ func (c *Connection) executeKeyPointDetection(grpcClient modelPB.ModelPublicServ
 			return nil, err
 		}
 		output := &structpb.Struct{}
-		protojson.Unmarshal(outputJson, output)
+		err = protojson.Unmarshal(outputJson, output)
+		if err != nil {
+			return nil, err
+		}
 		outputs = append(outputs, output)
 
 	}

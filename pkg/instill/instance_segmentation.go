@@ -23,7 +23,10 @@ func (c *Connection) executeInstanceSegmentation(grpcClient modelPB.ModelPublicS
 			return nil, err
 		}
 		segmentationInput := &modelPB.InstanceSegmentationInput{}
-		protojson.Unmarshal(inputJson, segmentationInput)
+		err = protojson.Unmarshal(inputJson, segmentationInput)
+		if err != nil {
+			return nil, err
+		}
 
 		taskInput := &modelPB.TaskInput_InstanceSegmentation{
 			InstanceSegmentation: segmentationInput,
@@ -59,7 +62,10 @@ func (c *Connection) executeInstanceSegmentation(grpcClient modelPB.ModelPublicS
 			return nil, err
 		}
 		output := &structpb.Struct{}
-		protojson.Unmarshal(outputJson, output)
+		err = protojson.Unmarshal(outputJson, output)
+		if err != nil {
+			return nil, err
+		}
 		outputs = append(outputs, output)
 
 	}

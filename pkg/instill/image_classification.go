@@ -24,7 +24,10 @@ func (c *Connection) executeImageClassification(grpcClient modelPB.ModelPublicSe
 			return nil, err
 		}
 		classificationInput := &modelPB.ClassificationInput{}
-		protojson.Unmarshal(inputJson, classificationInput)
+		err = protojson.Unmarshal(inputJson, classificationInput)
+		if err != nil {
+			return nil, err
+		}
 
 		taskInput := &modelPB.TaskInput_Classification{
 			Classification: classificationInput,
@@ -60,7 +63,10 @@ func (c *Connection) executeImageClassification(grpcClient modelPB.ModelPublicSe
 			return nil, err
 		}
 		output := &structpb.Struct{}
-		protojson.Unmarshal(outputJson, output)
+		err = protojson.Unmarshal(outputJson, output)
+		if err != nil {
+			return nil, err
+		}
 		outputs = append(outputs, output)
 	}
 	return outputs, nil
