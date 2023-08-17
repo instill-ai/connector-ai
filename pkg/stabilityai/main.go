@@ -271,16 +271,16 @@ func (c *Connection) Execute(inputs []*structpb.Struct) ([]*structpb.Struct, err
 	return outputs, nil
 }
 
-func (c *Connection) Test() (connectorPB.Connector_State, error) {
+func (c *Connection) Test() (connectorPB.ConnectorResource_State, error) {
 	client := NewClient(c.getAPIKey())
 	engines, err := client.ListEngines()
 	if err != nil {
-		return connectorPB.Connector_STATE_ERROR, err
+		return connectorPB.ConnectorResource_STATE_ERROR, err
 	}
 	if len(engines) == 0 {
-		return connectorPB.Connector_STATE_DISCONNECTED, nil
+		return connectorPB.ConnectorResource_STATE_DISCONNECTED, nil
 	}
-	return connectorPB.Connector_STATE_CONNECTED, nil
+	return connectorPB.ConnectorResource_STATE_CONNECTED, nil
 }
 
 // decode if the string is base64 encoded

@@ -180,7 +180,7 @@ func (c *Connection) Execute(inputs []*structpb.Struct) ([]*structpb.Struct, err
 	return result, err
 }
 
-func (c *Connection) Test() (connectorPB.Connector_State, error) {
+func (c *Connection) Test() (connectorPB.ConnectorResource_State, error) {
 	// TODO: add api_token validation endpoint in Base
-	return connectorPB.Connector_STATE_CONNECTED, nil
+	return connectorPB.ConnectorResource_STATE_CONNECTED, nil
 }
