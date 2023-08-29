@@ -34,7 +34,7 @@ func (c *Connection) executeTextGeneration(grpcClient modelPB.ModelPublicService
 		}
 
 		// only support batch 1
-		req := modelPB.TriggerModelRequest{
+		req := modelPB.TriggerUserModelRequest{
 			Name:       modelName,
 			TaskInputs: []*modelPB.TaskInput{{Input: taskInput}},
 		}
@@ -43,7 +43,7 @@ func (c *Connection) executeTextGeneration(grpcClient modelPB.ModelPublicService
 		}
 		md := metadata.Pairs("Authorization", fmt.Sprintf("Bearer %s", c.getAPIKey()))
 		ctx := metadata.NewOutgoingContext(context.Background(), md)
-		res, err := grpcClient.TriggerModel(ctx, &req)
+		res, err := grpcClient.TriggerUserModel(ctx, &req)
 		if err != nil || res == nil {
 			return nil, err
 		}

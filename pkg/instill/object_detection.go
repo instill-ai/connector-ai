@@ -16,7 +16,7 @@ func (c *Connection) executeObjectDetection(grpcClient modelPB.ModelPublicServic
 		return nil, fmt.Errorf("invalid input: %v for model: %s", inputs, modelName)
 	}
 
-	tasklInputs := []*modelPB.TaskInput{}
+	taskInputs := []*modelPB.TaskInput{}
 	for _, input := range inputs {
 		inputJson, err := protojson.Marshal(input)
 		if err != nil {
@@ -32,12 +32,12 @@ func (c *Connection) executeObjectDetection(grpcClient modelPB.ModelPublicServic
 		modelInput := &modelPB.TaskInput_Detection{
 			Detection: detectionInput,
 		}
-		tasklInputs = append(tasklInputs, &modelPB.TaskInput{Input: modelInput})
+		taskInputs = append(taskInputs, &modelPB.TaskInput{Input: modelInput})
 	}
 
-	req := modelPB.TriggerModelRequest{
+	req := modelPB.TriggerUserModelRequest{
 		Name:       modelName,
-		TaskInputs: tasklInputs,
+		TaskInputs: taskInputs,
 	}
 	if c.client == nil || grpcClient == nil {
 		return nil, fmt.Errorf("client not setup: %v", c.client)
@@ -45,7 +45,7 @@ func (c *Connection) executeObjectDetection(grpcClient modelPB.ModelPublicServic
 
 	md := metadata.Pairs("Authorization", fmt.Sprintf("Bearer %s", c.getAPIKey()))
 	ctx := metadata.NewOutgoingContext(context.Background(), md)
-	res, err := grpcClient.TriggerModel(ctx, &req)
+	res, err := grpcClient.TriggerUserModel(ctx, &req)
 	if err != nil || res == nil {
 		return nil, err
 	}
