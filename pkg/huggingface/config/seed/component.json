@@ -16,7 +16,11 @@
         "SUMMARIZATION",
         "TEXT_CLASSIFICATION",
         "TOKEN_CLASSIFICATION",
-        "TRANSLATION"
+        "TRANSLATION",
+        "ZERO_SHOT_CLASSIFICATION",
+        "FEATURE_EXTRACTION",
+        "QUESTION_ANSWERING",
+        "TABLE_QUESTION_ANSWERING"
       ],
       "default": "TEXT_GENERATION"
     },
@@ -215,6 +219,108 @@
           "options": {
             "type": "object",
             "$ref": "data.json#/TRANSLATION/input/properties/options"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "task": {
+            "const": "ZERO_SHOT_CLASSIFICATION"
+          }
+        }
+      },
+      "then": {
+        "type": "object",
+        "required": [
+          "inputs"
+        ],
+        "properties": {
+          "inputs": {
+            "type": "string",
+            "format": "instill-template-text",
+            "$ref": "data.json#/ZERO_SHOT_CLASSIFICATION/input/properties/inputs"
+          },
+          "options": {
+            "type": "object",
+            "$ref": "data.json#/ZERO_SHOT_CLASSIFICATION/input/properties/options"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "task": {
+            "const": "FEATURE_EXTRACTION"
+          }
+        }
+      },
+      "then": {
+        "type": "object",
+        "required": [
+          "inputs"
+        ],
+        "properties": {
+          "inputs": {
+            "type": "string",
+            "format": "instill-template-text",
+            "$ref": "data.json#/FEATURE_EXTRACTION/input/properties/inputs"
+          },
+          "options": {
+            "type": "object",
+            "$ref": "data.json#/FEATURE_EXTRACTION/input/properties/options"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "task": {
+            "const": "QUESTION_ANSWERING"
+          }
+        }
+      },
+      "then": {
+        "type": "object",
+        "required": [
+          "inputs"
+        ],
+        "properties": {
+          "inputs": {
+            "type": "object",
+            "$ref": "data.json#/QUESTION_ANSWERING/input/properties/inputs"
+          },
+          "options": {
+            "type": "object",
+            "$ref": "data.json#/QUESTION_ANSWERING/input/properties/options"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "task": {
+            "const": "TABLE_QUESTION_ANSWERING"
+          }
+        }
+      },
+      "then": {
+        "type": "object",
+        "required": [
+          "inputs"
+        ],
+        "properties": {
+          "inputs": {
+            "type": "object",
+            "$ref": "data.json#/TABLE_QUESTION_ANSWERING/input/properties/inputs"
+          },
+          "options": {
+            "type": "object",
+            "$ref": "data.json#/TABLE_QUESTION_ANSWERING/input/properties/options"
           }
         }
       }

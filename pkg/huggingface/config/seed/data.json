@@ -336,5 +336,178 @@
         }
       }
     }
+  },
+  "ZERO_SHOT_CLASSIFICATION": {
+    "input": {
+      "type": "object",
+      "required": [
+        "inputs",
+        "parameters"
+      ],
+      "properties": {
+        "inputs": {
+          "$ref": "#/$defs/string_input"
+        },
+        "options": {
+          "$ref": "#/$defs/options"
+        },
+        "parameters": {
+          "type": "object",
+          "required": [
+            "candidate_labels"
+          ],
+          "properties": {
+            "candidate_labels": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "multi_label": {
+              "type": "boolean"
+            }
+          }
+        }
+      }
+    },
+    "output": {
+      "type": "object",
+      "properties": {
+        "texts": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "FEATURE_EXTRACTION": {
+    "input": {
+      "type": "object",
+      "required": [
+        "inputs"
+      ],
+      "properties": {
+        "inputs": {
+          "$ref": "#/$defs/string_input"
+        },
+        "options": {
+          "$ref": "#/$defs/options"
+        }
+      }
+    },
+    "output": {
+      "type": "object",
+      "properties": {
+        "features": {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          }
+        }
+      }
+    }
+  },
+  "QUESTION_ANSWERING": {
+    "input": {
+      "type": "object",
+      "required": [
+        "inputs"
+      ],
+      "properties": {
+        "inputs": {
+          "type": "object",
+          "required": [
+            "question",
+            "context"
+          ],
+          "properties": {
+            "question": {
+              "type": "string"
+            },
+            "context": {
+              "type": "string"
+            }
+          }
+        },
+        "options": {
+          "$ref": "#/$defs/options"
+        }
+      }
+    },
+    "output": {
+      "type": "object",
+      "properties": {
+        "answer": {
+          "type": "string"
+        },
+        "score": {
+          "type": "number"
+        },
+        "start": {
+          "type": "integer"
+        },
+        "end": {
+          "type": "integer"
+        }
+      }
+    }
+  },
+  "TABLE_QUESTION_ANSWERING": {
+    "input": {
+      "type": "object",
+      "required": [
+        "inputs"
+      ],
+      "properties": {
+        "inputs": {
+          "required": [
+            "query",
+            "table"
+          ],
+          "properties": {
+            "query": {
+              "type": "string"
+            },
+            "table": {
+              "type": "object"
+            }
+          }
+        },
+        "options": {
+          "$ref": "#/$defs/options"
+        }
+      }
+    },
+    "output": {
+      "type": "object",
+      "properties": {
+        "answer": {
+          "type": "string"
+        },
+        "coordinates": {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "integer"
+            }
+          }
+        },
+        "cells": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "aggregator": {
+          "type": "string"
+        }
+      }
+    }
   }
 }

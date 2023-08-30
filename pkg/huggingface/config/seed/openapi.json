@@ -355,5 +355,209 @@
         }
       }
     }
+  },
+  "ZERO_SHOT_CLASSIFICATION": {
+    "openapi": "3.0.0",
+    "info": {
+      "version": "1.0.0",
+      "title": "Hugging Face AI Connector Openapi"
+    },
+    "paths": {
+      "/execute": {
+        "post": {
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "inputs": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "data.json#/ZERO_SHOT_CLASSIFICATION/input"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "outputs": {
+                        "type": "array",
+                        "items": {
+                          "$ref": "data.json#/ZERO_SHOT_CLASSIFICATION/output"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "FEATURE_EXTRACTION": {
+    "openapi": "3.0.0",
+    "info": {
+      "version": "1.0.0",
+      "title": "Hugging Face AI Connector Openapi"
+    },
+    "paths": {
+      "/execute": {
+        "post": {
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "inputs": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "data.json#/FEATURE_EXTRACTION/input"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "outputs": {
+                        "type": "array",
+                        "items": {
+                          "$ref": "data.json#/FEATURE_EXTRACTION/output"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "QUESTION_ANSWERING": {
+    "openapi": "3.0.0",
+    "info": {
+      "version": "1.0.0",
+      "title": "Hugging Face AI Connector Openapi"
+    },
+    "paths": {
+      "/execute": {
+        "post": {
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "inputs": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "data.json#/QUESTION_ANSWERING/input"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "outputs": {
+                        "type": "array",
+                        "items": {
+                          "$ref": "data.json#/QUESTION_ANSWERING/output"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "TABLE_QUESTION_ANSWERING": {
+    "openapi": "3.0.0",
+    "info": {
+      "version": "1.0.0",
+      "title": "Hugging Face AI Connector Openapi"
+    },
+    "paths": {
+      "/execute": {
+        "post": {
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "inputs": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "data.json#/TABLE_QUESTION_ANSWERING/input"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "outputs": {
+                        "type": "array",
+                        "items": {
+                          "$ref": "data.json#/TABLE_QUESTION_ANSWERING/output"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
   }
 }

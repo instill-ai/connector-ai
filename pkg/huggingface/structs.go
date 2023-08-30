@@ -217,3 +217,106 @@ type TranslationResponse struct {
 	// The translated Input string
 	TranslationText string `json:"translation_text,omitempty"`
 }
+
+type ZeroShotRequest struct {
+	// (Required)
+	Inputs string `json:"inputs"`
+
+	// (Required)
+	Parameters ZeroShotParameters `json:"parameters"`
+
+	Options Options `json:"options,omitempty"`
+}
+
+// Used with ZeroShotRequest
+type ZeroShotParameters struct {
+	// (Required) A list of strings that are potential classes for inputs. Max 10 candidate_labels,
+	// for more, simply run multiple requests, results are going to be misleading if using
+	// too many candidate_labels anyway. If you want to keep the exact same, you can
+	// simply run multi_label=True and do the scaling on your end.
+	CandidateLabels []string `json:"candidate_labels"`
+
+	// (Default: false) Boolean that is set to True if classes can overlap
+	MultiLabel *bool `json:"multi_label,omitempty"`
+}
+
+// Response structure from the Zero-shot classification endpoint.
+type ZeroShotResponse struct {
+	// The string sent as an input
+	Sequence string `json:"sequence,omitempty"`
+
+	// The list of labels sent in the request, sorted in descending order
+	// by probability that the input corresponds to the to the label.
+	Labels []string `json:"labels,omitempty"`
+
+	// a list of floats that correspond the the probability of label, in the same order as labels.
+	Scores []float64 `json:"scores,omitempty"`
+}
+
+type FeatureExtractionRequest struct {
+	// (Required)
+	Inputs string `json:"inputs"`
+
+	Options Options `json:"options,omitempty"`
+}
+
+// Request structure for question answering model
+type QuestionAnsweringRequest struct {
+	// (Required)
+	Inputs  QuestionAnsweringInputs `json:"inputs"`
+	Options Options                 `json:"options,omitempty"`
+}
+
+type QuestionAnsweringInputs struct {
+	// (Required) The question as a string that has an answer within Context.
+	Question string `json:"question"`
+
+	// (Required) A string that contains the answer to the question
+	Context string `json:"context"`
+}
+
+// Response structure for question answering model
+type QuestionAnsweringResponse struct {
+	// A string that’s the answer within the Context text.
+	Answer string `json:"answer,omitempty"`
+
+	// A float that represents how likely that the answer is correct.
+	Score float64 `json:"score,omitempty"`
+
+	// The string index of the start of the answer within Context.
+	Start int `json:"start,omitempty"`
+
+	// The string index of the stop of the answer within Context.
+	End int `json:"end,omitempty"`
+}
+
+// Request structure for table question answering model
+type TableQuestionAnsweringRequest struct {
+	Inputs  TableQuestionAnsweringInputs `json:"inputs"`
+	Options Options                      `json:"options,omitempty"`
+}
+
+type TableQuestionAnsweringInputs struct {
+	// (Required) The query in plain text that you want to ask the table
+	Query string `json:"query"`
+
+	// (Required) A table of data represented as a dict of list where entries
+	// are headers and the lists are all the values, all lists must
+	// have the same size.
+	Table map[string][]string `json:"table"`
+}
+
+// Response structure for table question answering model
+type TableQuestionAnsweringResponse struct {
+	// The plaintext answer
+	Answer string `json:"answer,omitempty"`
+
+	// A list of coordinates of the cells references in the answer
+	Coordinates [][]int `json:"coordinates,omitempty"`
+
+	// A list of coordinates of the cells contents
+	Cells []string `json:"cells,omitempty"`
+
+	// The aggregator used to get the answer
+	Aggregator string `json:"aggregator,omitempty"`
+}

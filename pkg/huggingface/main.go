@@ -27,13 +27,17 @@ const (
 	jsonMimeType = "application/json"
 	reqTimeout   = time.Second * 60 * 5
 	//tasks
-	textGenerationTask      = "TEXT_GENERATION"
-	textToImageTask         = "TEXT_TO_IMAGE"
-	fillMaskTask            = "FILL_MASK"
-	summarizationTask       = "SUMMARIZATION"
-	textClassificationTask  = "TEXT_CLASSIFICATION"
-	tokenClassificationTask = "TOKEN_CLASSIFICATION"
-	translationTask         = "TRANSLATION"
+	textGenerationTask         = "TEXT_GENERATION"
+	textToImageTask            = "TEXT_TO_IMAGE"
+	fillMaskTask               = "FILL_MASK"
+	summarizationTask          = "SUMMARIZATION"
+	textClassificationTask     = "TEXT_CLASSIFICATION"
+	tokenClassificationTask    = "TOKEN_CLASSIFICATION"
+	translationTask            = "TRANSLATION"
+	zeroShotClassificationTask = "ZERO_SHOT_CLASSIFICATION"
+	featureExtractionTask      = "FEATURE_EXTRACTION"
+	questionAnsweringTask      = "QUESTION_ANSWERING"
+	tableQuestionAnsweringTask = "TABLE_QUESTION_ANSWERING"
 )
 
 var (
@@ -137,7 +141,7 @@ func (c *Connection) Execute(inputs []*structpb.Struct) ([]*structpb.Struct, err
 			jsonBody, _ := json.Marshal(inputStruct)
 			resp, err := client.MakeHFAPIRequest(jsonBody, model)
 			if err != nil {
-				return inputs, err
+				return nil, err
 			}
 			outputArr := []TextGenerationResponse{}
 			err = json.Unmarshal(resp, &outputArr)
@@ -162,7 +166,7 @@ func (c *Connection) Execute(inputs []*structpb.Struct) ([]*structpb.Struct, err
 			jsonBody, _ := json.Marshal(inputStruct)
 			resp, err := client.MakeHFAPIRequest(jsonBody, model)
 			if err != nil {
-				return inputs, err
+				return nil, err
 			}
 			outputStruct := TextToImageResponse{Image: base64.StdEncoding.EncodeToString(resp)}
 			outputJson, err := json.Marshal(outputStruct)
@@ -184,7 +188,7 @@ func (c *Connection) Execute(inputs []*structpb.Struct) ([]*structpb.Struct, err
 			jsonBody, _ := json.Marshal(inputStruct)
 			resp, err := client.MakeHFAPIRequest(jsonBody, model)
 			if err != nil {
-				return inputs, err
+				return nil, err
 			}
 			outputArr := []FillMaskResponseEntry{}
 			err = json.Unmarshal(resp, &outputArr)
@@ -218,7 +222,7 @@ func (c *Connection) Execute(inputs []*structpb.Struct) ([]*structpb.Struct, err
 			jsonBody, _ := json.Marshal(inputStruct)
 			resp, err := client.MakeHFAPIRequest(jsonBody, model)
 			if err != nil {
-				return inputs, err
+				return nil, err
 			}
 			outputArr := []SummarizationResponse{}
 			err = json.Unmarshal(resp, &outputArr)
@@ -243,7 +247,7 @@ func (c *Connection) Execute(inputs []*structpb.Struct) ([]*structpb.Struct, err
 			jsonBody, _ := json.Marshal(inputStruct)
 			resp, err := client.MakeHFAPIRequest(jsonBody, model)
 			if err != nil {
-				return inputs, err
+				return nil, err
 			}
 			nestedArr := [][]TextClassificationResponseLabel{}
 			err = json.Unmarshal(resp, &nestedArr)
@@ -279,7 +283,7 @@ func (c *Connection) Execute(inputs []*structpb.Struct) ([]*structpb.Struct, err
 			jsonBody, _ := json.Marshal(inputStruct)
 			resp, err := client.MakeHFAPIRequest(jsonBody, model)
 			if err != nil {
-				return inputs, err
+				return nil, err
 			}
 			outputArr := []TokenClassificationResponseEntity{}
 			err = json.Unmarshal(resp, &outputArr)
@@ -314,7 +318,7 @@ func (c *Connection) Execute(inputs []*structpb.Struct) ([]*structpb.Struct, err
 			jsonBody, _ := json.Marshal(inputStruct)
 			resp, err := client.MakeHFAPIRequest(jsonBody, model)
 			if err != nil {
-				return inputs, err
+				return nil, err
 			}
 			outputArr := []TranslationResponse{}
 			err = json.Unmarshal(resp, &outputArr)
@@ -328,6 +332,90 @@ func (c *Connection) Execute(inputs []*structpb.Struct) ([]*structpb.Struct, err
 			}
 			output := structpb.Struct{
 				Fields: map[string]*structpb.Value{"texts": {Kind: &structpb.Value_ListValue{ListValue: &translations}}},
+			}
+			outputs = append(outputs, &output)
+		case zeroShotClassificationTask:
+			inputStruct := ZeroShotRequest{}
+			err := base.ConvertFromStructpb(input, &inputStruct)
+			if err != nil {
+				return nil, err
+			}
+			jsonBody, _ := json.Marshal(inputStruct)
+			resp, err := client.MakeHFAPIRequest(jsonBody, model)
+			if err != nil {
+				return nil, err
+			}
+			output := structpb.Struct{}
+			err = protojson.Unmarshal(resp, &output)
+			if err != nil {
+				return nil, err
+			}
+			outputs = append(outputs, &output)
+		case featureExtractionTask:
+			inputStruct := FeatureExtractionRequest{}
+			err := base.ConvertFromStructpb(input, &inputStruct)
+			if err != nil {
+				return nil, err
+			}
+			jsonBody, _ := json.Marshal(inputStruct)
+			resp, err := client.MakeHFAPIRequest(jsonBody, model)
+			if err != nil {
+				return nil, err
+			}
+			threeDArr := [][][]float64{}
+			err = json.Unmarshal(resp, &threeDArr)
+			if err != nil {
+				return nil, err
+			}
+			if len(threeDArr) <= 0 {
+				return nil, errors.New("invalid response")
+			}
+			nestedArr := threeDArr[0]
+			features := structpb.ListValue{}
+			features.Values = make([]*structpb.Value, len(nestedArr))
+			for i, innerArr := range nestedArr {
+				innerValues := make([]*structpb.Value, len(innerArr))
+				for j := range innerArr {
+					innerValues[j] = &structpb.Value{Kind: &structpb.Value_NumberValue{NumberValue: innerArr[j]}}
+				}
+				features.Values[i] = &structpb.Value{Kind: &structpb.Value_ListValue{ListValue: &structpb.ListValue{Values: innerValues}}}
+			}
+			output := structpb.Struct{
+				Fields: map[string]*structpb.Value{"features": {Kind: &structpb.Value_ListValue{ListValue: &features}}},
+			}
+			outputs = append(outputs, &output)
+		case questionAnsweringTask:
+			inputStruct := QuestionAnsweringRequest{}
+			err := base.ConvertFromStructpb(input, &inputStruct)
+			if err != nil {
+				return nil, err
+			}
+			jsonBody, _ := json.Marshal(inputStruct)
+			resp, err := client.MakeHFAPIRequest(jsonBody, model)
+			if err != nil {
+				return nil, err
+			}
+			output := structpb.Struct{}
+			err = protojson.Unmarshal(resp, &output)
+			if err != nil {
+				return nil, err
+			}
+			outputs = append(outputs, &output)
+		case tableQuestionAnsweringTask:
+			inputStruct := TableQuestionAnsweringRequest{}
+			err := base.ConvertFromStructpb(input, &inputStruct)
+			if err != nil {
+				return nil, err
+			}
+			jsonBody, _ := json.Marshal(inputStruct)
+			resp, err := client.MakeHFAPIRequest(jsonBody, model)
+			if err != nil {
+				return nil, err
+			}
+			output := structpb.Struct{}
+			err = protojson.Unmarshal(resp, &output)
+			if err != nil {
+				return nil, err
 			}
 			outputs = append(outputs, &output)
 		default:

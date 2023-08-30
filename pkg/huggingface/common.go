@@ -29,23 +29,19 @@ func (c *Client) MakeHFAPIRequest(jsonBody []byte, model string) ([]byte, error)
 	}
 	req.Header.Set("Content-Type", jsonMimeType)
 	req.Header.Set(AuthHeaderKey, AuthHeaderPrefix+c.APIKey)
-
 	resp, err := c.HTTPClient.Do(req)
 	if err != nil {
 		return nil, err
 	}
 	defer resp.Body.Close()
-
 	respBody, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
 	}
-
 	err = checkRespForError(respBody)
 	if err != nil {
 		return nil, err
 	}
-
 	return respBody, nil
 }
 
