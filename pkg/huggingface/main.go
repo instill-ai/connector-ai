@@ -4,6 +4,7 @@ import (
 	_ "embed"
 	"encoding/base64"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net/http"
 	"sync"
@@ -21,11 +22,15 @@ import (
 )
 
 const (
-	venderName      = "huggingface"
-	baseURL         = "https://api-inference.huggingface.co/models/"
-	jsonMimeType    = "application/json"
-	reqTimeout      = time.Second * 60 * 5
-	textToImageTask = "TEXT_TO_IMAGE"
+	venderName   = "huggingface"
+	baseURL      = "https://api-inference.huggingface.co/models/"
+	jsonMimeType = "application/json"
+	reqTimeout   = time.Second * 60 * 5
+	//tasks
+	textToImageTask        = "TEXT_TO_IMAGE"
+	fillMaskTask           = "FILL_MASK"
+	summarizationTask      = "SUMMARIZATION"
+	textClassificationTask = "TEXT_CLASSIFICATION"
 )
 
 var (
@@ -140,6 +145,107 @@ func (c *Connection) Execute(inputs []*structpb.Struct) ([]*structpb.Struct, err
 			err = protojson.Unmarshal(outputJson, &output)
 			if err != nil {
 				return nil, err
+			}
+			outputs = append(outputs, &output)
+		case fillMaskTask:
+			inputStruct := FillMaskRequest{}
+			err := base.ConvertFromStructpb(input, &inputStruct)
+			if err != nil {
+				return nil, err
+			}
+			jsonBody, _ := json.Marshal(inputStruct)
+			resp, err := client.MakeHFAPIRequest(jsonBody, model)
+			if err != nil {
+				return inputs, err
+			}
+			outputArr := []FillMaskResponseEntry{}
+			err = json.Unmarshal(resp, &outputArr)
+			if err != nil {
+				return nil, err
+			}
+			masks := structpb.ListValue{}
+			masks.Values = make([]*structpb.Value, len(outputArr))
+			for i := range outputArr {
+				masks.Values[i] = &structpb.Value{Kind: &structpb.Value_StructValue{
+					StructValue: &structpb.Struct{
+						Fields: map[string]*structpb.Value{
+							"sequence":  {Kind: &structpb.Value_StringValue{StringValue: outputArr[i].Sequence}},
+							"score":     {Kind: &structpb.Value_NumberValue{NumberValue: outputArr[i].Score}},
+							"token":     {Kind: &structpb.Value_NumberValue{NumberValue: float64(outputArr[i].Token)}},
+							"token_str": {Kind: &structpb.Value_StringValue{StringValue: outputArr[i].TokenStr}},
+						},
+					},
+				}}
+			}
+			output := structpb.Struct{
+				Fields: map[string]*structpb.Value{"masks": {Kind: &structpb.Value_ListValue{ListValue: &masks}}},
+			}
+			outputs = append(outputs, &output)
+		case summarizationTask:
+			inputStruct := SummarizationRequest{}
+			err := base.ConvertFromStructpb(input, &inputStruct)
+			if err != nil {
+				return nil, err
+			}
+			jsonBody, _ := json.Marshal(inputStruct)
+			resp, err := client.MakeHFAPIRequest(jsonBody, model)
+			if err != nil {
+				return inputs, err
+			}
+			outputArr := []SummarizationResponse{}
+			err = json.Unmarshal(resp, &outputArr)
+			if err != nil {
+				return nil, err
+			}
+			summaries := structpb.ListValue{}
+			summaries.Values = make([]*structpb.Value, len(outputArr))
+			for i := range outputArr {
+				summaries.Values[i] = &structpb.Value{Kind: &structpb.Value_StructValue{
+					StructValue: &structpb.Struct{
+						Fields: map[string]*structpb.Value{
+							"summary_text": {Kind: &structpb.Value_StringValue{StringValue: outputArr[i].SummaryText}},
+						},
+					},
+				}}
+			}
+			output := structpb.Struct{
+				Fields: map[string]*structpb.Value{"masks": {Kind: &structpb.Value_ListValue{ListValue: &summaries}}},
+			}
+			outputs = append(outputs, &output)
+		case textClassificationTask:
+			inputStruct := TextClassificationRequest{}
+			err := base.ConvertFromStructpb(input, &inputStruct)
+			if err != nil {
+				return nil, err
+			}
+			jsonBody, _ := json.Marshal(inputStruct)
+			resp, err := client.MakeHFAPIRequest(jsonBody, model)
+			if err != nil {
+				return inputs, err
+			}
+			nestedArr := [][]TextClassificationResponseLabel{}
+			err = json.Unmarshal(resp, &nestedArr)
+			if err != nil {
+				return nil, err
+			}
+			if len(nestedArr) <= 0 {
+				return nil, errors.New("invalid response")
+			}
+			outputArr := nestedArr[0]
+			classes := structpb.ListValue{}
+			classes.Values = make([]*structpb.Value, len(outputArr))
+			for i := range outputArr {
+				classes.Values[i] = &structpb.Value{Kind: &structpb.Value_StructValue{
+					StructValue: &structpb.Struct{
+						Fields: map[string]*structpb.Value{
+							"label": {Kind: &structpb.Value_StringValue{StringValue: outputArr[i].Label}},
+							"score": {Kind: &structpb.Value_NumberValue{NumberValue: outputArr[i].Score}},
+						},
+					},
+				}}
+			}
+			output := structpb.Struct{
+				Fields: map[string]*structpb.Value{"classes": {Kind: &structpb.Value_ListValue{ListValue: &classes}}},
 			}
 			outputs = append(outputs, &output)
 		default:

@@ -1,4 +1,23 @@
 {
+  "$defs": {
+    "string_input": {
+      "type": "string"
+    },
+    "options": {
+      "type": "object",
+      "properties": {
+        "use_gpu": {
+          "type": "boolean"
+        },
+        "use_cache": {
+          "type": "boolean"
+        },
+        "wait_for_model": {
+          "type": "boolean"
+        }
+      }
+    }
+  },
   "TEXT_TO_IMAGE": {
     "input": {
       "type": "object",
@@ -7,22 +26,10 @@
       ],
       "properties": {
         "inputs": {
-          "type": "string"
+          "$ref": "#/$defs/string_input"
         },
         "options": {
-          "type": "object",
-          "required": [],
-          "properties": {
-            "use_gpu": {
-              "type": "boolean"
-            },
-            "use_cache": {
-              "type": "boolean"
-            },
-            "wait_for_model": {
-              "type": "boolean"
-            }
-          }
+          "$ref": "#/$defs/options"
         },
         "parameters": {
           "type": "object",
@@ -51,6 +58,140 @@
       "properties": {
         "image": {
           "type": "string"
+        }
+      }
+    }
+  },
+  "FILL_MASK": {
+    "input": {
+      "type": "object",
+      "required": [
+        "inputs"
+      ],
+      "properties": {
+        "inputs": {
+          "$ref": "#/$defs/string_input"
+        },
+        "options": {
+          "$ref": "#/$defs/options"
+        }
+      }
+    },
+    "output": {
+      "type": "object",
+      "properties": {
+        "masks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "sequence": {
+                "type": "string"
+              },
+              "score": {
+                "type": "number"
+              },
+              "token": {
+                "type": "integer"
+              },
+              "token_str": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "SUMMARIZATION": {
+    "input": {
+      "type": "object",
+      "required": [
+        "inputs"
+      ],
+      "properties": {
+        "inputs": {
+          "$ref": "#/$defs/string_input"
+        },
+        "options": {
+          "$ref": "#/$defs/options"
+        },
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "min_length": {
+              "type": "integer"
+            },
+            "max_length": {
+              "type": "integer"
+            },
+            "top_k": {
+              "type": "integer"
+            },
+            "top_p": {
+              "type": "number"
+            },
+            "temperature": {
+              "type": "number"
+            },
+            "repetition_penalty": {
+              "type": "number"
+            },
+            "max_time": {
+              "type": "number"
+            }
+          }
+        }
+      }
+    },
+    "output": {
+      "type": "object",
+      "properties": {
+        "summaries": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "summary_text": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "TEXT_CLASSIFICATION": {
+    "input": {
+      "type": "object",
+      "required": [
+        "inputs"
+      ],
+      "properties": {
+        "inputs": {
+          "$ref": "#/$defs/string_input"
+        },
+        "options": {
+          "$ref": "#/$defs/options"
+        }
+      }
+    },
+    "output": {
+      "type": "object",
+      "properties": {
+        "classes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "label": {
+                "type": "string"
+              },
+              "score": {
+                "type": "number"
+              }
+            }
+          }
         }
       }
     }

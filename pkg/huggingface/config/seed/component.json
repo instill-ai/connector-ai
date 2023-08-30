@@ -2,12 +2,18 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "Hugging Face Connector Component Spec",
   "type": "object",
-  "required": ["task", "model"],
+  "required": [
+    "task",
+    "model"
+  ],
   "properties": {
     "task": {
       "title": "Task",
       "enum": [
-        "TEXT_TO_IMAGE"
+        "TEXT_TO_IMAGE",
+        "FILL_MASK",
+        "SUMMARIZATION",
+        "TEXT_CLASSIFICATION"
       ],
       "default": "TEXT_TO_IMAGE"
     },
@@ -27,7 +33,9 @@
       },
       "then": {
         "type": "object",
-        "required": ["inputs"],
+        "required": [
+          "inputs"
+        ],
         "properties": {
           "inputs": {
             "type": "string",
@@ -42,6 +50,84 @@
             "type": "object",
             "format": "instill-template-text",
             "$ref": "data.json#/TEXT_TO_IMAGE/input/properties/parameters"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "task": {
+            "const": "FILL_MASK"
+          }
+        }
+      },
+      "then": {
+        "type": "object",
+        "required": [
+          "inputs"
+        ],
+        "properties": {
+          "inputs": {
+            "type": "string",
+            "format": "instill-template-text",
+            "$ref": "data.json#/FILL_MASK/input/properties/inputs"
+          },
+          "options": {
+            "type": "object",
+            "$ref": "data.json#/FILL_MASK/input/properties/options"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "task": {
+            "const": "SUMMARIZATION"
+          }
+        }
+      },
+      "then": {
+        "type": "object",
+        "required": [
+          "inputs"
+        ],
+        "properties": {
+          "inputs": {
+            "type": "string",
+            "format": "instill-template-text",
+            "$ref": "data.json#/SUMMARIZATION/input/properties/inputs"
+          },
+          "options": {
+            "type": "object",
+            "$ref": "data.json#/SUMMARIZATION/input/properties/options"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "task": {
+            "const": "TEXT_CLASSIFICATION"
+          }
+        }
+      },
+      "then": {
+        "type": "object",
+        "required": [
+          "inputs"
+        ],
+        "properties": {
+          "inputs": {
+            "type": "string",
+            "format": "instill-template-text",
+            "$ref": "data.json#/TEXT_CLASSIFICATION/input/properties/inputs"
+          },
+          "options": {
+            "type": "object",
+            "$ref": "data.json#/TEXT_CLASSIFICATION/input/properties/options"
           }
         }
       }

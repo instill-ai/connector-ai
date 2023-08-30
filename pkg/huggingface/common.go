@@ -70,7 +70,6 @@ func checkRespForError(respJSON []byte) error {
 			return errors.New(string(respJSON))
 		}
 	}
-
 	// Check for multiple errors
 	{
 		buf := make([]byte, len(respJSON))
@@ -81,7 +80,6 @@ func checkRespForError(respJSON []byte) error {
 			return errors.New(string(respJSON))
 		}
 	}
-
 	return nil
 }
 

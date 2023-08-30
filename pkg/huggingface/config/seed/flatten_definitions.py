@@ -67,7 +67,7 @@ base_path = dirname(__file__)
 base_uri = 'file://{}/'.format(base_path)
 
 openapi_schema = {}
-for task_name in ["TEXT_TO_IMAGE"]:
+for task_name in ["TEXT_TO_IMAGE", "FILL_MASK", "SUMMARIZATION", "TEXT_CLASSIFICATION"]:
     openapi_schema[task_name] = gen_openapi(task_name)
 
 with open("./openapi.json", 'w') as openapifile:
