@@ -509,5 +509,132 @@
         }
       }
     }
+  },
+  "SENTENCE_SIMILARITY": {
+    "input": {
+      "type": "object",
+      "required": [
+        "inputs"
+      ],
+      "properties": {
+        "inputs": {
+          "required": [
+            "source_sentence",
+            "sentences"
+          ],
+          "properties": {
+            "source_sentence": {
+              "type": "string"
+            },
+            "sentences": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "options": {
+          "$ref": "#/$defs/options"
+        }
+      }
+    },
+    "output": {
+      "type": "object",
+      "properties": {
+        "scores": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          }
+        }
+      }
+    }
+  },
+  "CONVERSATIONAL": {
+    "input": {
+      "type": "object",
+      "required": [
+        "inputs"
+      ],
+      "properties": {
+        "inputs": {
+          "required": [
+            "text"
+          ],
+          "properties": {
+            "text": {
+              "type": "string"
+            },
+            "generated_responses": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "past_user_inputs": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "options": {
+          "$ref": "#/$defs/options"
+        },
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "min_length": {
+              "type": "integer"
+            },
+            "max_length": {
+              "type": "integer"
+            },
+            "top_k": {
+              "type": "integer"
+            },
+            "top_p": {
+              "type": "number"
+            },
+            "temperature": {
+              "type": "number"
+            },
+            "repetition_penalty": {
+              "type": "number"
+            },
+            "max_time": {
+              "type": "number"
+            }
+          }
+        }
+      }
+    },
+    "output": {
+      "type": "object",
+      "properties": {
+        "generated_text": {
+          "type": "string"
+        },
+        "conversation": {
+          "type": "object",
+          "properties": {
+            "past_user_inputs": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "generated_responses": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
   }
 }

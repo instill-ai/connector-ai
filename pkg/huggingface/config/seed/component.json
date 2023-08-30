@@ -20,7 +20,9 @@
         "ZERO_SHOT_CLASSIFICATION",
         "FEATURE_EXTRACTION",
         "QUESTION_ANSWERING",
-        "TABLE_QUESTION_ANSWERING"
+        "TABLE_QUESTION_ANSWERING",
+        "SENTENCE_SIMILARITY",
+        "CONVERSATIONAL"
       ],
       "default": "TEXT_GENERATION"
     },
@@ -321,6 +323,56 @@
           "options": {
             "type": "object",
             "$ref": "data.json#/TABLE_QUESTION_ANSWERING/input/properties/options"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "task": {
+            "const": "SENTENCE_SIMILARITY"
+          }
+        }
+      },
+      "then": {
+        "type": "object",
+        "required": [
+          "inputs"
+        ],
+        "properties": {
+          "inputs": {
+            "type": "object",
+            "$ref": "data.json#/SENTENCE_SIMILARITY/input/properties/inputs"
+          },
+          "options": {
+            "type": "object",
+            "$ref": "data.json#/SENTENCE_SIMILARITY/input/properties/options"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "task": {
+            "const": "CONVERSATIONAL"
+          }
+        }
+      },
+      "then": {
+        "type": "object",
+        "required": [
+          "inputs"
+        ],
+        "properties": {
+          "inputs": {
+            "type": "object",
+            "$ref": "data.json#/CONVERSATIONAL/input/properties/inputs"
+          },
+          "options": {
+            "type": "object",
+            "$ref": "data.json#/CONVERSATIONAL/input/properties/options"
           }
         }
       }

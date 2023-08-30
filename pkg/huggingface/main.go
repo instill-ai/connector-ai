@@ -38,6 +38,8 @@ const (
 	featureExtractionTask      = "FEATURE_EXTRACTION"
 	questionAnsweringTask      = "QUESTION_ANSWERING"
 	tableQuestionAnsweringTask = "TABLE_QUESTION_ANSWERING"
+	sentenceSimilarityTask     = "SENTENCE_SIMILARITY"
+	conversationalTask         = "CONVERSATIONAL"
 )
 
 var (
@@ -403,6 +405,48 @@ func (c *Connection) Execute(inputs []*structpb.Struct) ([]*structpb.Struct, err
 			outputs = append(outputs, &output)
 		case tableQuestionAnsweringTask:
 			inputStruct := TableQuestionAnsweringRequest{}
+			err := base.ConvertFromStructpb(input, &inputStruct)
+			if err != nil {
+				return nil, err
+			}
+			jsonBody, _ := json.Marshal(inputStruct)
+			resp, err := client.MakeHFAPIRequest(jsonBody, model)
+			if err != nil {
+				return nil, err
+			}
+			output := structpb.Struct{}
+			err = protojson.Unmarshal(resp, &output)
+			if err != nil {
+				return nil, err
+			}
+			outputs = append(outputs, &output)
+		case sentenceSimilarityTask:
+			inputStruct := SentenceSimilarityRequest{}
+			err := base.ConvertFromStructpb(input, &inputStruct)
+			if err != nil {
+				return nil, err
+			}
+			jsonBody, _ := json.Marshal(inputStruct)
+			resp, err := client.MakeHFAPIRequest(jsonBody, model)
+			if err != nil {
+				return nil, err
+			}
+			outputArr := []float64{}
+			err = json.Unmarshal(resp, &outputArr)
+			if err != nil {
+				return nil, err
+			}
+			scores := structpb.ListValue{}
+			scores.Values = make([]*structpb.Value, len(outputArr))
+			for i := range outputArr {
+				scores.Values[i] = &structpb.Value{Kind: &structpb.Value_NumberValue{NumberValue: outputArr[i]}}
+			}
+			output := structpb.Struct{
+				Fields: map[string]*structpb.Value{"scores": {Kind: &structpb.Value_ListValue{ListValue: &scores}}},
+			}
+			outputs = append(outputs, &output)
+		case conversationalTask:
+			inputStruct := ConversationalRequest{}
 			err := base.ConvertFromStructpb(input, &inputStruct)
 			if err != nil {
 				return nil, err

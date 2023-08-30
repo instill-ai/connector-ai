@@ -46,7 +46,9 @@
               "ZERO_SHOT_CLASSIFICATION",
               "FEATURE_EXTRACTION",
               "QUESTION_ANSWERING",
-              "TABLE_QUESTION_ANSWERING"
+              "TABLE_QUESTION_ANSWERING",
+              "SENTENCE_SIMILARITY",
+              "CONVERSATIONAL"
             ],
             "default": "TEXT_GENERATION"
           },
@@ -497,6 +499,109 @@
                     },
                     "table": {
                       "type": "object"
+                    }
+                  },
+                  "type": "object"
+                },
+                "options": {
+                  "type": "object",
+                  "properties": {
+                    "use_gpu": {
+                      "type": "boolean"
+                    },
+                    "use_cache": {
+                      "type": "boolean"
+                    },
+                    "wait_for_model": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "task": {
+                  "const": "SENTENCE_SIMILARITY"
+                }
+              }
+            },
+            "then": {
+              "type": "object",
+              "required": [
+                "inputs"
+              ],
+              "properties": {
+                "inputs": {
+                  "required": [
+                    "source_sentence",
+                    "sentences"
+                  ],
+                  "properties": {
+                    "source_sentence": {
+                      "type": "string"
+                    },
+                    "sentences": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "type": "object"
+                },
+                "options": {
+                  "type": "object",
+                  "properties": {
+                    "use_gpu": {
+                      "type": "boolean"
+                    },
+                    "use_cache": {
+                      "type": "boolean"
+                    },
+                    "wait_for_model": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "task": {
+                  "const": "CONVERSATIONAL"
+                }
+              }
+            },
+            "then": {
+              "type": "object",
+              "required": [
+                "inputs"
+              ],
+              "properties": {
+                "inputs": {
+                  "required": [
+                    "text"
+                  ],
+                  "properties": {
+                    "text": {
+                      "type": "string"
+                    },
+                    "generated_responses": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "past_user_inputs": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
                     }
                   },
                   "type": "object"
@@ -1593,6 +1698,241 @@
                                   },
                                   "aggregator": {
                                     "type": "string"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "SENTENCE_SIMILARITY": {
+          "openapi": "3.0.0",
+          "info": {
+            "version": "1.0.0",
+            "title": "Hugging Face AI Connector Openapi"
+          },
+          "paths": {
+            "/execute": {
+              "post": {
+                "requestBody": {
+                  "required": true,
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "inputs": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "required": [
+                                "inputs"
+                              ],
+                              "properties": {
+                                "inputs": {
+                                  "required": [
+                                    "source_sentence",
+                                    "sentences"
+                                  ],
+                                  "properties": {
+                                    "source_sentence": {
+                                      "type": "string"
+                                    },
+                                    "sentences": {
+                                      "type": "array",
+                                      "items": {
+                                        "type": "string"
+                                      }
+                                    }
+                                  }
+                                },
+                                "options": {
+                                  "type": "object",
+                                  "properties": {
+                                    "use_gpu": {
+                                      "type": "boolean"
+                                    },
+                                    "use_cache": {
+                                      "type": "boolean"
+                                    },
+                                    "wait_for_model": {
+                                      "type": "boolean"
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "responses": {
+                  "200": {
+                    "description": "",
+                    "content": {
+                      "application/json": {
+                        "schema": {
+                          "type": "object",
+                          "properties": {
+                            "outputs": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "scores": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "number"
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "CONVERSATIONAL": {
+          "openapi": "3.0.0",
+          "info": {
+            "version": "1.0.0",
+            "title": "Hugging Face AI Connector Openapi"
+          },
+          "paths": {
+            "/execute": {
+              "post": {
+                "requestBody": {
+                  "required": true,
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "inputs": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "required": [
+                                "inputs"
+                              ],
+                              "properties": {
+                                "inputs": {
+                                  "required": [
+                                    "text"
+                                  ],
+                                  "properties": {
+                                    "text": {
+                                      "type": "string"
+                                    },
+                                    "generated_responses": {
+                                      "type": "array",
+                                      "items": {
+                                        "type": "string"
+                                      }
+                                    },
+                                    "past_user_inputs": {
+                                      "type": "array",
+                                      "items": {
+                                        "type": "string"
+                                      }
+                                    }
+                                  }
+                                },
+                                "options": {
+                                  "type": "object",
+                                  "properties": {
+                                    "use_gpu": {
+                                      "type": "boolean"
+                                    },
+                                    "use_cache": {
+                                      "type": "boolean"
+                                    },
+                                    "wait_for_model": {
+                                      "type": "boolean"
+                                    }
+                                  }
+                                },
+                                "parameters": {
+                                  "type": "object",
+                                  "properties": {
+                                    "min_length": {
+                                      "type": "integer"
+                                    },
+                                    "max_length": {
+                                      "type": "integer"
+                                    },
+                                    "top_k": {
+                                      "type": "integer"
+                                    },
+                                    "top_p": {
+                                      "type": "number"
+                                    },
+                                    "temperature": {
+                                      "type": "number"
+                                    },
+                                    "repetition_penalty": {
+                                      "type": "number"
+                                    },
+                                    "max_time": {
+                                      "type": "number"
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "responses": {
+                  "200": {
+                    "description": "",
+                    "content": {
+                      "application/json": {
+                        "schema": {
+                          "type": "object",
+                          "properties": {
+                            "outputs": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "generated_text": {
+                                    "type": "string"
+                                  },
+                                  "conversation": {
+                                    "type": "object",
+                                    "properties": {
+                                      "past_user_inputs": {
+                                        "type": "array",
+                                        "items": {
+                                          "type": "string"
+                                        }
+                                      },
+                                      "generated_responses": {
+                                        "type": "array",
+                                        "items": {
+                                          "type": "string"
+                                        }
+                                      }
+                                    }
                                   }
                                 }
                               }
