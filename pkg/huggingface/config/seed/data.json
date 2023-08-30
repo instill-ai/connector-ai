@@ -773,5 +773,58 @@
         }
       }
     }
+  },
+  "SPEECH_RECOGNITION": {
+    "input": {
+      "type": "object",
+      "required": [
+        "audio"
+      ],
+      "properties": {
+        "audio": {
+          "type": "string"
+        }
+      }
+    },
+    "output": {
+      "type": "object",
+      "properties": {
+        "text": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "AUDIO_CLASSIFICATION": {
+    "input": {
+      "type": "object",
+      "required": [
+        "audio"
+      ],
+      "properties": {
+        "audio": {
+          "type": "string"
+        }
+      }
+    },
+    "output": {
+      "type": "object",
+      "properties": {
+        "classes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "label": {
+                "type": "string"
+              },
+              "score": {
+                "type": "number"
+              }
+            }
+          }
+        }
+      }
+    }
   }
 }

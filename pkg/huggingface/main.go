@@ -44,6 +44,8 @@ const (
 	imageSegmentationTask      = "IMAGE_SEGMENTATION"
 	objectDetectionTask        = "OBJECT_DETECTION"
 	imageToTextTask            = "IMAGE_TO_TEXT"
+	speechRecognitionTask      = "SPEECH_RECOGNITION"
+	audioClassificationTask    = "AUDIO_CLASSIFICATION"
 )
 
 var (
@@ -255,7 +257,7 @@ func (c *Connection) Execute(inputs []*structpb.Struct) ([]*structpb.Struct, err
 			if err != nil {
 				return nil, err
 			}
-			nestedArr := [][]TextClassificationResponseLabel{}
+			nestedArr := [][]ClassificationResponse{}
 			err = json.Unmarshal(resp, &nestedArr)
 			if err != nil {
 				return nil, err
@@ -480,7 +482,7 @@ func (c *Connection) Execute(inputs []*structpb.Struct) ([]*structpb.Struct, err
 			if err != nil {
 				return nil, err
 			}
-			outputArr := []ImageClassificationResponse{}
+			outputArr := []ClassificationResponse{}
 			err = json.Unmarshal(resp, &outputArr)
 			if err != nil {
 				return nil, err
@@ -603,6 +605,60 @@ func (c *Connection) Execute(inputs []*structpb.Struct) ([]*structpb.Struct, err
 				Fields: map[string]*structpb.Value{
 					"text": {Kind: &structpb.Value_StringValue{StringValue: outputArr[0].GeneratedText}},
 				},
+			}
+			outputs = append(outputs, &output)
+		case speechRecognitionTask:
+			inputStruct := AudioRequest{}
+			err := base.ConvertFromStructpb(input, &inputStruct)
+			if err != nil {
+				return nil, err
+			}
+			b, err := base64.StdEncoding.DecodeString(inputStruct.Audio)
+			if err != nil {
+				return nil, err
+			}
+			resp, err := client.MakeHFAPIRequest(b, model)
+			if err != nil {
+				return nil, err
+			}
+			output := structpb.Struct{}
+			err = protojson.Unmarshal(resp, &output)
+			if err != nil {
+				return nil, err
+			}
+			outputs = append(outputs, &output)
+		case audioClassificationTask:
+			inputStruct := AudioRequest{}
+			err := base.ConvertFromStructpb(input, &inputStruct)
+			if err != nil {
+				return nil, err
+			}
+			b, err := base64.StdEncoding.DecodeString(inputStruct.Audio)
+			if err != nil {
+				return nil, err
+			}
+			resp, err := client.MakeHFAPIRequest(b, model)
+			if err != nil {
+				return nil, err
+			}
+			outputArr := []ClassificationResponse{}
+			err = json.Unmarshal(resp, &outputArr)
+			if err != nil {
+				return nil, err
+			}
+			classes := structpb.ListValue{}
+			classes.Values = make([]*structpb.Value, len(outputArr))
+			for i := range outputArr {
+				classes.Values[i] = &structpb.Value{Kind: &structpb.Value_StructValue{
+					StructValue: &structpb.Struct{Fields: map[string]*structpb.Value{
+						"score": {Kind: &structpb.Value_NumberValue{NumberValue: outputArr[i].Score}},
+						"label": {Kind: &structpb.Value_StringValue{StringValue: outputArr[i].Label}},
+					}}},
+				}
+			}
+			output := structpb.Struct{}
+			output.Fields = map[string]*structpb.Value{
+				"classes": {Kind: &structpb.Value_ListValue{ListValue: &classes}},
 			}
 			outputs = append(outputs, &output)
 		default:

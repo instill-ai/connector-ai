@@ -119,8 +119,7 @@ type TextClassificationRequest struct {
 	Options Options `json:"options,omitempty"`
 }
 
-// Used in TextClassificationResponse
-type TextClassificationResponseLabel struct {
+type ClassificationResponse struct {
 	// The label for the class (model specific)
 	Label string `json:"label,omitempty"`
 
@@ -412,14 +411,6 @@ type ImageRequest struct {
 	Image string `json:"image"`
 }
 
-type ImageClassificationResponse struct {
-	// The label for the class (model specific)
-	Label string `json:"label,omitempty"`
-
-	// A float that represents how likely it is that the image file belongs to this class.
-	Score float64 `json:"score,omitempty"`
-}
-
 type ImageSegmentationResponse struct {
 	// The label for the class (model specific) of a segment.
 	Label string `json:"label,omitempty"`
@@ -452,4 +443,13 @@ type ObjectBox struct {
 type ImageToTextResponse struct {
 	// The generated caption
 	GeneratedText string `json:"generated_text"`
+}
+
+type AudioRequest struct {
+	Audio string `json:"audio"`
+}
+
+type SpeechRecognitionResponse struct {
+	// The string that was recognized within the audio file.
+	Text string `json:"text,omitempty"`
 }

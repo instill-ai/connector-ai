@@ -865,5 +865,107 @@
         }
       }
     }
+  },
+  "SPEECH_RECOGNITION": {
+    "openapi": "3.0.0",
+    "info": {
+      "version": "1.0.0",
+      "title": "Hugging Face AI Connector Openapi"
+    },
+    "paths": {
+      "/execute": {
+        "post": {
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "inputs": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "data.json#/SPEECH_RECOGNITION/input"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "outputs": {
+                        "type": "array",
+                        "items": {
+                          "$ref": "data.json#/SPEECH_RECOGNITION/output"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "AUDIO_CLASSIFICATION": {
+    "openapi": "3.0.0",
+    "info": {
+      "version": "1.0.0",
+      "title": "Hugging Face AI Connector Openapi"
+    },
+    "paths": {
+      "/execute": {
+        "post": {
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "inputs": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "data.json#/AUDIO_CLASSIFICATION/input"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "outputs": {
+                        "type": "array",
+                        "items": {
+                          "$ref": "data.json#/AUDIO_CLASSIFICATION/output"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
   }
 }

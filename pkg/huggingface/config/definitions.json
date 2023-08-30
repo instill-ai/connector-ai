@@ -52,7 +52,9 @@
               "IMAGE_CLASSIFICATION",
               "IMAGE_SEGMENTATION",
               "OBJECT_DETECTION",
-              "IMAGE_TO_TEXT"
+              "IMAGE_TO_TEXT",
+              "SPEECH_RECOGNITION",
+              "AUDIO_CLASSIFICATION"
             ],
             "default": "TEXT_GENERATION"
           },
@@ -692,6 +694,46 @@
               "properties": {
                 "task": {
                   "const": "IMAGE_TO_TEXT"
+                }
+              }
+            },
+            "then": {
+              "type": "string",
+              "required": [
+                "image"
+              ],
+              "properties": {
+                "image": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "task": {
+                  "const": "SPEECH_RECOGNITION"
+                }
+              }
+            },
+            "then": {
+              "type": "string",
+              "required": [
+                "image"
+              ],
+              "properties": {
+                "image": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "task": {
+                  "const": "AUDIO_CLASSIFICATION"
                 }
               }
             },
@@ -2326,6 +2368,145 @@
                                 "properties": {
                                   "text": {
                                     "type": "string"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "SPEECH_RECOGNITION": {
+          "openapi": "3.0.0",
+          "info": {
+            "version": "1.0.0",
+            "title": "Hugging Face AI Connector Openapi"
+          },
+          "paths": {
+            "/execute": {
+              "post": {
+                "requestBody": {
+                  "required": true,
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "inputs": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "required": [
+                                "audio"
+                              ],
+                              "properties": {
+                                "audio": {
+                                  "type": "string"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "responses": {
+                  "200": {
+                    "description": "",
+                    "content": {
+                      "application/json": {
+                        "schema": {
+                          "type": "object",
+                          "properties": {
+                            "outputs": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "text": {
+                                    "type": "string"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "AUDIO_CLASSIFICATION": {
+          "openapi": "3.0.0",
+          "info": {
+            "version": "1.0.0",
+            "title": "Hugging Face AI Connector Openapi"
+          },
+          "paths": {
+            "/execute": {
+              "post": {
+                "requestBody": {
+                  "required": true,
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "inputs": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "required": [
+                                "audio"
+                              ],
+                              "properties": {
+                                "audio": {
+                                  "type": "string"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "responses": {
+                  "200": {
+                    "description": "",
+                    "content": {
+                      "application/json": {
+                        "schema": {
+                          "type": "object",
+                          "properties": {
+                            "outputs": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "classes": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "object",
+                                      "properties": {
+                                        "label": {
+                                          "type": "string"
+                                        },
+                                        "score": {
+                                          "type": "number"
+                                        }
+                                      }
+                                    }
                                   }
                                 }
                               }

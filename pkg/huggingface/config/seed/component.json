@@ -26,7 +26,9 @@
         "IMAGE_CLASSIFICATION",
         "IMAGE_SEGMENTATION",
         "OBJECT_DETECTION",
-        "IMAGE_TO_TEXT"
+        "IMAGE_TO_TEXT",
+        "SPEECH_RECOGNITION",
+        "AUDIO_CLASSIFICATION"
       ],
       "default": "TEXT_GENERATION"
     },
@@ -446,6 +448,46 @@
         "properties": {
           "task": {
             "const": "IMAGE_TO_TEXT"
+          }
+        }
+      },
+      "then": {
+        "type": "string",
+        "required": [
+          "image"
+        ],
+        "properties": {
+          "image": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "task": {
+            "const": "SPEECH_RECOGNITION"
+          }
+        }
+      },
+      "then": {
+        "type": "string",
+        "required": [
+          "image"
+        ],
+        "properties": {
+          "image": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "task": {
+            "const": "AUDIO_CLASSIFICATION"
           }
         }
       },
