@@ -97,7 +97,7 @@ func (c *Connector) CreateConnection(defUid uuid.UUID, config *structpb.Struct, 
 	}, nil
 }
 
-// NewClient initializes a new Stability AI client
+// NewClient initializes a new OpenAI client
 func NewClient(apiKey string) Client {
 	tr := &http.Transport{
 		DisableKeepAlives: true,

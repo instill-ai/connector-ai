@@ -1,0 +1,50 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Hugging Face Connector Component Spec",
+  "type": "object",
+  "required": ["task", "model"],
+  "properties": {
+    "task": {
+      "title": "Task",
+      "enum": [
+        "TEXT_TO_IMAGE"
+      ],
+      "default": "TEXT_TO_IMAGE"
+    },
+    "model": {
+      "title": "Model",
+      "type": "string"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "task": {
+            "const": "TEXT_TO_IMAGE"
+          }
+        }
+      },
+      "then": {
+        "type": "object",
+        "required": ["inputs"],
+        "properties": {
+          "inputs": {
+            "type": "string",
+            "format": "instill-template-text",
+            "$ref": "data.json#/TEXT_TO_IMAGE/input/properties/inputs"
+          },
+          "options": {
+            "type": "object",
+            "$ref": "data.json#/TEXT_TO_IMAGE/input/properties/options"
+          },
+          "parameters": {
+            "type": "object",
+            "format": "instill-template-text",
+            "$ref": "data.json#/TEXT_TO_IMAGE/input/properties/parameters"
+          }
+        }
+      }
+    }
+  ]
+}

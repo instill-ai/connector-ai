@@ -1,0 +1,58 @@
+{
+  "TEXT_TO_IMAGE": {
+    "input": {
+      "type": "object",
+      "required": [
+        "inputs"
+      ],
+      "properties": {
+        "inputs": {
+          "type": "string"
+        },
+        "options": {
+          "type": "object",
+          "required": [],
+          "properties": {
+            "use_gpu": {
+              "type": "boolean"
+            },
+            "use_cache": {
+              "type": "boolean"
+            },
+            "wait_for_model": {
+              "type": "boolean"
+            }
+          }
+        },
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "negative_prompt": {
+              "type": "string"
+            },
+            "height": {
+              "type": "integer"
+            },
+            "width": {
+              "type": "integer"
+            },
+            "num_inference_steps": {
+              "type": "integer"
+            },
+            "guidance_scale": {
+              "type": "number"
+            }
+          }
+        }
+      }
+    },
+    "output": {
+      "type": "object",
+      "properties": {
+        "image": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

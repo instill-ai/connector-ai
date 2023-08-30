@@ -1,0 +1,213 @@
+[
+  {
+    "uid": "0255ef87-33ce-4f88-b9db-8897f8c17233",
+    "id": "ai-hugging-face",
+    "title": "Hugging Face",
+    "documentation_url": "https://www.instill.tech/docs/vdp/ai-connectors/hugging-face",
+    "icon": "huggingface.svg",
+    "icon_url": "",
+    "spec": {
+      "resource_specification": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "title": "Hugging Face Connector Spec",
+        "type": "object",
+        "required": [
+          "api_key"
+        ],
+        "additionalProperties": true,
+        "properties": {
+          "api_key": {
+            "credential_field": true,
+            "title": "API Key",
+            "description": "Fill your Hugging face API token. To find your token, visit https://huggingface.co/settings/tokens.",
+            "type": "string"
+          }
+        }
+      },
+      "component_specification": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "title": "Hugging Face Connector Component Spec",
+        "type": "object",
+        "required": [
+          "task",
+          "model"
+        ],
+        "properties": {
+          "task": {
+            "title": "Task",
+            "enum": [
+              "TEXT_TO_IMAGE"
+            ],
+            "default": "TEXT_TO_IMAGE"
+          },
+          "model": {
+            "title": "Model",
+            "type": "string"
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "task": {
+                  "const": "TEXT_TO_IMAGE"
+                }
+              }
+            },
+            "then": {
+              "type": "object",
+              "required": [
+                "inputs"
+              ],
+              "properties": {
+                "inputs": {
+                  "type": "string",
+                  "format": "instill-template-text"
+                },
+                "options": {
+                  "type": "object",
+                  "properties": {
+                    "use_gpu": {
+                      "type": "boolean"
+                    },
+                    "use_cache": {
+                      "type": "boolean"
+                    },
+                    "wait_for_model": {
+                      "type": "boolean"
+                    }
+                  }
+                },
+                "parameters": {
+                  "type": "object",
+                  "properties": {
+                    "negative_prompt": {
+                      "type": "string"
+                    },
+                    "height": {
+                      "type": "integer"
+                    },
+                    "width": {
+                      "type": "integer"
+                    },
+                    "num_inference_steps": {
+                      "type": "integer"
+                    },
+                    "guidance_scale": {
+                      "type": "number"
+                    }
+                  },
+                  "format": "instill-template-text"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "openapi_specifications": {
+        "TEXT_TO_IMAGE": {
+          "openapi": "3.0.0",
+          "info": {
+            "version": "1.0.0",
+            "title": "Hugging Face AI Connector Openapi"
+          },
+          "paths": {
+            "/execute": {
+              "post": {
+                "requestBody": {
+                  "required": true,
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "inputs": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "required": [
+                                "inputs"
+                              ],
+                              "properties": {
+                                "inputs": {
+                                  "type": "string"
+                                },
+                                "options": {
+                                  "type": "object",
+                                  "properties": {
+                                    "use_gpu": {
+                                      "type": "boolean"
+                                    },
+                                    "use_cache": {
+                                      "type": "boolean"
+                                    },
+                                    "wait_for_model": {
+                                      "type": "boolean"
+                                    }
+                                  }
+                                },
+                                "parameters": {
+                                  "type": "object",
+                                  "properties": {
+                                    "negative_prompt": {
+                                      "type": "string"
+                                    },
+                                    "height": {
+                                      "type": "integer"
+                                    },
+                                    "width": {
+                                      "type": "integer"
+                                    },
+                                    "num_inference_steps": {
+                                      "type": "integer"
+                                    },
+                                    "guidance_scale": {
+                                      "type": "number"
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "responses": {
+                  "200": {
+                    "description": "",
+                    "content": {
+                      "application/json": {
+                        "schema": {
+                          "type": "object",
+                          "properties": {
+                            "outputs": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "image": {
+                                    "type": "string"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "public": true,
+    "custom": false,
+    "tombstone": false,
+    "vendor_attributes": {}
+  }
+]
