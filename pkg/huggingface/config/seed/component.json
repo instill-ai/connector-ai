@@ -10,19 +10,54 @@
     "task": {
       "title": "Task",
       "enum": [
+        "TEXT_GENERATION",
         "TEXT_TO_IMAGE",
         "FILL_MASK",
         "SUMMARIZATION",
-        "TEXT_CLASSIFICATION"
+        "TEXT_CLASSIFICATION",
+        "TOKEN_CLASSIFICATION",
+        "TRANSLATION"
       ],
-      "default": "TEXT_TO_IMAGE"
+      "default": "TEXT_GENERATION"
     },
     "model": {
       "title": "Model",
-      "type": "string"
+      "type": "string",
+      "default": "gpt2"
     }
   },
   "allOf": [
+    {
+      "if": {
+        "properties": {
+          "task": {
+            "const": "TEXT_GENERATION"
+          }
+        }
+      },
+      "then": {
+        "type": "object",
+        "required": [
+          "inputs"
+        ],
+        "properties": {
+          "inputs": {
+            "type": "string",
+            "format": "instill-template-text",
+            "$ref": "data.json#/TEXT_GENERATION/input/properties/inputs"
+          },
+          "options": {
+            "type": "object",
+            "$ref": "data.json#/TEXT_GENERATION/input/properties/options"
+          },
+          "parameters": {
+            "type": "object",
+            "format": "instill-template-text",
+            "$ref": "data.json#/TEXT_GENERATION/input/properties/parameters"
+          }
+        }
+      }
+    },
     {
       "if": {
         "properties": {
@@ -128,6 +163,58 @@
           "options": {
             "type": "object",
             "$ref": "data.json#/TEXT_CLASSIFICATION/input/properties/options"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "task": {
+            "const": "TOKEN_CLASSIFICATION"
+          }
+        }
+      },
+      "then": {
+        "type": "object",
+        "required": [
+          "inputs"
+        ],
+        "properties": {
+          "inputs": {
+            "type": "string",
+            "format": "instill-template-text",
+            "$ref": "data.json#/TOKEN_CLASSIFICATION/input/properties/inputs"
+          },
+          "options": {
+            "type": "object",
+            "$ref": "data.json#/TOKEN_CLASSIFICATION/input/properties/options"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "task": {
+            "const": "TRANSLATION"
+          }
+        }
+      },
+      "then": {
+        "type": "object",
+        "required": [
+          "inputs"
+        ],
+        "properties": {
+          "inputs": {
+            "type": "string",
+            "format": "instill-template-text",
+            "$ref": "data.json#/TRANSLATION/input/properties/inputs"
+          },
+          "options": {
+            "type": "object",
+            "$ref": "data.json#/TRANSLATION/input/properties/options"
           }
         }
       }

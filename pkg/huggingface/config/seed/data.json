@@ -18,6 +18,73 @@
       }
     }
   },
+  "TEXT_GENERATION": {
+    "input": {
+      "type": "object",
+      "required": [
+        "inputs"
+      ],
+      "properties": {
+        "inputs": {
+          "$ref": "#/$defs/string_input"
+        },
+        "options": {
+          "$ref": "#/$defs/options"
+        },
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "top_k": {
+              "type": "integer"
+            },
+            "top_p": {
+              "type": "number"
+            },
+            "temperature": {
+              "type": "number"
+            },
+            "repetition_penalty": {
+              "type": "number"
+            },
+            "max_new_tokens": {
+              "type": "integer"
+            },
+            "max_time": {
+              "type": "number"
+            },
+            "return_full_text": {
+              "type": "boolean"
+            },
+            "num_return_sequences": {
+              "type": "integer"
+            },
+            "do_sample": {
+              "type": "boolean"
+            }
+          }
+        }
+      }
+    },
+    "output": {
+      "type": "object",
+      "properties": {
+        "classes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "label": {
+                "type": "string"
+              },
+              "score": {
+                "type": "number"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
   "TEXT_TO_IMAGE": {
     "input": {
       "type": "object",
@@ -147,15 +214,10 @@
     "output": {
       "type": "object",
       "properties": {
-        "summaries": {
+        "texts": {
           "type": "array",
           "items": {
-            "type": "object",
-            "properties": {
-              "summary_text": {
-                "type": "string"
-              }
-            }
+            "type": "string"
           }
         }
       }
@@ -191,6 +253,85 @@
                 "type": "number"
               }
             }
+          }
+        }
+      }
+    }
+  },
+  "TOKEN_CLASSIFICATION": {
+    "input": {
+      "type": "object",
+      "required": [
+        "inputs"
+      ],
+      "properties": {
+        "inputs": {
+          "$ref": "#/$defs/string_input"
+        },
+        "options": {
+          "$ref": "#/$defs/options"
+        },
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "aggregation_strategy": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "output": {
+      "type": "object",
+      "properties": {
+        "masks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "entity_group": {
+                "type": "string"
+              },
+              "score": {
+                "type": "number"
+              },
+              "word": {
+                "type": "string"
+              },
+              "start": {
+                "type": "integer"
+              },
+              "end": {
+                "type": "integer"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "TRANSLATION": {
+    "input": {
+      "type": "object",
+      "required": [
+        "inputs"
+      ],
+      "properties": {
+        "inputs": {
+          "$ref": "#/$defs/string_input"
+        },
+        "options": {
+          "$ref": "#/$defs/options"
+        }
+      }
+    },
+    "output": {
+      "type": "object",
+      "properties": {
+        "texts": {
+          "type": "array",
+          "items": {
+            "type": "string"
           }
         }
       }

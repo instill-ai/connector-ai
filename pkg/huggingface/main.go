@@ -27,10 +27,13 @@ const (
 	jsonMimeType = "application/json"
 	reqTimeout   = time.Second * 60 * 5
 	//tasks
-	textToImageTask        = "TEXT_TO_IMAGE"
-	fillMaskTask           = "FILL_MASK"
-	summarizationTask      = "SUMMARIZATION"
-	textClassificationTask = "TEXT_CLASSIFICATION"
+	textGenerationTask      = "TEXT_GENERATION"
+	textToImageTask         = "TEXT_TO_IMAGE"
+	fillMaskTask            = "FILL_MASK"
+	summarizationTask       = "SUMMARIZATION"
+	textClassificationTask  = "TEXT_CLASSIFICATION"
+	tokenClassificationTask = "TOKEN_CLASSIFICATION"
+	translationTask         = "TRANSLATION"
 )
 
 var (
@@ -125,6 +128,31 @@ func (c *Connection) Execute(inputs []*structpb.Struct) ([]*structpb.Struct, err
 
 	for _, input := range inputs {
 		switch task {
+		case textGenerationTask:
+			inputStruct := TextGenerationRequest{}
+			err := base.ConvertFromStructpb(input, &inputStruct)
+			if err != nil {
+				return nil, err
+			}
+			jsonBody, _ := json.Marshal(inputStruct)
+			resp, err := client.MakeHFAPIRequest(jsonBody, model)
+			if err != nil {
+				return inputs, err
+			}
+			outputArr := []TextGenerationResponse{}
+			err = json.Unmarshal(resp, &outputArr)
+			if err != nil {
+				return nil, err
+			}
+			generatedTexts := structpb.ListValue{}
+			generatedTexts.Values = make([]*structpb.Value, len(outputArr))
+			for i := range outputArr {
+				generatedTexts.Values[i] = &structpb.Value{Kind: &structpb.Value_StringValue{StringValue: outputArr[i].GeneratedText}}
+			}
+			output := structpb.Struct{
+				Fields: map[string]*structpb.Value{"texts": {Kind: &structpb.Value_ListValue{ListValue: &generatedTexts}}},
+			}
+			outputs = append(outputs, &output)
 		case textToImageTask:
 			inputStruct := TextToImageRequest{}
 			err := base.ConvertFromStructpb(input, &inputStruct)
@@ -200,16 +228,10 @@ func (c *Connection) Execute(inputs []*structpb.Struct) ([]*structpb.Struct, err
 			summaries := structpb.ListValue{}
 			summaries.Values = make([]*structpb.Value, len(outputArr))
 			for i := range outputArr {
-				summaries.Values[i] = &structpb.Value{Kind: &structpb.Value_StructValue{
-					StructValue: &structpb.Struct{
-						Fields: map[string]*structpb.Value{
-							"summary_text": {Kind: &structpb.Value_StringValue{StringValue: outputArr[i].SummaryText}},
-						},
-					},
-				}}
+				summaries.Values[i] = &structpb.Value{Kind: &structpb.Value_StringValue{StringValue: outputArr[i].SummaryText}}
 			}
 			output := structpb.Struct{
-				Fields: map[string]*structpb.Value{"masks": {Kind: &structpb.Value_ListValue{ListValue: &summaries}}},
+				Fields: map[string]*structpb.Value{"texts": {Kind: &structpb.Value_ListValue{ListValue: &summaries}}},
 			}
 			outputs = append(outputs, &output)
 		case textClassificationTask:
@@ -246,6 +268,66 @@ func (c *Connection) Execute(inputs []*structpb.Struct) ([]*structpb.Struct, err
 			}
 			output := structpb.Struct{
 				Fields: map[string]*structpb.Value{"classes": {Kind: &structpb.Value_ListValue{ListValue: &classes}}},
+			}
+			outputs = append(outputs, &output)
+		case tokenClassificationTask:
+			inputStruct := TokenClassificationRequest{}
+			err := base.ConvertFromStructpb(input, &inputStruct)
+			if err != nil {
+				return nil, err
+			}
+			jsonBody, _ := json.Marshal(inputStruct)
+			resp, err := client.MakeHFAPIRequest(jsonBody, model)
+			if err != nil {
+				return inputs, err
+			}
+			outputArr := []TokenClassificationResponseEntity{}
+			err = json.Unmarshal(resp, &outputArr)
+			if err != nil {
+				return nil, err
+			}
+			classes := structpb.ListValue{}
+			classes.Values = make([]*structpb.Value, len(outputArr))
+			for i := range outputArr {
+				classes.Values[i] = &structpb.Value{Kind: &structpb.Value_StructValue{
+					StructValue: &structpb.Struct{
+						Fields: map[string]*structpb.Value{
+							"entity_group": {Kind: &structpb.Value_StringValue{StringValue: outputArr[i].EntityGroup}},
+							"score":        {Kind: &structpb.Value_NumberValue{NumberValue: outputArr[i].Score}},
+							"word":         {Kind: &structpb.Value_StringValue{StringValue: outputArr[i].Word}},
+							"start":        {Kind: &structpb.Value_NumberValue{NumberValue: float64(outputArr[i].Start)}},
+							"end":          {Kind: &structpb.Value_NumberValue{NumberValue: float64(outputArr[i].End)}},
+						},
+					},
+				}}
+			}
+			output := structpb.Struct{
+				Fields: map[string]*structpb.Value{"classes": {Kind: &structpb.Value_ListValue{ListValue: &classes}}},
+			}
+			outputs = append(outputs, &output)
+		case translationTask:
+			inputStruct := TranslationRequest{}
+			err := base.ConvertFromStructpb(input, &inputStruct)
+			if err != nil {
+				return nil, err
+			}
+			jsonBody, _ := json.Marshal(inputStruct)
+			resp, err := client.MakeHFAPIRequest(jsonBody, model)
+			if err != nil {
+				return inputs, err
+			}
+			outputArr := []TranslationResponse{}
+			err = json.Unmarshal(resp, &outputArr)
+			if err != nil {
+				return nil, err
+			}
+			translations := structpb.ListValue{}
+			translations.Values = make([]*structpb.Value, len(outputArr))
+			for i := range outputArr {
+				translations.Values[i] = &structpb.Value{Kind: &structpb.Value_StringValue{StringValue: outputArr[i].TranslationText}}
+			}
+			output := structpb.Struct{
+				Fields: map[string]*structpb.Value{"texts": {Kind: &structpb.Value_ListValue{ListValue: &translations}}},
 			}
 			outputs = append(outputs, &output)
 		default:
