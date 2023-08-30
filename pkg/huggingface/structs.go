@@ -407,3 +407,49 @@ type Conversation struct {
 	// The last inputs from the user in the conversation, after the model has run.
 	PastUserInputs []string `json:"past_user_inputs,omitempty"`
 }
+
+type ImageRequest struct {
+	Image string `json:"image"`
+}
+
+type ImageClassificationResponse struct {
+	// The label for the class (model specific)
+	Label string `json:"label,omitempty"`
+
+	// A float that represents how likely it is that the image file belongs to this class.
+	Score float64 `json:"score,omitempty"`
+}
+
+type ImageSegmentationResponse struct {
+	// The label for the class (model specific) of a segment.
+	Label string `json:"label,omitempty"`
+
+	// A float that represents how likely it is that the segment belongs to the given class.
+	Score float64 `json:"score,omitempty"`
+
+	// A str (base64 str of a single channel black-and-white img) representing the mask of a segment.
+	Mask string `json:"mask,omitempty"`
+}
+
+type ObjectDetectionResponse struct {
+	// The label for the class (model specific) of a detected object.
+	Label string `json:"label,omitempty"`
+
+	// A float that represents how likely it is that the detected object belongs to the given class.
+	Score float64 `json:"score,omitempty"`
+
+	// Bounding box of the detected object
+	Box ObjectBox
+}
+
+type ObjectBox struct {
+	XMin int `json:"xmin,omitempty"`
+	YMin int `json:"ymin,omitempty"`
+	XMax int `json:"xmax,omitempty"`
+	YMax int `json:"ymax,omitempty"`
+}
+
+type ImageToTextResponse struct {
+	// The generated caption
+	GeneratedText string `json:"generated_text"`
+}

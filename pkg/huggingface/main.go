@@ -40,6 +40,10 @@ const (
 	tableQuestionAnsweringTask = "TABLE_QUESTION_ANSWERING"
 	sentenceSimilarityTask     = "SENTENCE_SIMILARITY"
 	conversationalTask         = "CONVERSATIONAL"
+	imageClassificationTask    = "IMAGE_CLASSIFICATION"
+	imageSegmentationTask      = "IMAGE_SEGMENTATION"
+	objectDetectionTask        = "OBJECT_DETECTION"
+	imageToTextTask            = "IMAGE_TO_TEXT"
 )
 
 var (
@@ -460,6 +464,145 @@ func (c *Connection) Execute(inputs []*structpb.Struct) ([]*structpb.Struct, err
 			err = protojson.Unmarshal(resp, &output)
 			if err != nil {
 				return nil, err
+			}
+			outputs = append(outputs, &output)
+		case imageClassificationTask:
+			inputStruct := ImageRequest{}
+			err := base.ConvertFromStructpb(input, &inputStruct)
+			if err != nil {
+				return nil, err
+			}
+			b, err := base64.StdEncoding.DecodeString(inputStruct.Image)
+			if err != nil {
+				return nil, err
+			}
+			resp, err := client.MakeHFAPIRequest(b, model)
+			if err != nil {
+				return nil, err
+			}
+			outputArr := []ImageClassificationResponse{}
+			err = json.Unmarshal(resp, &outputArr)
+			if err != nil {
+				return nil, err
+			}
+			classes := structpb.ListValue{}
+			classes.Values = make([]*structpb.Value, len(outputArr))
+			for i := range outputArr {
+				classes.Values[i] = &structpb.Value{Kind: &structpb.Value_StructValue{
+					StructValue: &structpb.Struct{Fields: map[string]*structpb.Value{
+						"score": {Kind: &structpb.Value_NumberValue{NumberValue: outputArr[i].Score}},
+						"label": {Kind: &structpb.Value_StringValue{StringValue: outputArr[i].Label}},
+					}}},
+				}
+			}
+			output := structpb.Struct{}
+			output.Fields = map[string]*structpb.Value{
+				"classes": {Kind: &structpb.Value_ListValue{ListValue: &classes}},
+			}
+			outputs = append(outputs, &output)
+		case imageSegmentationTask:
+			inputStruct := ImageRequest{}
+			err := base.ConvertFromStructpb(input, &inputStruct)
+			if err != nil {
+				return nil, err
+			}
+			b, err := base64.StdEncoding.DecodeString(inputStruct.Image)
+			if err != nil {
+				return nil, err
+			}
+			resp, err := client.MakeHFAPIRequest(b, model)
+			if err != nil {
+				return nil, err
+			}
+			outputArr := []ImageSegmentationResponse{}
+			err = json.Unmarshal(resp, &outputArr)
+			if err != nil {
+				return nil, err
+			}
+			segments := structpb.ListValue{}
+			segments.Values = make([]*structpb.Value, len(outputArr))
+			for i := range outputArr {
+				segments.Values[i] = &structpb.Value{Kind: &structpb.Value_StructValue{
+					StructValue: &structpb.Struct{Fields: map[string]*structpb.Value{
+						"score": {Kind: &structpb.Value_NumberValue{NumberValue: outputArr[i].Score}},
+						"label": {Kind: &structpb.Value_StringValue{StringValue: outputArr[i].Label}},
+						"mask":  {Kind: &structpb.Value_StringValue{StringValue: outputArr[i].Mask}},
+					}}},
+				}
+			}
+			output := structpb.Struct{}
+			output.Fields = map[string]*structpb.Value{
+				"segments": {Kind: &structpb.Value_ListValue{ListValue: &segments}},
+			}
+			outputs = append(outputs, &output)
+		case objectDetectionTask:
+			inputStruct := ImageRequest{}
+			err := base.ConvertFromStructpb(input, &inputStruct)
+			if err != nil {
+				return nil, err
+			}
+			b, err := base64.StdEncoding.DecodeString(inputStruct.Image)
+			if err != nil {
+				return nil, err
+			}
+			resp, err := client.MakeHFAPIRequest(b, model)
+			if err != nil {
+				return nil, err
+			}
+			outputArr := []ObjectDetectionResponse{}
+			err = json.Unmarshal(resp, &outputArr)
+			if err != nil {
+				return nil, err
+			}
+			objects := structpb.ListValue{}
+			objects.Values = make([]*structpb.Value, len(outputArr))
+			for i := range outputArr {
+				objects.Values[i] = &structpb.Value{Kind: &structpb.Value_StructValue{
+					StructValue: &structpb.Struct{Fields: map[string]*structpb.Value{
+						"score": {Kind: &structpb.Value_NumberValue{NumberValue: outputArr[i].Score}},
+						"label": {Kind: &structpb.Value_StringValue{StringValue: outputArr[i].Label}},
+						"box": {Kind: &structpb.Value_StructValue{StructValue: &structpb.Struct{
+							Fields: map[string]*structpb.Value{
+								"xmin": {Kind: &structpb.Value_NumberValue{NumberValue: float64(outputArr[i].Box.XMin)}},
+								"ymin": {Kind: &structpb.Value_NumberValue{NumberValue: float64(outputArr[i].Box.YMin)}},
+								"xmax": {Kind: &structpb.Value_NumberValue{NumberValue: float64(outputArr[i].Box.XMax)}},
+								"ymax": {Kind: &structpb.Value_NumberValue{NumberValue: float64(outputArr[i].Box.YMax)}},
+							},
+						}}},
+					}},
+				}}
+			}
+			output := structpb.Struct{}
+			output.Fields = map[string]*structpb.Value{
+				"objects": {Kind: &structpb.Value_ListValue{ListValue: &objects}},
+			}
+			outputs = append(outputs, &output)
+		case imageToTextTask:
+			inputStruct := ImageRequest{}
+			err := base.ConvertFromStructpb(input, &inputStruct)
+			if err != nil {
+				return nil, err
+			}
+			b, err := base64.StdEncoding.DecodeString(inputStruct.Image)
+			if err != nil {
+				return nil, err
+			}
+			resp, err := client.MakeHFAPIRequest(b, model)
+			if err != nil {
+				return nil, err
+			}
+			outputArr := []ImageToTextResponse{}
+			err = json.Unmarshal(resp, &outputArr)
+			if err != nil {
+				return nil, err
+			}
+			if len(outputArr) <= 0 {
+				return nil, errors.New("invalid response")
+			}
+			output := structpb.Struct{
+				Fields: map[string]*structpb.Value{
+					"text": {Kind: &structpb.Value_StringValue{StringValue: outputArr[0].GeneratedText}},
+				},
 			}
 			outputs = append(outputs, &output)
 		default:

@@ -22,7 +22,11 @@
         "QUESTION_ANSWERING",
         "TABLE_QUESTION_ANSWERING",
         "SENTENCE_SIMILARITY",
-        "CONVERSATIONAL"
+        "CONVERSATIONAL",
+        "IMAGE_CLASSIFICATION",
+        "IMAGE_SEGMENTATION",
+        "OBJECT_DETECTION",
+        "IMAGE_TO_TEXT"
       ],
       "default": "TEXT_GENERATION"
     },
@@ -373,6 +377,86 @@
           "options": {
             "type": "object",
             "$ref": "data.json#/CONVERSATIONAL/input/properties/options"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "task": {
+            "const": "IMAGE_CLASSIFICATION"
+          }
+        }
+      },
+      "then": {
+        "type": "string",
+        "required": [
+          "image"
+        ],
+        "properties": {
+          "image": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "task": {
+            "const": "IMAGE_SEGMENTATION"
+          }
+        }
+      },
+      "then": {
+        "type": "string",
+        "required": [
+          "image"
+        ],
+        "properties": {
+          "image": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "task": {
+            "const": "OBJECT_DETECTION"
+          }
+        }
+      },
+      "then": {
+        "type": "string",
+        "required": [
+          "image"
+        ],
+        "properties": {
+          "image": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "task": {
+            "const": "IMAGE_TO_TEXT"
+          }
+        }
+      },
+      "then": {
+        "type": "string",
+        "required": [
+          "image"
+        ],
+        "properties": {
+          "image": {
+            "type": "string"
           }
         }
       }

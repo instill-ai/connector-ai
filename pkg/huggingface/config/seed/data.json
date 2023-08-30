@@ -636,5 +636,142 @@
         }
       }
     }
+  },
+  "IMAGE_CLASSIFICATION": {
+    "input": {
+      "type": "object",
+      "required": [
+        "image"
+      ],
+      "properties": {
+        "image": {
+          "type": "string"
+        }
+      }
+    },
+    "output": {
+      "type": "object",
+      "properties": {
+        "classes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "label": {
+                "type": "string"
+              },
+              "score": {
+                "type": "number"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "IMAGE_SEGMENTATION": {
+    "input": {
+      "type": "object",
+      "required": [
+        "image"
+      ],
+      "properties": {
+        "image": {
+          "type": "string"
+        }
+      }
+    },
+    "output": {
+      "type": "object",
+      "properties": {
+        "segments": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "label": {
+                "type": "string"
+              },
+              "score": {
+                "type": "number"
+              },
+              "mask": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "OBJECT_DETECTION": {
+    "input": {
+      "type": "object",
+      "required": [
+        "image"
+      ],
+      "properties": {
+        "image": {
+          "type": "string"
+        }
+      }
+    },
+    "output": {
+      "type": "object",
+      "properties": {
+        "objects": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "label": {
+                "type": "string"
+              },
+              "score": {
+                "type": "number"
+              },
+              "box": {
+                "type": "object",
+                "properties": {
+                  "xmin": {
+                    "type": "number"
+                  },
+                  "ymin": {
+                    "type": "number"
+                  },
+                  "xmax": {
+                    "type": "number"
+                  },
+                  "ymax": {
+                    "type": "number"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "IMAGE_TO_TEXT": {
+    "input": {
+      "type": "object",
+      "required": [
+        "image"
+      ],
+      "properties": {
+        "image": {
+          "type": "string"
+        }
+      }
+    },
+    "output": {
+      "type": "object",
+      "properties": {
+        "text": {
+          "type": "string"
+        }
+      }
+    }
   }
 }
