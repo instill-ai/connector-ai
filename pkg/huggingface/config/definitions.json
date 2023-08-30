@@ -720,7 +720,7 @@
             "then": {
               "type": "string",
               "required": [
-                "image"
+                "audio"
               ],
               "properties": {
                 "image": {
@@ -740,7 +740,7 @@
             "then": {
               "type": "string",
               "required": [
-                "image"
+                "audio"
               ],
               "properties": {
                 "image": {
