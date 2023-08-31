@@ -11,9 +11,10 @@ import (
 )
 
 const (
-	AuthHeaderKey    = "Authorization"
-	AuthHeaderPrefix = "Bearer "
-	modelsPath       = "/models/"
+	AuthHeaderKey     = "Authorization"
+	AuthHeaderPrefix  = "Bearer "
+	ContentTypeHeader = "Content-Type"
+	modelsPath        = "/models/"
 )
 
 // MakeHFAPIRequest builds and sends an HTTP POST request to the given model
@@ -21,13 +22,18 @@ const (
 // response JSON and a nil error. If the request fails, returns an empty slice
 // and an error describing the failure.
 func (c *Client) MakeHFAPIRequest(body []byte, model string) ([]byte, error) {
-	req, err := http.NewRequest(http.MethodPost, baseURL+modelsPath+model, bytes.NewBuffer(body))
+	url := c.BaseURL
+	if !c.IsCustomEndpoint {
+		url += modelsPath + model
+	}
+	req, err := http.NewRequest(http.MethodPost, url, bytes.NewBuffer(body))
 	if err != nil {
 		return nil, err
 	}
 	if req == nil {
 		return nil, errors.New("nil request created")
 	}
+	req.Header.Set(ContentTypeHeader, http.DetectContentType(body))
 	req.Header.Set(AuthHeaderKey, AuthHeaderPrefix+c.APIKey)
 	resp, err := c.HTTPClient.Do(req)
 	if err != nil {
@@ -80,8 +86,7 @@ func checkRespForError(respJSON []byte) error {
 }
 
 func (c *Client) GetConnectionState() (connectorPB.ConnectorResource_State, error) {
-	req, _ := http.NewRequest(http.MethodGet, baseURL, nil)
-	req.Header.Set("Content-Type", jsonMimeType)
+	req, _ := http.NewRequest(http.MethodGet, c.BaseURL, nil)
 	req.Header.Set(AuthHeaderKey, AuthHeaderPrefix+c.APIKey)
 	resp, err := c.HTTPClient.Do(req)
 	if err != nil {
