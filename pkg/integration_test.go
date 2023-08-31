@@ -36,7 +36,9 @@ func init() {
 	huggingFaceKey = string(b)
 	hfConfig := &structpb.Struct{
 		Fields: map[string]*structpb.Value{
-			"api_key": {Kind: &structpb.Value_StringValue{StringValue: huggingFaceKey}},
+			"api_key":            {Kind: &structpb.Value_StringValue{StringValue: huggingFaceKey}},
+			"base_url":           {Kind: &structpb.Value_StringValue{StringValue: "https://api-inference.huggingface.co"}},
+			"is_custom_endpoint": {Kind: &structpb.Value_BoolValue{BoolValue: false}},
 		}}
 	c := Init(nil, ConnectorOptions{})
 	hfCon, _ = c.CreateConnection(c.ListConnectorDefinitionUids()[3], hfConfig, nil)
@@ -380,5 +382,26 @@ func TestHuggingFaceAudioClassification(t *testing.T) {
 	in.Fields["task"] = &structpb.Value{Kind: &structpb.Value_StringValue{StringValue: "AUDIO_CLASSIFICATION"}}
 	in.Fields["model"] = &structpb.Value{Kind: &structpb.Value_StringValue{StringValue: "superb/hubert-large-superb-er"}}
 	op, err := hfCon.Execute([]*structpb.Struct{&in})
+	fmt.Printf("\n op :%v, err:%s", op, err)
+}
+
+func TestHuggingFaceCustomEndpointImageClassification(t *testing.T) {
+	hfCustomConfig := &structpb.Struct{
+		Fields: map[string]*structpb.Value{
+			"api_key":            {Kind: &structpb.Value_StringValue{StringValue: huggingFaceKey}},
+			"base_url":           {Kind: &structpb.Value_StringValue{StringValue: "valid URL here"}},
+			"is_custom_endpoint": {Kind: &structpb.Value_BoolValue{BoolValue: true}},
+		}}
+	c := Init(nil, ConnectorOptions{})
+	hfCustomCon, _ := c.CreateConnection(c.ListConnectorDefinitionUids()[3], hfCustomConfig, nil)
+
+	b, _ := ioutil.ReadFile("test_artifacts/image.jpg")
+	req := huggingface.ImageRequest{Image: base64.StdEncoding.EncodeToString(b)}
+	var in structpb.Struct
+	b, _ = json.Marshal(req)
+	protojson.Unmarshal(b, &in)
+	in.Fields["task"] = &structpb.Value{Kind: &structpb.Value_StringValue{StringValue: "IMAGE_CLASSIFICATION"}}
+	in.Fields["model"] = &structpb.Value{Kind: &structpb.Value_StringValue{StringValue: ""}}
+	op, err := hfCustomCon.Execute([]*structpb.Struct{&in})
 	fmt.Printf("\n op :%v, err:%s", op, err)
 }

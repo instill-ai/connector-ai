@@ -3,7 +3,9 @@
   "title": "Hugging Face Connector Spec",
   "type": "object",
   "required": [
-    "api_key"
+    "api_key",
+    "base_url",
+    "is_custom_endpoint"
   ],
   "additionalProperties": true,
   "properties": {
@@ -12,6 +14,20 @@
       "title": "API Key",
       "description": "Fill your Hugging face API token. To find your token, visit https://huggingface.co/settings/tokens.",
       "type": "string"
+    },
+    "base_url": {
+      "credential_field": false,
+      "title": "Base URL",
+      "description": "Hostname for the endpoint. To use Inference API set to https://api-inference.huggingface.co, for Inference Endpoint set to your custom endpoint.",
+      "type": "string",
+      "default": "https://api-inference.huggingface.co"
+    },
+    "is_custom_endpoint": {
+      "credential_field": false,
+      "title": "Is Custom Endpoint",
+      "description": "Fill true if you are using a custom Inference Endpoint and not the Inference API.",
+      "type": "boolean",
+      "default": false
     }
   }
 }

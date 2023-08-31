@@ -22,10 +22,8 @@ import (
 )
 
 const (
-	venderName   = "huggingface"
-	baseURL      = "https://api-inference.huggingface.co"
-	jsonMimeType = "application/json"
-	reqTimeout   = time.Second * 60 * 5
+	venderName = "huggingface"
+	reqTimeout = time.Second * 60 * 5
 	//tasks
 	textGenerationTask         = "TEXT_GENERATION"
 	textToImageTask            = "TEXT_TO_IMAGE"
@@ -69,8 +67,10 @@ type Connection struct {
 
 // Client represents a OpenAI client
 type Client struct {
-	APIKey     string
-	HTTPClient HTTPClient
+	APIKey           string
+	BaseURL          string
+	IsCustomEndpoint bool
+	HTTPClient       HTTPClient
 }
 
 // HTTPClient interface
@@ -115,17 +115,25 @@ func (c *Connector) CreateConnection(defUid uuid.UUID, config *structpb.Struct, 
 }
 
 // NewClient initializes a new Hugging Face client
-func NewClient(apiKey string) Client {
+func NewClient(apiKey, baseURL string, isCustomEndpoint bool) Client {
 	tr := &http.Transport{DisableKeepAlives: true}
-	return Client{APIKey: apiKey, HTTPClient: &http.Client{Timeout: reqTimeout, Transport: tr}}
+	return Client{APIKey: apiKey, BaseURL: baseURL, IsCustomEndpoint: isCustomEndpoint, HTTPClient: &http.Client{Timeout: reqTimeout, Transport: tr}}
 }
 
 func (c *Connection) getAPIKey() string {
 	return c.Config.GetFields()["api_key"].GetStringValue()
 }
 
+func (c *Connection) getBaseURL() string {
+	return c.Config.GetFields()["base_url"].GetStringValue()
+}
+
+func (c *Connection) isCustomEndpoint() bool {
+	return c.Config.GetFields()["is_custom_endpoint"].GetBoolValue()
+}
+
 func (c *Connection) Execute(inputs []*structpb.Struct) ([]*structpb.Struct, error) {
-	client := NewClient(c.getAPIKey())
+	client := NewClient(c.getAPIKey(), c.getBaseURL(), c.isCustomEndpoint())
 	outputs := []*structpb.Struct{}
 	task := inputs[0].GetFields()["task"].GetStringValue()
 	model := inputs[0].GetFields()["model"].GetStringValue()
@@ -672,6 +680,6 @@ func (c *Connection) Execute(inputs []*structpb.Struct) ([]*structpb.Struct, err
 }
 
 func (c *Connection) Test() (connectorPB.ConnectorResource_State, error) {
-	client := NewClient(c.getAPIKey())
+	client := NewClient(c.getAPIKey(), c.getBaseURL(), c.isCustomEndpoint())
 	return client.GetConnectionState()
 }
