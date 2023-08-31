@@ -1,0 +1,2531 @@
+[
+  {
+    "uid": "0255ef87-33ce-4f88-b9db-8897f8c17233",
+    "id": "ai-hugging-face",
+    "title": "Hugging Face",
+    "documentation_url": "https://www.instill.tech/docs/vdp/ai-connectors/hugging-face",
+    "icon": "huggingface.svg",
+    "icon_url": "",
+    "spec": {
+      "resource_specification": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "title": "Hugging Face Connector Spec",
+        "type": "object",
+        "required": [
+          "api_key"
+        ],
+        "additionalProperties": true,
+        "properties": {
+          "api_key": {
+            "credential_field": true,
+            "title": "API Key",
+            "description": "Fill your Hugging face API token. To find your token, visit https://huggingface.co/settings/tokens.",
+            "type": "string"
+          }
+        }
+      },
+      "component_specification": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "title": "Hugging Face Connector Component Spec",
+        "type": "object",
+        "required": [
+          "task",
+          "model"
+        ],
+        "properties": {
+          "task": {
+            "title": "Task",
+            "enum": [
+              "TEXT_GENERATION",
+              "TEXT_TO_IMAGE",
+              "FILL_MASK",
+              "SUMMARIZATION",
+              "TEXT_CLASSIFICATION",
+              "TOKEN_CLASSIFICATION",
+              "TRANSLATION",
+              "ZERO_SHOT_CLASSIFICATION",
+              "FEATURE_EXTRACTION",
+              "QUESTION_ANSWERING",
+              "TABLE_QUESTION_ANSWERING",
+              "SENTENCE_SIMILARITY",
+              "CONVERSATIONAL",
+              "IMAGE_CLASSIFICATION",
+              "IMAGE_SEGMENTATION",
+              "OBJECT_DETECTION",
+              "IMAGE_TO_TEXT",
+              "SPEECH_RECOGNITION",
+              "AUDIO_CLASSIFICATION"
+            ],
+            "default": "TEXT_GENERATION"
+          },
+          "model": {
+            "title": "Model",
+            "type": "string",
+            "default": "gpt2"
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "task": {
+                  "const": "TEXT_GENERATION"
+                }
+              }
+            },
+            "then": {
+              "type": "object",
+              "required": [
+                "inputs"
+              ],
+              "properties": {
+                "inputs": {
+                  "type": "string",
+                  "format": "instill-template-text"
+                },
+                "options": {
+                  "type": "object",
+                  "properties": {
+                    "use_gpu": {
+                      "type": "boolean"
+                    },
+                    "use_cache": {
+                      "type": "boolean"
+                    },
+                    "wait_for_model": {
+                      "type": "boolean"
+                    }
+                  }
+                },
+                "parameters": {
+                  "type": "object",
+                  "properties": {
+                    "top_k": {
+                      "type": "integer"
+                    },
+                    "top_p": {
+                      "type": "number"
+                    },
+                    "temperature": {
+                      "type": "number"
+                    },
+                    "repetition_penalty": {
+                      "type": "number"
+                    },
+                    "max_new_tokens": {
+                      "type": "integer"
+                    },
+                    "max_time": {
+                      "type": "number"
+                    },
+                    "return_full_text": {
+                      "type": "boolean"
+                    },
+                    "num_return_sequences": {
+                      "type": "integer"
+                    },
+                    "do_sample": {
+                      "type": "boolean"
+                    }
+                  },
+                  "format": "instill-template-text"
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "task": {
+                  "const": "TEXT_TO_IMAGE"
+                }
+              }
+            },
+            "then": {
+              "type": "object",
+              "required": [
+                "inputs"
+              ],
+              "properties": {
+                "inputs": {
+                  "type": "string",
+                  "format": "instill-template-text"
+                },
+                "options": {
+                  "type": "object",
+                  "properties": {
+                    "use_gpu": {
+                      "type": "boolean"
+                    },
+                    "use_cache": {
+                      "type": "boolean"
+                    },
+                    "wait_for_model": {
+                      "type": "boolean"
+                    }
+                  }
+                },
+                "parameters": {
+                  "type": "object",
+                  "properties": {
+                    "negative_prompt": {
+                      "type": "string"
+                    },
+                    "height": {
+                      "type": "integer"
+                    },
+                    "width": {
+                      "type": "integer"
+                    },
+                    "num_inference_steps": {
+                      "type": "integer"
+                    },
+                    "guidance_scale": {
+                      "type": "number"
+                    }
+                  },
+                  "format": "instill-template-text"
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "task": {
+                  "const": "FILL_MASK"
+                }
+              }
+            },
+            "then": {
+              "type": "object",
+              "required": [
+                "inputs"
+              ],
+              "properties": {
+                "inputs": {
+                  "type": "string",
+                  "format": "instill-template-text"
+                },
+                "options": {
+                  "type": "object",
+                  "properties": {
+                    "use_gpu": {
+                      "type": "boolean"
+                    },
+                    "use_cache": {
+                      "type": "boolean"
+                    },
+                    "wait_for_model": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "task": {
+                  "const": "SUMMARIZATION"
+                }
+              }
+            },
+            "then": {
+              "type": "object",
+              "required": [
+                "inputs"
+              ],
+              "properties": {
+                "inputs": {
+                  "type": "string",
+                  "format": "instill-template-text"
+                },
+                "options": {
+                  "type": "object",
+                  "properties": {
+                    "use_gpu": {
+                      "type": "boolean"
+                    },
+                    "use_cache": {
+                      "type": "boolean"
+                    },
+                    "wait_for_model": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "task": {
+                  "const": "TEXT_CLASSIFICATION"
+                }
+              }
+            },
+            "then": {
+              "type": "object",
+              "required": [
+                "inputs"
+              ],
+              "properties": {
+                "inputs": {
+                  "type": "string",
+                  "format": "instill-template-text"
+                },
+                "options": {
+                  "type": "object",
+                  "properties": {
+                    "use_gpu": {
+                      "type": "boolean"
+                    },
+                    "use_cache": {
+                      "type": "boolean"
+                    },
+                    "wait_for_model": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "task": {
+                  "const": "TOKEN_CLASSIFICATION"
+                }
+              }
+            },
+            "then": {
+              "type": "object",
+              "required": [
+                "inputs"
+              ],
+              "properties": {
+                "inputs": {
+                  "type": "string",
+                  "format": "instill-template-text"
+                },
+                "options": {
+                  "type": "object",
+                  "properties": {
+                    "use_gpu": {
+                      "type": "boolean"
+                    },
+                    "use_cache": {
+                      "type": "boolean"
+                    },
+                    "wait_for_model": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "task": {
+                  "const": "TRANSLATION"
+                }
+              }
+            },
+            "then": {
+              "type": "object",
+              "required": [
+                "inputs"
+              ],
+              "properties": {
+                "inputs": {
+                  "type": "string",
+                  "format": "instill-template-text"
+                },
+                "options": {
+                  "type": "object",
+                  "properties": {
+                    "use_gpu": {
+                      "type": "boolean"
+                    },
+                    "use_cache": {
+                      "type": "boolean"
+                    },
+                    "wait_for_model": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "task": {
+                  "const": "ZERO_SHOT_CLASSIFICATION"
+                }
+              }
+            },
+            "then": {
+              "type": "object",
+              "required": [
+                "inputs"
+              ],
+              "properties": {
+                "inputs": {
+                  "type": "string",
+                  "format": "instill-template-text"
+                },
+                "options": {
+                  "type": "object",
+                  "properties": {
+                    "use_gpu": {
+                      "type": "boolean"
+                    },
+                    "use_cache": {
+                      "type": "boolean"
+                    },
+                    "wait_for_model": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "task": {
+                  "const": "FEATURE_EXTRACTION"
+                }
+              }
+            },
+            "then": {
+              "type": "object",
+              "required": [
+                "inputs"
+              ],
+              "properties": {
+                "inputs": {
+                  "type": "string",
+                  "format": "instill-template-text"
+                },
+                "options": {
+                  "type": "object",
+                  "properties": {
+                    "use_gpu": {
+                      "type": "boolean"
+                    },
+                    "use_cache": {
+                      "type": "boolean"
+                    },
+                    "wait_for_model": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "task": {
+                  "const": "QUESTION_ANSWERING"
+                }
+              }
+            },
+            "then": {
+              "type": "object",
+              "required": [
+                "inputs"
+              ],
+              "properties": {
+                "inputs": {
+                  "type": "object",
+                  "required": [
+                    "question",
+                    "context"
+                  ],
+                  "properties": {
+                    "question": {
+                      "type": "string"
+                    },
+                    "context": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "options": {
+                  "type": "object",
+                  "properties": {
+                    "use_gpu": {
+                      "type": "boolean"
+                    },
+                    "use_cache": {
+                      "type": "boolean"
+                    },
+                    "wait_for_model": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "task": {
+                  "const": "TABLE_QUESTION_ANSWERING"
+                }
+              }
+            },
+            "then": {
+              "type": "object",
+              "required": [
+                "inputs"
+              ],
+              "properties": {
+                "inputs": {
+                  "required": [
+                    "query",
+                    "table"
+                  ],
+                  "properties": {
+                    "query": {
+                      "type": "string"
+                    },
+                    "table": {
+                      "type": "object"
+                    }
+                  },
+                  "type": "object"
+                },
+                "options": {
+                  "type": "object",
+                  "properties": {
+                    "use_gpu": {
+                      "type": "boolean"
+                    },
+                    "use_cache": {
+                      "type": "boolean"
+                    },
+                    "wait_for_model": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "task": {
+                  "const": "SENTENCE_SIMILARITY"
+                }
+              }
+            },
+            "then": {
+              "type": "object",
+              "required": [
+                "inputs"
+              ],
+              "properties": {
+                "inputs": {
+                  "required": [
+                    "source_sentence",
+                    "sentences"
+                  ],
+                  "properties": {
+                    "source_sentence": {
+                      "type": "string"
+                    },
+                    "sentences": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "type": "object"
+                },
+                "options": {
+                  "type": "object",
+                  "properties": {
+                    "use_gpu": {
+                      "type": "boolean"
+                    },
+                    "use_cache": {
+                      "type": "boolean"
+                    },
+                    "wait_for_model": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "task": {
+                  "const": "CONVERSATIONAL"
+                }
+              }
+            },
+            "then": {
+              "type": "object",
+              "required": [
+                "inputs"
+              ],
+              "properties": {
+                "inputs": {
+                  "required": [
+                    "text"
+                  ],
+                  "properties": {
+                    "text": {
+                      "type": "string"
+                    },
+                    "generated_responses": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "past_user_inputs": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "type": "object"
+                },
+                "options": {
+                  "type": "object",
+                  "properties": {
+                    "use_gpu": {
+                      "type": "boolean"
+                    },
+                    "use_cache": {
+                      "type": "boolean"
+                    },
+                    "wait_for_model": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "task": {
+                  "const": "IMAGE_CLASSIFICATION"
+                }
+              }
+            },
+            "then": {
+              "type": "string",
+              "required": [
+                "image"
+              ],
+              "properties": {
+                "image": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "task": {
+                  "const": "IMAGE_SEGMENTATION"
+                }
+              }
+            },
+            "then": {
+              "type": "string",
+              "required": [
+                "image"
+              ],
+              "properties": {
+                "image": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "task": {
+                  "const": "OBJECT_DETECTION"
+                }
+              }
+            },
+            "then": {
+              "type": "string",
+              "required": [
+                "image"
+              ],
+              "properties": {
+                "image": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "task": {
+                  "const": "IMAGE_TO_TEXT"
+                }
+              }
+            },
+            "then": {
+              "type": "string",
+              "required": [
+                "image"
+              ],
+              "properties": {
+                "image": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "task": {
+                  "const": "SPEECH_RECOGNITION"
+                }
+              }
+            },
+            "then": {
+              "type": "string",
+              "required": [
+                "audio"
+              ],
+              "properties": {
+                "image": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "task": {
+                  "const": "AUDIO_CLASSIFICATION"
+                }
+              }
+            },
+            "then": {
+              "type": "string",
+              "required": [
+                "audio"
+              ],
+              "properties": {
+                "image": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "openapi_specifications": {
+        "TEXT_GENERATION": {
+          "openapi": "3.0.0",
+          "info": {
+            "version": "1.0.0",
+            "title": "Hugging Face AI Connector Openapi"
+          },
+          "paths": {
+            "/execute": {
+              "post": {
+                "requestBody": {
+                  "required": true,
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "inputs": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "required": [
+                                "inputs"
+                              ],
+                              "properties": {
+                                "inputs": {
+                                  "type": "string"
+                                },
+                                "options": {
+                                  "type": "object",
+                                  "properties": {
+                                    "use_gpu": {
+                                      "type": "boolean"
+                                    },
+                                    "use_cache": {
+                                      "type": "boolean"
+                                    },
+                                    "wait_for_model": {
+                                      "type": "boolean"
+                                    }
+                                  }
+                                },
+                                "parameters": {
+                                  "type": "object",
+                                  "properties": {
+                                    "top_k": {
+                                      "type": "integer"
+                                    },
+                                    "top_p": {
+                                      "type": "number"
+                                    },
+                                    "temperature": {
+                                      "type": "number"
+                                    },
+                                    "repetition_penalty": {
+                                      "type": "number"
+                                    },
+                                    "max_new_tokens": {
+                                      "type": "integer"
+                                    },
+                                    "max_time": {
+                                      "type": "number"
+                                    },
+                                    "return_full_text": {
+                                      "type": "boolean"
+                                    },
+                                    "num_return_sequences": {
+                                      "type": "integer"
+                                    },
+                                    "do_sample": {
+                                      "type": "boolean"
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "responses": {
+                  "200": {
+                    "description": "",
+                    "content": {
+                      "application/json": {
+                        "schema": {
+                          "type": "object",
+                          "properties": {
+                            "outputs": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "classes": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "object",
+                                      "properties": {
+                                        "label": {
+                                          "type": "string"
+                                        },
+                                        "score": {
+                                          "type": "number"
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "TEXT_TO_IMAGE": {
+          "openapi": "3.0.0",
+          "info": {
+            "version": "1.0.0",
+            "title": "Hugging Face AI Connector Openapi"
+          },
+          "paths": {
+            "/execute": {
+              "post": {
+                "requestBody": {
+                  "required": true,
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "inputs": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "required": [
+                                "inputs"
+                              ],
+                              "properties": {
+                                "inputs": {
+                                  "type": "string"
+                                },
+                                "options": {
+                                  "type": "object",
+                                  "properties": {
+                                    "use_gpu": {
+                                      "type": "boolean"
+                                    },
+                                    "use_cache": {
+                                      "type": "boolean"
+                                    },
+                                    "wait_for_model": {
+                                      "type": "boolean"
+                                    }
+                                  }
+                                },
+                                "parameters": {
+                                  "type": "object",
+                                  "properties": {
+                                    "negative_prompt": {
+                                      "type": "string"
+                                    },
+                                    "height": {
+                                      "type": "integer"
+                                    },
+                                    "width": {
+                                      "type": "integer"
+                                    },
+                                    "num_inference_steps": {
+                                      "type": "integer"
+                                    },
+                                    "guidance_scale": {
+                                      "type": "number"
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "responses": {
+                  "200": {
+                    "description": "",
+                    "content": {
+                      "application/json": {
+                        "schema": {
+                          "type": "object",
+                          "properties": {
+                            "outputs": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "image": {
+                                    "type": "string"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "FILL_MASK": {
+          "openapi": "3.0.0",
+          "info": {
+            "version": "1.0.0",
+            "title": "Hugging Face AI Connector Openapi"
+          },
+          "paths": {
+            "/execute": {
+              "post": {
+                "requestBody": {
+                  "required": true,
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "inputs": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "required": [
+                                "inputs"
+                              ],
+                              "properties": {
+                                "inputs": {
+                                  "type": "string"
+                                },
+                                "options": {
+                                  "type": "object",
+                                  "properties": {
+                                    "use_gpu": {
+                                      "type": "boolean"
+                                    },
+                                    "use_cache": {
+                                      "type": "boolean"
+                                    },
+                                    "wait_for_model": {
+                                      "type": "boolean"
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "responses": {
+                  "200": {
+                    "description": "",
+                    "content": {
+                      "application/json": {
+                        "schema": {
+                          "type": "object",
+                          "properties": {
+                            "outputs": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "masks": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "object",
+                                      "properties": {
+                                        "sequence": {
+                                          "type": "string"
+                                        },
+                                        "score": {
+                                          "type": "number"
+                                        },
+                                        "token": {
+                                          "type": "integer"
+                                        },
+                                        "token_str": {
+                                          "type": "string"
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "SUMMARIZATION": {
+          "openapi": "3.0.0",
+          "info": {
+            "version": "1.0.0",
+            "title": "Hugging Face AI Connector Openapi"
+          },
+          "paths": {
+            "/execute": {
+              "post": {
+                "requestBody": {
+                  "required": true,
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "inputs": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "required": [
+                                "inputs"
+                              ],
+                              "properties": {
+                                "inputs": {
+                                  "type": "string"
+                                },
+                                "options": {
+                                  "type": "object",
+                                  "properties": {
+                                    "use_gpu": {
+                                      "type": "boolean"
+                                    },
+                                    "use_cache": {
+                                      "type": "boolean"
+                                    },
+                                    "wait_for_model": {
+                                      "type": "boolean"
+                                    }
+                                  }
+                                },
+                                "parameters": {
+                                  "type": "object",
+                                  "properties": {
+                                    "min_length": {
+                                      "type": "integer"
+                                    },
+                                    "max_length": {
+                                      "type": "integer"
+                                    },
+                                    "top_k": {
+                                      "type": "integer"
+                                    },
+                                    "top_p": {
+                                      "type": "number"
+                                    },
+                                    "temperature": {
+                                      "type": "number"
+                                    },
+                                    "repetition_penalty": {
+                                      "type": "number"
+                                    },
+                                    "max_time": {
+                                      "type": "number"
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "responses": {
+                  "200": {
+                    "description": "",
+                    "content": {
+                      "application/json": {
+                        "schema": {
+                          "type": "object",
+                          "properties": {
+                            "outputs": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "texts": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "string"
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "TEXT_CLASSIFICATION": {
+          "openapi": "3.0.0",
+          "info": {
+            "version": "1.0.0",
+            "title": "Hugging Face AI Connector Openapi"
+          },
+          "paths": {
+            "/execute": {
+              "post": {
+                "requestBody": {
+                  "required": true,
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "inputs": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "required": [
+                                "inputs"
+                              ],
+                              "properties": {
+                                "inputs": {
+                                  "type": "string"
+                                },
+                                "options": {
+                                  "type": "object",
+                                  "properties": {
+                                    "use_gpu": {
+                                      "type": "boolean"
+                                    },
+                                    "use_cache": {
+                                      "type": "boolean"
+                                    },
+                                    "wait_for_model": {
+                                      "type": "boolean"
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "responses": {
+                  "200": {
+                    "description": "",
+                    "content": {
+                      "application/json": {
+                        "schema": {
+                          "type": "object",
+                          "properties": {
+                            "outputs": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "classes": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "object",
+                                      "properties": {
+                                        "label": {
+                                          "type": "string"
+                                        },
+                                        "score": {
+                                          "type": "number"
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "TOKEN_CLASSIFICATION": {
+          "openapi": "3.0.0",
+          "info": {
+            "version": "1.0.0",
+            "title": "Hugging Face AI Connector Openapi"
+          },
+          "paths": {
+            "/execute": {
+              "post": {
+                "requestBody": {
+                  "required": true,
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "inputs": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "required": [
+                                "inputs"
+                              ],
+                              "properties": {
+                                "inputs": {
+                                  "type": "string"
+                                },
+                                "options": {
+                                  "type": "object",
+                                  "properties": {
+                                    "use_gpu": {
+                                      "type": "boolean"
+                                    },
+                                    "use_cache": {
+                                      "type": "boolean"
+                                    },
+                                    "wait_for_model": {
+                                      "type": "boolean"
+                                    }
+                                  }
+                                },
+                                "parameters": {
+                                  "type": "object",
+                                  "properties": {
+                                    "aggregation_strategy": {
+                                      "type": "string"
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "responses": {
+                  "200": {
+                    "description": "",
+                    "content": {
+                      "application/json": {
+                        "schema": {
+                          "type": "object",
+                          "properties": {
+                            "outputs": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "masks": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "object",
+                                      "properties": {
+                                        "entity_group": {
+                                          "type": "string"
+                                        },
+                                        "score": {
+                                          "type": "number"
+                                        },
+                                        "word": {
+                                          "type": "string"
+                                        },
+                                        "start": {
+                                          "type": "integer"
+                                        },
+                                        "end": {
+                                          "type": "integer"
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "TRANSLATION": {
+          "openapi": "3.0.0",
+          "info": {
+            "version": "1.0.0",
+            "title": "Hugging Face AI Connector Openapi"
+          },
+          "paths": {
+            "/execute": {
+              "post": {
+                "requestBody": {
+                  "required": true,
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "inputs": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "required": [
+                                "inputs"
+                              ],
+                              "properties": {
+                                "inputs": {
+                                  "type": "string"
+                                },
+                                "options": {
+                                  "type": "object",
+                                  "properties": {
+                                    "use_gpu": {
+                                      "type": "boolean"
+                                    },
+                                    "use_cache": {
+                                      "type": "boolean"
+                                    },
+                                    "wait_for_model": {
+                                      "type": "boolean"
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "responses": {
+                  "200": {
+                    "description": "",
+                    "content": {
+                      "application/json": {
+                        "schema": {
+                          "type": "object",
+                          "properties": {
+                            "outputs": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "texts": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "string"
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "ZERO_SHOT_CLASSIFICATION": {
+          "openapi": "3.0.0",
+          "info": {
+            "version": "1.0.0",
+            "title": "Hugging Face AI Connector Openapi"
+          },
+          "paths": {
+            "/execute": {
+              "post": {
+                "requestBody": {
+                  "required": true,
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "inputs": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "required": [
+                                "inputs",
+                                "parameters"
+                              ],
+                              "properties": {
+                                "inputs": {
+                                  "type": "string"
+                                },
+                                "options": {
+                                  "type": "object",
+                                  "properties": {
+                                    "use_gpu": {
+                                      "type": "boolean"
+                                    },
+                                    "use_cache": {
+                                      "type": "boolean"
+                                    },
+                                    "wait_for_model": {
+                                      "type": "boolean"
+                                    }
+                                  }
+                                },
+                                "parameters": {
+                                  "type": "object",
+                                  "required": [
+                                    "candidate_labels"
+                                  ],
+                                  "properties": {
+                                    "candidate_labels": {
+                                      "type": "array",
+                                      "items": {
+                                        "type": "string"
+                                      }
+                                    },
+                                    "multi_label": {
+                                      "type": "boolean"
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "responses": {
+                  "200": {
+                    "description": "",
+                    "content": {
+                      "application/json": {
+                        "schema": {
+                          "type": "object",
+                          "properties": {
+                            "outputs": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "texts": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "string"
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "FEATURE_EXTRACTION": {
+          "openapi": "3.0.0",
+          "info": {
+            "version": "1.0.0",
+            "title": "Hugging Face AI Connector Openapi"
+          },
+          "paths": {
+            "/execute": {
+              "post": {
+                "requestBody": {
+                  "required": true,
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "inputs": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "required": [
+                                "inputs"
+                              ],
+                              "properties": {
+                                "inputs": {
+                                  "type": "string"
+                                },
+                                "options": {
+                                  "type": "object",
+                                  "properties": {
+                                    "use_gpu": {
+                                      "type": "boolean"
+                                    },
+                                    "use_cache": {
+                                      "type": "boolean"
+                                    },
+                                    "wait_for_model": {
+                                      "type": "boolean"
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "responses": {
+                  "200": {
+                    "description": "",
+                    "content": {
+                      "application/json": {
+                        "schema": {
+                          "type": "object",
+                          "properties": {
+                            "outputs": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "features": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "array",
+                                      "items": {
+                                        "type": "number"
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "QUESTION_ANSWERING": {
+          "openapi": "3.0.0",
+          "info": {
+            "version": "1.0.0",
+            "title": "Hugging Face AI Connector Openapi"
+          },
+          "paths": {
+            "/execute": {
+              "post": {
+                "requestBody": {
+                  "required": true,
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "inputs": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "required": [
+                                "inputs"
+                              ],
+                              "properties": {
+                                "inputs": {
+                                  "type": "object",
+                                  "required": [
+                                    "question",
+                                    "context"
+                                  ],
+                                  "properties": {
+                                    "question": {
+                                      "type": "string"
+                                    },
+                                    "context": {
+                                      "type": "string"
+                                    }
+                                  }
+                                },
+                                "options": {
+                                  "type": "object",
+                                  "properties": {
+                                    "use_gpu": {
+                                      "type": "boolean"
+                                    },
+                                    "use_cache": {
+                                      "type": "boolean"
+                                    },
+                                    "wait_for_model": {
+                                      "type": "boolean"
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "responses": {
+                  "200": {
+                    "description": "",
+                    "content": {
+                      "application/json": {
+                        "schema": {
+                          "type": "object",
+                          "properties": {
+                            "outputs": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "answer": {
+                                    "type": "string"
+                                  },
+                                  "score": {
+                                    "type": "number"
+                                  },
+                                  "start": {
+                                    "type": "integer"
+                                  },
+                                  "end": {
+                                    "type": "integer"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "TABLE_QUESTION_ANSWERING": {
+          "openapi": "3.0.0",
+          "info": {
+            "version": "1.0.0",
+            "title": "Hugging Face AI Connector Openapi"
+          },
+          "paths": {
+            "/execute": {
+              "post": {
+                "requestBody": {
+                  "required": true,
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "inputs": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "required": [
+                                "inputs"
+                              ],
+                              "properties": {
+                                "inputs": {
+                                  "required": [
+                                    "query",
+                                    "table"
+                                  ],
+                                  "properties": {
+                                    "query": {
+                                      "type": "string"
+                                    },
+                                    "table": {
+                                      "type": "object"
+                                    }
+                                  }
+                                },
+                                "options": {
+                                  "type": "object",
+                                  "properties": {
+                                    "use_gpu": {
+                                      "type": "boolean"
+                                    },
+                                    "use_cache": {
+                                      "type": "boolean"
+                                    },
+                                    "wait_for_model": {
+                                      "type": "boolean"
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "responses": {
+                  "200": {
+                    "description": "",
+                    "content": {
+                      "application/json": {
+                        "schema": {
+                          "type": "object",
+                          "properties": {
+                            "outputs": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "answer": {
+                                    "type": "string"
+                                  },
+                                  "coordinates": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "array",
+                                      "items": {
+                                        "type": "integer"
+                                      }
+                                    }
+                                  },
+                                  "cells": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "string"
+                                    }
+                                  },
+                                  "aggregator": {
+                                    "type": "string"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "SENTENCE_SIMILARITY": {
+          "openapi": "3.0.0",
+          "info": {
+            "version": "1.0.0",
+            "title": "Hugging Face AI Connector Openapi"
+          },
+          "paths": {
+            "/execute": {
+              "post": {
+                "requestBody": {
+                  "required": true,
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "inputs": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "required": [
+                                "inputs"
+                              ],
+                              "properties": {
+                                "inputs": {
+                                  "required": [
+                                    "source_sentence",
+                                    "sentences"
+                                  ],
+                                  "properties": {
+                                    "source_sentence": {
+                                      "type": "string"
+                                    },
+                                    "sentences": {
+                                      "type": "array",
+                                      "items": {
+                                        "type": "string"
+                                      }
+                                    }
+                                  }
+                                },
+                                "options": {
+                                  "type": "object",
+                                  "properties": {
+                                    "use_gpu": {
+                                      "type": "boolean"
+                                    },
+                                    "use_cache": {
+                                      "type": "boolean"
+                                    },
+                                    "wait_for_model": {
+                                      "type": "boolean"
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "responses": {
+                  "200": {
+                    "description": "",
+                    "content": {
+                      "application/json": {
+                        "schema": {
+                          "type": "object",
+                          "properties": {
+                            "outputs": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "scores": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "number"
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "CONVERSATIONAL": {
+          "openapi": "3.0.0",
+          "info": {
+            "version": "1.0.0",
+            "title": "Hugging Face AI Connector Openapi"
+          },
+          "paths": {
+            "/execute": {
+              "post": {
+                "requestBody": {
+                  "required": true,
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "inputs": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "required": [
+                                "inputs"
+                              ],
+                              "properties": {
+                                "inputs": {
+                                  "required": [
+                                    "text"
+                                  ],
+                                  "properties": {
+                                    "text": {
+                                      "type": "string"
+                                    },
+                                    "generated_responses": {
+                                      "type": "array",
+                                      "items": {
+                                        "type": "string"
+                                      }
+                                    },
+                                    "past_user_inputs": {
+                                      "type": "array",
+                                      "items": {
+                                        "type": "string"
+                                      }
+                                    }
+                                  }
+                                },
+                                "options": {
+                                  "type": "object",
+                                  "properties": {
+                                    "use_gpu": {
+                                      "type": "boolean"
+                                    },
+                                    "use_cache": {
+                                      "type": "boolean"
+                                    },
+                                    "wait_for_model": {
+                                      "type": "boolean"
+                                    }
+                                  }
+                                },
+                                "parameters": {
+                                  "type": "object",
+                                  "properties": {
+                                    "min_length": {
+                                      "type": "integer"
+                                    },
+                                    "max_length": {
+                                      "type": "integer"
+                                    },
+                                    "top_k": {
+                                      "type": "integer"
+                                    },
+                                    "top_p": {
+                                      "type": "number"
+                                    },
+                                    "temperature": {
+                                      "type": "number"
+                                    },
+                                    "repetition_penalty": {
+                                      "type": "number"
+                                    },
+                                    "max_time": {
+                                      "type": "number"
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "responses": {
+                  "200": {
+                    "description": "",
+                    "content": {
+                      "application/json": {
+                        "schema": {
+                          "type": "object",
+                          "properties": {
+                            "outputs": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "generated_text": {
+                                    "type": "string"
+                                  },
+                                  "conversation": {
+                                    "type": "object",
+                                    "properties": {
+                                      "past_user_inputs": {
+                                        "type": "array",
+                                        "items": {
+                                          "type": "string"
+                                        }
+                                      },
+                                      "generated_responses": {
+                                        "type": "array",
+                                        "items": {
+                                          "type": "string"
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "IMAGE_CLASSIFICATION": {
+          "openapi": "3.0.0",
+          "info": {
+            "version": "1.0.0",
+            "title": "Hugging Face AI Connector Openapi"
+          },
+          "paths": {
+            "/execute": {
+              "post": {
+                "requestBody": {
+                  "required": true,
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "inputs": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "required": [
+                                "image"
+                              ],
+                              "properties": {
+                                "image": {
+                                  "type": "string"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "responses": {
+                  "200": {
+                    "description": "",
+                    "content": {
+                      "application/json": {
+                        "schema": {
+                          "type": "object",
+                          "properties": {
+                            "outputs": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "classes": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "object",
+                                      "properties": {
+                                        "label": {
+                                          "type": "string"
+                                        },
+                                        "score": {
+                                          "type": "number"
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "IMAGE_SEGMENTATION": {
+          "openapi": "3.0.0",
+          "info": {
+            "version": "1.0.0",
+            "title": "Hugging Face AI Connector Openapi"
+          },
+          "paths": {
+            "/execute": {
+              "post": {
+                "requestBody": {
+                  "required": true,
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "inputs": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "required": [
+                                "image"
+                              ],
+                              "properties": {
+                                "image": {
+                                  "type": "string"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "responses": {
+                  "200": {
+                    "description": "",
+                    "content": {
+                      "application/json": {
+                        "schema": {
+                          "type": "object",
+                          "properties": {
+                            "outputs": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "segments": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "object",
+                                      "properties": {
+                                        "label": {
+                                          "type": "string"
+                                        },
+                                        "score": {
+                                          "type": "number"
+                                        },
+                                        "mask": {
+                                          "type": "string"
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "OBJECT_DETECTION": {
+          "openapi": "3.0.0",
+          "info": {
+            "version": "1.0.0",
+            "title": "Hugging Face AI Connector Openapi"
+          },
+          "paths": {
+            "/execute": {
+              "post": {
+                "requestBody": {
+                  "required": true,
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "inputs": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "required": [
+                                "image"
+                              ],
+                              "properties": {
+                                "image": {
+                                  "type": "string"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "responses": {
+                  "200": {
+                    "description": "",
+                    "content": {
+                      "application/json": {
+                        "schema": {
+                          "type": "object",
+                          "properties": {
+                            "outputs": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "objects": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "object",
+                                      "properties": {
+                                        "label": {
+                                          "type": "string"
+                                        },
+                                        "score": {
+                                          "type": "number"
+                                        },
+                                        "box": {
+                                          "type": "object",
+                                          "properties": {
+                                            "xmin": {
+                                              "type": "number"
+                                            },
+                                            "ymin": {
+                                              "type": "number"
+                                            },
+                                            "xmax": {
+                                              "type": "number"
+                                            },
+                                            "ymax": {
+                                              "type": "number"
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "IMAGE_TO_TEXT": {
+          "openapi": "3.0.0",
+          "info": {
+            "version": "1.0.0",
+            "title": "Hugging Face AI Connector Openapi"
+          },
+          "paths": {
+            "/execute": {
+              "post": {
+                "requestBody": {
+                  "required": true,
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "inputs": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "required": [
+                                "image"
+                              ],
+                              "properties": {
+                                "image": {
+                                  "type": "string"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "responses": {
+                  "200": {
+                    "description": "",
+                    "content": {
+                      "application/json": {
+                        "schema": {
+                          "type": "object",
+                          "properties": {
+                            "outputs": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "text": {
+                                    "type": "string"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "SPEECH_RECOGNITION": {
+          "openapi": "3.0.0",
+          "info": {
+            "version": "1.0.0",
+            "title": "Hugging Face AI Connector Openapi"
+          },
+          "paths": {
+            "/execute": {
+              "post": {
+                "requestBody": {
+                  "required": true,
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "inputs": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "required": [
+                                "audio"
+                              ],
+                              "properties": {
+                                "audio": {
+                                  "type": "string"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "responses": {
+                  "200": {
+                    "description": "",
+                    "content": {
+                      "application/json": {
+                        "schema": {
+                          "type": "object",
+                          "properties": {
+                            "outputs": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "text": {
+                                    "type": "string"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "AUDIO_CLASSIFICATION": {
+          "openapi": "3.0.0",
+          "info": {
+            "version": "1.0.0",
+            "title": "Hugging Face AI Connector Openapi"
+          },
+          "paths": {
+            "/execute": {
+              "post": {
+                "requestBody": {
+                  "required": true,
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "inputs": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "required": [
+                                "audio"
+                              ],
+                              "properties": {
+                                "audio": {
+                                  "type": "string"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "responses": {
+                  "200": {
+                    "description": "",
+                    "content": {
+                      "application/json": {
+                        "schema": {
+                          "type": "object",
+                          "properties": {
+                            "outputs": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "classes": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "object",
+                                      "properties": {
+                                        "label": {
+                                          "type": "string"
+                                        },
+                                        "score": {
+                                          "type": "number"
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "public": true,
+    "custom": false,
+    "tombstone": false,
+    "vendor_attributes": {}
+  }
+]

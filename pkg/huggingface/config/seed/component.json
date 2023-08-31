@@ -1,0 +1,507 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Hugging Face Connector Component Spec",
+  "type": "object",
+  "required": [
+    "task",
+    "model"
+  ],
+  "properties": {
+    "task": {
+      "title": "Task",
+      "enum": [
+        "TEXT_GENERATION",
+        "TEXT_TO_IMAGE",
+        "FILL_MASK",
+        "SUMMARIZATION",
+        "TEXT_CLASSIFICATION",
+        "TOKEN_CLASSIFICATION",
+        "TRANSLATION",
+        "ZERO_SHOT_CLASSIFICATION",
+        "FEATURE_EXTRACTION",
+        "QUESTION_ANSWERING",
+        "TABLE_QUESTION_ANSWERING",
+        "SENTENCE_SIMILARITY",
+        "CONVERSATIONAL",
+        "IMAGE_CLASSIFICATION",
+        "IMAGE_SEGMENTATION",
+        "OBJECT_DETECTION",
+        "IMAGE_TO_TEXT",
+        "SPEECH_RECOGNITION",
+        "AUDIO_CLASSIFICATION"
+      ],
+      "default": "TEXT_GENERATION"
+    },
+    "model": {
+      "title": "Model",
+      "type": "string",
+      "default": "gpt2"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "task": {
+            "const": "TEXT_GENERATION"
+          }
+        }
+      },
+      "then": {
+        "type": "object",
+        "required": [
+          "inputs"
+        ],
+        "properties": {
+          "inputs": {
+            "type": "string",
+            "format": "instill-template-text",
+            "$ref": "data.json#/TEXT_GENERATION/input/properties/inputs"
+          },
+          "options": {
+            "type": "object",
+            "$ref": "data.json#/TEXT_GENERATION/input/properties/options"
+          },
+          "parameters": {
+            "type": "object",
+            "format": "instill-template-text",
+            "$ref": "data.json#/TEXT_GENERATION/input/properties/parameters"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "task": {
+            "const": "TEXT_TO_IMAGE"
+          }
+        }
+      },
+      "then": {
+        "type": "object",
+        "required": [
+          "inputs"
+        ],
+        "properties": {
+          "inputs": {
+            "type": "string",
+            "format": "instill-template-text",
+            "$ref": "data.json#/TEXT_TO_IMAGE/input/properties/inputs"
+          },
+          "options": {
+            "type": "object",
+            "$ref": "data.json#/TEXT_TO_IMAGE/input/properties/options"
+          },
+          "parameters": {
+            "type": "object",
+            "format": "instill-template-text",
+            "$ref": "data.json#/TEXT_TO_IMAGE/input/properties/parameters"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "task": {
+            "const": "FILL_MASK"
+          }
+        }
+      },
+      "then": {
+        "type": "object",
+        "required": [
+          "inputs"
+        ],
+        "properties": {
+          "inputs": {
+            "type": "string",
+            "format": "instill-template-text",
+            "$ref": "data.json#/FILL_MASK/input/properties/inputs"
+          },
+          "options": {
+            "type": "object",
+            "$ref": "data.json#/FILL_MASK/input/properties/options"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "task": {
+            "const": "SUMMARIZATION"
+          }
+        }
+      },
+      "then": {
+        "type": "object",
+        "required": [
+          "inputs"
+        ],
+        "properties": {
+          "inputs": {
+            "type": "string",
+            "format": "instill-template-text",
+            "$ref": "data.json#/SUMMARIZATION/input/properties/inputs"
+          },
+          "options": {
+            "type": "object",
+            "$ref": "data.json#/SUMMARIZATION/input/properties/options"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "task": {
+            "const": "TEXT_CLASSIFICATION"
+          }
+        }
+      },
+      "then": {
+        "type": "object",
+        "required": [
+          "inputs"
+        ],
+        "properties": {
+          "inputs": {
+            "type": "string",
+            "format": "instill-template-text",
+            "$ref": "data.json#/TEXT_CLASSIFICATION/input/properties/inputs"
+          },
+          "options": {
+            "type": "object",
+            "$ref": "data.json#/TEXT_CLASSIFICATION/input/properties/options"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "task": {
+            "const": "TOKEN_CLASSIFICATION"
+          }
+        }
+      },
+      "then": {
+        "type": "object",
+        "required": [
+          "inputs"
+        ],
+        "properties": {
+          "inputs": {
+            "type": "string",
+            "format": "instill-template-text",
+            "$ref": "data.json#/TOKEN_CLASSIFICATION/input/properties/inputs"
+          },
+          "options": {
+            "type": "object",
+            "$ref": "data.json#/TOKEN_CLASSIFICATION/input/properties/options"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "task": {
+            "const": "TRANSLATION"
+          }
+        }
+      },
+      "then": {
+        "type": "object",
+        "required": [
+          "inputs"
+        ],
+        "properties": {
+          "inputs": {
+            "type": "string",
+            "format": "instill-template-text",
+            "$ref": "data.json#/TRANSLATION/input/properties/inputs"
+          },
+          "options": {
+            "type": "object",
+            "$ref": "data.json#/TRANSLATION/input/properties/options"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "task": {
+            "const": "ZERO_SHOT_CLASSIFICATION"
+          }
+        }
+      },
+      "then": {
+        "type": "object",
+        "required": [
+          "inputs"
+        ],
+        "properties": {
+          "inputs": {
+            "type": "string",
+            "format": "instill-template-text",
+            "$ref": "data.json#/ZERO_SHOT_CLASSIFICATION/input/properties/inputs"
+          },
+          "options": {
+            "type": "object",
+            "$ref": "data.json#/ZERO_SHOT_CLASSIFICATION/input/properties/options"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "task": {
+            "const": "FEATURE_EXTRACTION"
+          }
+        }
+      },
+      "then": {
+        "type": "object",
+        "required": [
+          "inputs"
+        ],
+        "properties": {
+          "inputs": {
+            "type": "string",
+            "format": "instill-template-text",
+            "$ref": "data.json#/FEATURE_EXTRACTION/input/properties/inputs"
+          },
+          "options": {
+            "type": "object",
+            "$ref": "data.json#/FEATURE_EXTRACTION/input/properties/options"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "task": {
+            "const": "QUESTION_ANSWERING"
+          }
+        }
+      },
+      "then": {
+        "type": "object",
+        "required": [
+          "inputs"
+        ],
+        "properties": {
+          "inputs": {
+            "type": "object",
+            "$ref": "data.json#/QUESTION_ANSWERING/input/properties/inputs"
+          },
+          "options": {
+            "type": "object",
+            "$ref": "data.json#/QUESTION_ANSWERING/input/properties/options"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "task": {
+            "const": "TABLE_QUESTION_ANSWERING"
+          }
+        }
+      },
+      "then": {
+        "type": "object",
+        "required": [
+          "inputs"
+        ],
+        "properties": {
+          "inputs": {
+            "type": "object",
+            "$ref": "data.json#/TABLE_QUESTION_ANSWERING/input/properties/inputs"
+          },
+          "options": {
+            "type": "object",
+            "$ref": "data.json#/TABLE_QUESTION_ANSWERING/input/properties/options"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "task": {
+            "const": "SENTENCE_SIMILARITY"
+          }
+        }
+      },
+      "then": {
+        "type": "object",
+        "required": [
+          "inputs"
+        ],
+        "properties": {
+          "inputs": {
+            "type": "object",
+            "$ref": "data.json#/SENTENCE_SIMILARITY/input/properties/inputs"
+          },
+          "options": {
+            "type": "object",
+            "$ref": "data.json#/SENTENCE_SIMILARITY/input/properties/options"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "task": {
+            "const": "CONVERSATIONAL"
+          }
+        }
+      },
+      "then": {
+        "type": "object",
+        "required": [
+          "inputs"
+        ],
+        "properties": {
+          "inputs": {
+            "type": "object",
+            "$ref": "data.json#/CONVERSATIONAL/input/properties/inputs"
+          },
+          "options": {
+            "type": "object",
+            "$ref": "data.json#/CONVERSATIONAL/input/properties/options"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "task": {
+            "const": "IMAGE_CLASSIFICATION"
+          }
+        }
+      },
+      "then": {
+        "type": "string",
+        "required": [
+          "image"
+        ],
+        "properties": {
+          "image": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "task": {
+            "const": "IMAGE_SEGMENTATION"
+          }
+        }
+      },
+      "then": {
+        "type": "string",
+        "required": [
+          "image"
+        ],
+        "properties": {
+          "image": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "task": {
+            "const": "OBJECT_DETECTION"
+          }
+        }
+      },
+      "then": {
+        "type": "string",
+        "required": [
+          "image"
+        ],
+        "properties": {
+          "image": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "task": {
+            "const": "IMAGE_TO_TEXT"
+          }
+        }
+      },
+      "then": {
+        "type": "string",
+        "required": [
+          "image"
+        ],
+        "properties": {
+          "image": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "task": {
+            "const": "SPEECH_RECOGNITION"
+          }
+        }
+      },
+      "then": {
+        "type": "string",
+        "required": [
+          "audio"
+        ],
+        "properties": {
+          "image": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "task": {
+            "const": "AUDIO_CLASSIFICATION"
+          }
+        }
+      },
+      "then": {
+        "type": "string",
+        "required": [
+          "audio"
+        ],
+        "properties": {
+          "image": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  ]
+}
