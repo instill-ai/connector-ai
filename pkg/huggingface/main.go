@@ -23,7 +23,7 @@ import (
 
 const (
 	venderName   = "huggingface"
-	baseURL      = "https://api-inference.huggingface.co/models/"
+	baseURL      = "https://api-inference.huggingface.co"
 	jsonMimeType = "application/json"
 	reqTimeout   = time.Second * 60 * 5
 	//tasks

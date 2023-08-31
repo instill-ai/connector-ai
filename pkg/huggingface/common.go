@@ -13,6 +13,7 @@ import (
 const (
 	AuthHeaderKey    = "Authorization"
 	AuthHeaderPrefix = "Bearer "
+	modelsPath       = "/models/"
 )
 
 // MakeHFAPIRequest builds and sends an HTTP POST request to the given model
@@ -20,7 +21,7 @@ const (
 // response JSON and a nil error. If the request fails, returns an empty slice
 // and an error describing the failure.
 func (c *Client) MakeHFAPIRequest(body []byte, model string) ([]byte, error) {
-	req, err := http.NewRequest(http.MethodPost, baseURL+model, bytes.NewBuffer(body))
+	req, err := http.NewRequest(http.MethodPost, baseURL+modelsPath+model, bytes.NewBuffer(body))
 	if err != nil {
 		return nil, err
 	}

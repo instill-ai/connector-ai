@@ -136,6 +136,11 @@ func TestOpenAIAudioTranscription(t *testing.T) {
 	fmt.Printf("\n op :%v, err:%s", op, err)
 }
 
+func TestGetConnectionState(t *testing.T) {
+	state, err := hfCon.Test()
+	fmt.Printf("\n state: %v, err: %v", state, err)
+}
+
 func TestHuggingFaceTextToImage(t *testing.T) {
 	req := huggingface.TextToImageRequest{Inputs: "a black dog"}
 	var in structpb.Struct
