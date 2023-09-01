@@ -9,20 +9,26 @@
           "const": "TASK_TEXT_TO_IMAGE"
         },
         "prompts": {
+          "title": "Prompts",
           "type": "array",
           "description": "An array of prompts to use for generation.",
           "items": {
             "$ref": "stabilityai.json#/components/schemas/TextPrompt/properties/text"
           },
-          "minItems": 1
+          "minItems": 1,
+          "instillFormat": "text_array",
+          "instillUpstreamTypes": ["reference"]
         },
         "weights": {
+          "title": "Weights",
           "type": "array",
           "description": "An array of weights to use for generation.",
           "items": {
             "$ref": "stabilityai.json#/components/schemas/TextPrompt/properties/weight"
           },
-          "minItems": 1
+          "minItems": 1,
+          "instillFormat": "number_array",
+          "instillUpstreamTypes": ["reference"]
         },
         "engine": {
           "title": "Engine",
@@ -47,34 +53,63 @@
             {
               "type": "string"
             }
-          ]
+          ],
+          "instillFormat": "text",
+          "instillUpstreamTypes": ["value", "reference"]
         },
         "height": {
-          "$ref": "stabilityai.json#/components/schemas/DiffuseImageHeight"
+          "title": "Height",
+          "$ref": "stabilityai.json#/components/schemas/DiffuseImageHeight",
+          "instillFormat": "integer",
+          "instillUpstreamTypes": ["value", "reference"]
         },
         "width": {
-          "$ref": "stabilityai.json#/components/schemas/DiffuseImageWidth"
+          "title": "Width",
+          "$ref": "stabilityai.json#/components/schemas/DiffuseImageWidth",
+          "instillFormat": "integer",
+          "instillUpstreamTypes": ["value", "reference"]
         },
         "cfg_scale": {
-          "$ref": "stabilityai.json#/components/schemas/CfgScale"
+          "title": "CFG Scale",
+          "$ref": "stabilityai.json#/components/schemas/CfgScale",
+          "instillFormat": "number",
+          "instillUpstreamTypes": ["value", "reference"]
         },
         "clip_guidance_preset": {
-          "$ref": "stabilityai.json#/components/schemas/ClipGuidancePreset"
+          "title": "Clip Guidance Preset",
+          "$ref": "stabilityai.json#/components/schemas/ClipGuidancePreset",
+          "instillFormat": "text",
+          "instillUpstreamTypes": ["value", "reference"]
         },
         "sampler": {
-          "$ref": "stabilityai.json#/components/schemas/Sampler"
+          "title": "Sampler",
+          "$ref": "stabilityai.json#/components/schemas/Sampler",
+          "instillFormat": "text",
+          "instillUpstreamTypes": ["value", "reference"]
         },
         "samples": {
-          "$ref": "stabilityai.json#/components/schemas/Samples"
+          "title": "Samples",
+          "$ref": "stabilityai.json#/components/schemas/Samples",
+          "instillFormat": "integer",
+          "instillUpstreamTypes": ["value", "reference"]
         },
         "seed": {
-          "$ref": "stabilityai.json#/components/schemas/Seed"
+          "title": "Seed",
+          "$ref": "stabilityai.json#/components/schemas/Seed",
+          "instillFormat": "number",
+          "instillUpstreamTypes": ["value", "reference"]
         },
         "steps": {
-          "$ref": "stabilityai.json#/components/schemas/Steps"
+          "title": "Steps",
+          "$ref": "stabilityai.json#/components/schemas/Steps",
+          "instillFormat": "integer",
+          "instillUpstreamTypes": ["value", "reference"]
         },
         "style_preset": {
-          "$ref": "stabilityai.json#/components/schemas/StylePreset"
+          "title": "Style Preset",
+          "$ref": "stabilityai.json#/components/schemas/StylePreset",
+          "instillFormat": "text",
+          "instillUpstreamTypes": ["value", "reference"]
         }
       }
     },
@@ -84,16 +119,20 @@
       "required": ["images", "seeds"],
       "properties": {
         "images": {
+          "title": "Images",
           "type": "array",
           "items": {
             "type": "string"
-          }
+          },
+          "instillFormat": "text_array"
         },
         "seeds": {
+          "title": "Seeds",
           "type": "array",
           "items": {
             "$ref": "stabilityai.json#/components/schemas/Image/properties/seed"
-          }
+          },
+          "instillFormat": "number_array"
         }
       }
     }
@@ -108,23 +147,32 @@
           "const": "TASK_IMAGE_TO_IMAGE"
         },
         "prompts": {
+          "title": "Prompts",
           "type": "array",
           "description": "An array of prompts to use for generation.",
           "items": {
             "$ref": "stabilityai.json#/components/schemas/TextPrompt/properties/text"
           },
-          "minItems": 1
+          "minItems": 1,
+          "instillFormat": "text_array",
+          "instillUpstreamTypes": ["reference"]
         },
         "weights": {
+          "title": "Weights",
           "type": "array",
           "description": "An array of weights to use for generation.",
           "items": {
             "$ref": "stabilityai.json#/components/schemas/TextPrompt/properties/weight"
           },
-          "minItems": 1
+          "minItems": 1,
+          "instillFormat": "number_array",
+          "instillUpstreamTypes": ["reference"]
         },
         "init_image": {
-          "$ref": "stabilityai.json#/components/schemas/InitImage"
+          "title": "Init Image",
+          "$ref": "stabilityai.json#/components/schemas/InitImage",
+          "instillFormat": "image",
+          "instillUpstreamTypes": ["reference"]
         },
         "engine": {
           "title": "Engine",
@@ -149,45 +197,81 @@
             {
               "type": "string"
             }
-          ]
+          ],
+          "instillFormat": "text",
+          "instillUpstreamTypes": ["value", "reference"]
         },
         "init_image_mode": {
-          "$ref": "stabilityai.json#/components/schemas/InitImageMode"
+          "title": "Init Image Mode",
+          "$ref": "stabilityai.json#/components/schemas/InitImageMode",
+          "instillFormat": "text",
+          "instillUpstreamTypes": ["value", "reference"]
         },
         "image_strength": {
-          "$ref": "stabilityai.json#/components/schemas/InitImageStrength"
+          "title": "Image Strength",
+          "$ref": "stabilityai.json#/components/schemas/InitImageStrength",
+          "instillFormat": "number",
+          "instillUpstreamTypes": ["value", "reference"]
         },
         "step_schedule_start": {
-          "$ref": "stabilityai.json#/components/schemas/StepScheduleStart"
+          "title": "Step Schedule Start",
+          "$ref": "stabilityai.json#/components/schemas/StepScheduleStart",
+          "instillFormat": "number",
+          "instillUpstreamTypes": ["value", "reference"]
         },
         "step_schedule_end": {
-          "$ref": "stabilityai.json#/components/schemas/StepScheduleEnd"
+          "title": "Step Schedule End",
+          "$ref": "stabilityai.json#/components/schemas/StepScheduleEnd",
+          "instillFormat": "number",
+          "instillUpstreamTypes": ["value", "reference"]
         },
         "cfg_scale": {
-          "$ref": "stabilityai.json#/components/schemas/CfgScale"
+          "title": "Cfg Scale",
+          "$ref": "stabilityai.json#/components/schemas/CfgScale",
+          "instillFormat": "number",
+          "instillUpstreamTypes": ["value", "reference"]
         },
         "clip_guidance_preset": {
-          "$ref": "stabilityai.json#/components/schemas/ClipGuidancePreset"
+          "title": "Clip Guidance Preset",
+          "$ref": "stabilityai.json#/components/schemas/ClipGuidancePreset",
+          "instillFormat": "text",
+          "instillUpstreamTypes": ["value", "reference"]
         },
         "sampler": {
-          "$ref": "stabilityai.json#/components/schemas/Sampler"
+          "title": "Sampler",
+          "$ref": "stabilityai.json#/components/schemas/Sampler",
+          "instillFormat": "text",
+          "instillUpstreamTypes": ["value", "reference"]
         },
         "samples": {
-          "$ref": "stabilityai.json#/components/schemas/Samples"
+          "title": "Samples",
+          "$ref": "stabilityai.json#/components/schemas/Samples",
+          "instillFormat": "integer",
+          "instillUpstreamTypes": ["value", "reference"]
         },
         "seed": {
-          "$ref": "stabilityai.json#/components/schemas/Seed"
+          "title": "Seed",
+          "$ref": "stabilityai.json#/components/schemas/Seed",
+          "instillFormat": "number",
+          "instillUpstreamTypes": ["value", "reference"]
         },
         "steps": {
-          "$ref": "stabilityai.json#/components/schemas/Steps"
+          "title": "Steps",
+          "$ref": "stabilityai.json#/components/schemas/Steps",
+          "instillFormat": "integer",
+          "instillUpstreamTypes": ["value", "reference"]
         },
         "style_preset": {
-          "$ref": "stabilityai.json#/components/schemas/StylePreset"
+          "title": "Style Preset",
+          "$ref": "stabilityai.json#/components/schemas/StylePreset",
+          "instillFormat": "text",
+          "instillUpstreamTypes": ["value", "reference"]
         }
       }
     },
     "output": {
-      "$ref": "#/TASK_TEXT_TO_IMAGE/output"
+      "$ref": "#/TASK_TEXT_TO_IMAGE/output",
+      "instillFormat": "image"
     }
   }
 }

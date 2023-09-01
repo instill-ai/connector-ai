@@ -32,77 +32,103 @@
       },
       "component_specification": {
         "$schema": "http://json-schema.org/draft-07/schema#",
-        "title": "OpenAI Connector Component Spec",
-        "$defs": {
-          "shared_then": {
-            "type": "object",
-            "required": [
-              "image_base64",
-              "model_id"
-            ],
+        "title": "Instill Model Component Setting",
+        "type": "object",
+        "properties": {
+          "input": {
             "properties": {
-              "image_base64": {
-                "type": "string",
-                "format": "instill-template-image"
-              },
-              "model_id": {
-                "title": "Model ID",
-                "description": "ID of the Instill Model model to be used.",
-                "type": "string",
-                "format": "instill-template-text"
+              "task": {
+                "title": "Task",
+                "enum": [
+                  "TASK_CLASSIFICATION",
+                  "TASK_INSTANCE_SEGMENTATION",
+                  "TASK_KEYPOINT",
+                  "TASK_DETECTION",
+                  "TASK_OCR",
+                  "TASK_SEMANTIC_SEGMENTATION",
+                  "TASK_TEXT_GENERATION",
+                  "TASK_TEXT_TO_IMAGE"
+                ]
               }
             }
-          }
-        },
-        "type": "object",
-        "required": [
-          "task",
-          "model_id"
-        ],
-        "properties": {
-          "task": {
-            "title": "Task",
-            "enum": [
-              "TASK_CLASSIFICATION",
-              "TASK_INSTANCE_SEGMENTATION",
-              "TASK_KEYPOINT",
-              "TASK_DETECTION",
-              "TASK_OCR",
-              "TASK_SEMANTIC_SEGMENTATION",
-              "TASK_TEXT_GENERATION",
-              "TASK_TEXT_TO_IMAGE"
-            ],
-            "default": "TASK_CLASSIFICATION"
-          },
-          "model_id": {
-            "type": "string"
           }
         },
         "allOf": [
           {
             "if": {
               "properties": {
-                "task": {
-                  "const": "TASK_CLASSIFICATION"
+                "input": {
+                  "properties": {
+                    "task": {
+                      "const": "TASK_CLASSIFICATION"
+                    }
+                  }
                 }
               }
             },
             "then": {
-              "type": "object",
-              "required": [
-                "image_base64",
-                "model_id"
-              ],
               "properties": {
-                "image_base64": {
-                  "type": "string",
-                  "format": "instill-template-image"
+                "metadata": {
+                  "input": "Metadata",
+                  "type": "object"
                 },
-                "model_id": {
-                  "title": "Model ID",
-                  "description": "ID of the Instill Model model to be used.",
-                  "type": "string",
-                  "format": "instill-template-text"
+                "input": {
+                  "type": "object",
+                  "allOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "task": {
+                          "const": "TASK_CLASSIFICATION"
+                        }
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "image_base64",
+                        "model_id"
+                      ],
+                      "properties": {
+                        "image_base64": {
+                          "title": "Image",
+                          "description": "",
+                          "instillFormat": "image",
+                          "instillUpstreamTypes": [
+                            "reference"
+                          ],
+                          "oneOf": [
+                            {
+                              "type": "string",
+                              "pattern": "^\\{.*\\}$",
+                              "instillUpstreamType": "reference"
+                            }
+                          ]
+                        },
+                        "model_id": {
+                          "title": "Model ID",
+                          "description": "ID of the Instill Model model to be used.",
+                          "instillFormat": "text",
+                          "instillUpstreamTypes": [
+                            "value",
+                            "reference"
+                          ],
+                          "oneOf": [
+                            {
+                              "type": "string",
+                              "instillUpstreamType": "value"
+                            },
+                            {
+                              "type": "string",
+                              "pattern": "^\\{.*\\}$",
+                              "instillUpstreamType": "reference"
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  ],
+                  "title": "Data Flow"
                 }
               }
             }
@@ -110,27 +136,78 @@
           {
             "if": {
               "properties": {
-                "task": {
-                  "const": "TASK_INSTANCE_SEGMENTATION"
+                "input": {
+                  "properties": {
+                    "task": {
+                      "const": "TASK_INSTANCE_SEGMENTATION"
+                    }
+                  }
                 }
               }
             },
             "then": {
-              "type": "object",
-              "required": [
-                "image_base64",
-                "model_id"
-              ],
               "properties": {
-                "image_base64": {
-                  "type": "string",
-                  "format": "instill-template-image"
+                "metadata": {
+                  "input": "Metadata",
+                  "type": "object"
                 },
-                "model_id": {
-                  "title": "Model ID",
-                  "description": "ID of the Instill Model model to be used.",
-                  "type": "string",
-                  "format": "instill-template-text"
+                "input": {
+                  "type": "object",
+                  "allOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "task": {
+                          "const": "TASK_INSTANCE_SEGMENTATION"
+                        }
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "image_base64",
+                        "model_id"
+                      ],
+                      "properties": {
+                        "image_base64": {
+                          "title": "Image",
+                          "description": "",
+                          "instillFormat": "image",
+                          "instillUpstreamTypes": [
+                            "reference"
+                          ],
+                          "oneOf": [
+                            {
+                              "type": "string",
+                              "pattern": "^\\{.*\\}$",
+                              "instillUpstreamType": "reference"
+                            }
+                          ]
+                        },
+                        "model_id": {
+                          "title": "Model ID",
+                          "description": "ID of the Instill Model model to be used.",
+                          "instillFormat": "text",
+                          "instillUpstreamTypes": [
+                            "value",
+                            "reference"
+                          ],
+                          "oneOf": [
+                            {
+                              "type": "string",
+                              "instillUpstreamType": "value"
+                            },
+                            {
+                              "type": "string",
+                              "pattern": "^\\{.*\\}$",
+                              "instillUpstreamType": "reference"
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  ],
+                  "title": "Data Flow"
                 }
               }
             }
@@ -138,27 +215,78 @@
           {
             "if": {
               "properties": {
-                "task": {
-                  "const": "TASK_KEYPOINT"
+                "input": {
+                  "properties": {
+                    "task": {
+                      "const": "TASK_KEYPOINT"
+                    }
+                  }
                 }
               }
             },
             "then": {
-              "type": "object",
-              "required": [
-                "image_base64",
-                "model_id"
-              ],
               "properties": {
-                "image_base64": {
-                  "type": "string",
-                  "format": "instill-template-image"
+                "metadata": {
+                  "input": "Metadata",
+                  "type": "object"
                 },
-                "model_id": {
-                  "title": "Model ID",
-                  "description": "ID of the Instill Model model to be used.",
-                  "type": "string",
-                  "format": "instill-template-text"
+                "input": {
+                  "type": "object",
+                  "allOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "task": {
+                          "const": "TASK_KEYPOINT"
+                        }
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "image_base64",
+                        "model_id"
+                      ],
+                      "properties": {
+                        "image_base64": {
+                          "title": "Image",
+                          "description": "",
+                          "instillFormat": "image",
+                          "instillUpstreamTypes": [
+                            "reference"
+                          ],
+                          "oneOf": [
+                            {
+                              "type": "string",
+                              "pattern": "^\\{.*\\}$",
+                              "instillUpstreamType": "reference"
+                            }
+                          ]
+                        },
+                        "model_id": {
+                          "title": "Model ID",
+                          "description": "ID of the Instill Model model to be used.",
+                          "instillFormat": "text",
+                          "instillUpstreamTypes": [
+                            "value",
+                            "reference"
+                          ],
+                          "oneOf": [
+                            {
+                              "type": "string",
+                              "instillUpstreamType": "value"
+                            },
+                            {
+                              "type": "string",
+                              "pattern": "^\\{.*\\}$",
+                              "instillUpstreamType": "reference"
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  ],
+                  "title": "Data Flow"
                 }
               }
             }
@@ -166,27 +294,78 @@
           {
             "if": {
               "properties": {
-                "task": {
-                  "const": "TASK_DETECTION"
+                "input": {
+                  "properties": {
+                    "task": {
+                      "const": "TASK_DETECTION"
+                    }
+                  }
                 }
               }
             },
             "then": {
-              "type": "object",
-              "required": [
-                "image_base64",
-                "model_id"
-              ],
               "properties": {
-                "image_base64": {
-                  "type": "string",
-                  "format": "instill-template-image"
+                "metadata": {
+                  "input": "Metadata",
+                  "type": "object"
                 },
-                "model_id": {
-                  "title": "Model ID",
-                  "description": "ID of the Instill Model model to be used.",
-                  "type": "string",
-                  "format": "instill-template-text"
+                "input": {
+                  "type": "object",
+                  "allOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "task": {
+                          "const": "TASK_DETECTION"
+                        }
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "image_base64",
+                        "model_id"
+                      ],
+                      "properties": {
+                        "image_base64": {
+                          "title": "Image",
+                          "description": "",
+                          "instillFormat": "image",
+                          "instillUpstreamTypes": [
+                            "reference"
+                          ],
+                          "oneOf": [
+                            {
+                              "type": "string",
+                              "pattern": "^\\{.*\\}$",
+                              "instillUpstreamType": "reference"
+                            }
+                          ]
+                        },
+                        "model_id": {
+                          "title": "Model ID",
+                          "description": "ID of the Instill Model model to be used.",
+                          "instillFormat": "text",
+                          "instillUpstreamTypes": [
+                            "value",
+                            "reference"
+                          ],
+                          "oneOf": [
+                            {
+                              "type": "string",
+                              "instillUpstreamType": "value"
+                            },
+                            {
+                              "type": "string",
+                              "pattern": "^\\{.*\\}$",
+                              "instillUpstreamType": "reference"
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  ],
+                  "title": "Data Flow"
                 }
               }
             }
@@ -194,27 +373,78 @@
           {
             "if": {
               "properties": {
-                "task": {
-                  "const": "TASK_OCR"
+                "input": {
+                  "properties": {
+                    "task": {
+                      "const": "TASK_OCR"
+                    }
+                  }
                 }
               }
             },
             "then": {
-              "type": "object",
-              "required": [
-                "image_base64",
-                "model_id"
-              ],
               "properties": {
-                "image_base64": {
-                  "type": "string",
-                  "format": "instill-template-image"
+                "metadata": {
+                  "input": "Metadata",
+                  "type": "object"
                 },
-                "model_id": {
-                  "title": "Model ID",
-                  "description": "ID of the Instill Model model to be used.",
-                  "type": "string",
-                  "format": "instill-template-text"
+                "input": {
+                  "type": "object",
+                  "allOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "task": {
+                          "const": "TASK_OCR"
+                        }
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "image_base64",
+                        "model_id"
+                      ],
+                      "properties": {
+                        "image_base64": {
+                          "title": "Image",
+                          "description": "",
+                          "instillFormat": "image",
+                          "instillUpstreamTypes": [
+                            "reference"
+                          ],
+                          "oneOf": [
+                            {
+                              "type": "string",
+                              "pattern": "^\\{.*\\}$",
+                              "instillUpstreamType": "reference"
+                            }
+                          ]
+                        },
+                        "model_id": {
+                          "title": "Model ID",
+                          "description": "ID of the Instill Model model to be used.",
+                          "instillFormat": "text",
+                          "instillUpstreamTypes": [
+                            "value",
+                            "reference"
+                          ],
+                          "oneOf": [
+                            {
+                              "type": "string",
+                              "instillUpstreamType": "value"
+                            },
+                            {
+                              "type": "string",
+                              "pattern": "^\\{.*\\}$",
+                              "instillUpstreamType": "reference"
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  ],
+                  "title": "Data Flow"
                 }
               }
             }
@@ -222,27 +452,78 @@
           {
             "if": {
               "properties": {
-                "task": {
-                  "const": "TASK_SEMANTIC_SEGMENTATION"
+                "input": {
+                  "properties": {
+                    "task": {
+                      "const": "TASK_SEMANTIC_SEGMENTATION"
+                    }
+                  }
                 }
               }
             },
             "then": {
-              "type": "object",
-              "required": [
-                "image_base64",
-                "model_id"
-              ],
               "properties": {
-                "image_base64": {
-                  "type": "string",
-                  "format": "instill-template-image"
+                "metadata": {
+                  "input": "Metadata",
+                  "type": "object"
                 },
-                "model_id": {
-                  "title": "Model ID",
-                  "description": "ID of the Instill Model model to be used.",
-                  "type": "string",
-                  "format": "instill-template-text"
+                "input": {
+                  "type": "object",
+                  "allOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "task": {
+                          "const": "TASK_SEMANTIC_SEGMENTATION"
+                        }
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "required": [
+                        "image_base64",
+                        "model_id"
+                      ],
+                      "properties": {
+                        "image_base64": {
+                          "title": "Image",
+                          "description": "",
+                          "instillFormat": "image",
+                          "instillUpstreamTypes": [
+                            "reference"
+                          ],
+                          "oneOf": [
+                            {
+                              "type": "string",
+                              "pattern": "^\\{.*\\}$",
+                              "instillUpstreamType": "reference"
+                            }
+                          ]
+                        },
+                        "model_id": {
+                          "title": "Model ID",
+                          "description": "ID of the Instill Model model to be used.",
+                          "instillFormat": "text",
+                          "instillUpstreamTypes": [
+                            "value",
+                            "reference"
+                          ],
+                          "oneOf": [
+                            {
+                              "type": "string",
+                              "instillUpstreamType": "value"
+                            },
+                            {
+                              "type": "string",
+                              "pattern": "^\\{.*\\}$",
+                              "instillUpstreamType": "reference"
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  ],
+                  "title": "Data Flow"
                 }
               }
             }
@@ -250,52 +531,174 @@
           {
             "if": {
               "properties": {
-                "task": {
-                  "const": "TASK_TEXT_GENERATION"
+                "input": {
+                  "properties": {
+                    "task": {
+                      "const": "TASK_TEXT_GENERATION"
+                    }
+                  }
                 }
               }
             },
             "then": {
-              "type": "object",
-              "required": [
-                "model_id",
-                "prompt",
-                "output_len",
-                "bad_words_list",
-                "stop_words_list",
-                "top_k",
-                "seed"
-              ],
               "properties": {
-                "model_id": {
-                  "title": "Model ID",
-                  "description": "ID of the Instill Model model to be used.",
-                  "type": "string",
-                  "format": "instill-template-text"
+                "metadata": {
+                  "input": "Metadata",
+                  "type": "object"
                 },
-                "prompt": {
-                  "type": "string",
-                  "format": "instill-template-text"
-                },
-                "output_len": {
-                  "type": "string",
-                  "format": "instill-template-integer"
-                },
-                "bad_words_list": {
-                  "type": "string",
-                  "format": "instill-template-text"
-                },
-                "stop_words_list": {
-                  "type": "string",
-                  "format": "instill-template-text"
-                },
-                "top_k": {
-                  "type": "string",
-                  "format": "instill-template-integer"
-                },
-                "seed": {
-                  "type": "string",
-                  "format": "instill-template-integer"
+                "input": {
+                  "type": "object",
+                  "required": [
+                    "task",
+                    "prompt",
+                    "model_id"
+                  ],
+                  "properties": {
+                    "task": {
+                      "const": "TASK_TEXT_GENERATION"
+                    },
+                    "model_id": {
+                      "title": "Model ID",
+                      "description": "ID of the Instill Model model to be used.",
+                      "instillFormat": "text",
+                      "instillUpstreamTypes": [
+                        "value",
+                        "reference"
+                      ],
+                      "oneOf": [
+                        {
+                          "type": "string",
+                          "instillUpstreamType": "value"
+                        },
+                        {
+                          "type": "string",
+                          "pattern": "^\\{.*\\}$",
+                          "instillUpstreamType": "reference"
+                        }
+                      ]
+                    },
+                    "prompt": {
+                      "title": "Prompt",
+                      "description": "",
+                      "instillFormat": "text",
+                      "instillUpstreamTypes": [
+                        "value",
+                        "reference"
+                      ],
+                      "oneOf": [
+                        {
+                          "type": "string",
+                          "instillUpstreamType": "value"
+                        },
+                        {
+                          "type": "string",
+                          "pattern": "^\\{.*\\}$",
+                          "instillUpstreamType": "reference"
+                        }
+                      ]
+                    },
+                    "output_len": {
+                      "title": "Output Length",
+                      "description": "",
+                      "instillFormat": "integer",
+                      "instillUpstreamTypes": [
+                        "value",
+                        "reference"
+                      ],
+                      "oneOf": [
+                        {
+                          "type": "integer",
+                          "instillUpstreamType": "value"
+                        },
+                        {
+                          "type": "string",
+                          "pattern": "^\\{.*\\}$",
+                          "instillUpstreamType": "reference"
+                        }
+                      ]
+                    },
+                    "bad_words_list": {
+                      "title": "Bad Words List",
+                      "description": "",
+                      "instillFormat": "text",
+                      "instillUpstreamTypes": [
+                        "value",
+                        "reference"
+                      ],
+                      "oneOf": [
+                        {
+                          "type": "string",
+                          "instillUpstreamType": "value"
+                        },
+                        {
+                          "type": "string",
+                          "pattern": "^\\{.*\\}$",
+                          "instillUpstreamType": "reference"
+                        }
+                      ]
+                    },
+                    "stop_words_list": {
+                      "title": "Stop Words List",
+                      "description": "",
+                      "instillFormat": "text",
+                      "instillUpstreamTypes": [
+                        "value",
+                        "reference"
+                      ],
+                      "oneOf": [
+                        {
+                          "type": "string",
+                          "instillUpstreamType": "value"
+                        },
+                        {
+                          "type": "string",
+                          "pattern": "^\\{.*\\}$",
+                          "instillUpstreamType": "reference"
+                        }
+                      ]
+                    },
+                    "top_k": {
+                      "title": "Top K",
+                      "description": "",
+                      "instillFormat": "integer",
+                      "instillUpstreamTypes": [
+                        "value",
+                        "reference"
+                      ],
+                      "oneOf": [
+                        {
+                          "type": "integer",
+                          "instillUpstreamType": "value"
+                        },
+                        {
+                          "type": "string",
+                          "pattern": "^\\{.*\\}$",
+                          "instillUpstreamType": "reference"
+                        }
+                      ]
+                    },
+                    "seed": {
+                      "title": "Seed",
+                      "description": "",
+                      "instillFormat": "integer",
+                      "instillUpstreamTypes": [
+                        "value",
+                        "reference"
+                      ],
+                      "oneOf": [
+                        {
+                          "type": "integer",
+                          "instillUpstreamType": "value"
+                        },
+                        {
+                          "type": "string",
+                          "pattern": "^\\{.*\\}$",
+                          "instillUpstreamType": "reference"
+                        }
+                      ]
+                    }
+                  },
+                  "title": "Data Flow"
                 }
               }
             }
@@ -303,47 +706,154 @@
           {
             "if": {
               "properties": {
-                "task": {
-                  "const": "TASK_TEXT_TO_IMAGE"
+                "input": {
+                  "properties": {
+                    "task": {
+                      "const": "TASK_TEXT_TO_IMAGE"
+                    }
+                  }
                 }
               }
             },
             "then": {
-              "type": "object",
-              "required": [
-                "model_id",
-                "prompt",
-                "cfg_scale",
-                "steps",
-                "samples",
-                "seed"
-              ],
               "properties": {
-                "model_id": {
-                  "title": "Model ID",
-                  "description": "ID of the Instill Model model to be used.",
-                  "type": "string",
-                  "format": "instill-template-text"
+                "metadata": {
+                  "input": "Metadata",
+                  "type": "object"
                 },
-                "prompt": {
-                  "type": "string",
-                  "format": "instill-template-text"
-                },
-                "cfg_scale": {
-                  "type": "string",
-                  "format": "instill-template-number"
-                },
-                "steps": {
-                  "type": "string",
-                  "format": "instill-template-integer"
-                },
-                "samples": {
-                  "type": "string",
-                  "format": "instill-template-integer"
-                },
-                "seed": {
-                  "type": "string",
-                  "format": "instill-template-integer"
+                "input": {
+                  "type": "object",
+                  "required": [
+                    "task",
+                    "prompt",
+                    "model_id"
+                  ],
+                  "properties": {
+                    "task": {
+                      "const": "TASK_TEXT_TO_IMAGE"
+                    },
+                    "model_id": {
+                      "title": "Model ID",
+                      "description": "ID of the Instill Model model to be used.",
+                      "instillFormat": "text",
+                      "instillUpstreamTypes": [
+                        "value",
+                        "reference"
+                      ],
+                      "oneOf": [
+                        {
+                          "type": "string",
+                          "instillUpstreamType": "value"
+                        },
+                        {
+                          "type": "string",
+                          "pattern": "^\\{.*\\}$",
+                          "instillUpstreamType": "reference"
+                        }
+                      ]
+                    },
+                    "prompt": {
+                      "title": "Prompt",
+                      "description": "",
+                      "instillFormat": "text",
+                      "instillUpstreamTypes": [
+                        "value",
+                        "reference"
+                      ],
+                      "oneOf": [
+                        {
+                          "type": "string",
+                          "instillUpstreamType": "value"
+                        },
+                        {
+                          "type": "string",
+                          "pattern": "^\\{.*\\}$",
+                          "instillUpstreamType": "reference"
+                        }
+                      ]
+                    },
+                    "cfg_scale": {
+                      "title": "CFG Scale",
+                      "description": "",
+                      "instillFormat": "number",
+                      "instillUpstreamTypes": [
+                        "value",
+                        "reference"
+                      ],
+                      "oneOf": [
+                        {
+                          "type": "number",
+                          "instillUpstreamType": "value"
+                        },
+                        {
+                          "type": "string",
+                          "pattern": "^\\{.*\\}$",
+                          "instillUpstreamType": "reference"
+                        }
+                      ]
+                    },
+                    "steps": {
+                      "title": "Steps",
+                      "description": "",
+                      "instillFormat": "integer",
+                      "instillUpstreamTypes": [
+                        "value",
+                        "reference"
+                      ],
+                      "oneOf": [
+                        {
+                          "type": "integer",
+                          "instillUpstreamType": "value"
+                        },
+                        {
+                          "type": "string",
+                          "pattern": "^\\{.*\\}$",
+                          "instillUpstreamType": "reference"
+                        }
+                      ]
+                    },
+                    "samples": {
+                      "title": "Samples",
+                      "description": "",
+                      "instillFormat": "integer",
+                      "instillUpstreamTypes": [
+                        "value",
+                        "reference"
+                      ],
+                      "oneOf": [
+                        {
+                          "type": "integer",
+                          "instillUpstreamType": "value"
+                        },
+                        {
+                          "type": "string",
+                          "pattern": "^\\{.*\\}$",
+                          "instillUpstreamType": "reference"
+                        }
+                      ]
+                    },
+                    "seed": {
+                      "title": "Seed",
+                      "description": "",
+                      "instillFormat": "integer",
+                      "instillUpstreamTypes": [
+                        "value",
+                        "reference"
+                      ],
+                      "oneOf": [
+                        {
+                          "type": "integer",
+                          "instillUpstreamType": "value"
+                        },
+                        {
+                          "type": "string",
+                          "pattern": "^\\{.*\\}$",
+                          "instillUpstreamType": "reference"
+                        }
+                      ]
+                    }
+                  },
+                  "title": "Data Flow"
                 }
               }
             }
@@ -355,7 +865,7 @@
           "openapi": "3.0.0",
           "info": {
             "version": "1.0.0",
-            "title": "Instill-Model Connector Openapi"
+            "title": "Instill Model Connector OpenAPI"
           },
           "paths": {
             "/execute": {
@@ -373,6 +883,7 @@
                               "type": "object",
                               "allOf": [
                                 {
+                                  "type": "object",
                                   "properties": {
                                     "task": {
                                       "const": "TASK_CLASSIFICATION"
@@ -387,12 +898,22 @@
                                   ],
                                   "properties": {
                                     "image_base64": {
-                                      "type": "string"
+                                      "title": "Image",
+                                      "type": "string",
+                                      "instillFormat": "image",
+                                      "instillUpstreamTypes": [
+                                        "reference"
+                                      ]
                                     },
                                     "model_id": {
                                       "title": "Model ID",
                                       "description": "ID of the Instill Model model to be used.",
-                                      "type": "string"
+                                      "type": "string",
+                                      "instillFormat": "text",
+                                      "instillUpstreamTypes": [
+                                        "value",
+                                        "reference"
+                                      ]
                                     }
                                   }
                                 }
@@ -434,7 +955,8 @@
                                         "description": "The confidence score of the predicted category of the input",
                                         "type": "number"
                                       }
-                                    }
+                                    },
+                                    "instillFormat": "object"
                                   }
                                 }
                               }
@@ -453,7 +975,7 @@
           "openapi": "3.0.0",
           "info": {
             "version": "1.0.0",
-            "title": "Instill-Model Connector Openapi"
+            "title": "Instill Model Connector OpenAPI"
           },
           "paths": {
             "/execute": {
@@ -471,6 +993,7 @@
                               "type": "object",
                               "allOf": [
                                 {
+                                  "type": "object",
                                   "properties": {
                                     "task": {
                                       "const": "TASK_INSTANCE_SEGMENTATION"
@@ -485,12 +1008,22 @@
                                   ],
                                   "properties": {
                                     "image_base64": {
-                                      "type": "string"
+                                      "title": "Image",
+                                      "type": "string",
+                                      "instillFormat": "image",
+                                      "instillUpstreamTypes": [
+                                        "reference"
+                                      ]
                                     },
                                     "model_id": {
                                       "title": "Model ID",
                                       "description": "ID of the Instill Model model to be used.",
-                                      "type": "string"
+                                      "type": "string",
+                                      "instillFormat": "text",
+                                      "instillUpstreamTypes": [
+                                        "value",
+                                        "reference"
+                                      ]
                                     }
                                   }
                                 }
@@ -580,7 +1113,8 @@
                                           }
                                         }
                                       }
-                                    }
+                                    },
+                                    "instillFormat": "object"
                                   }
                                 }
                               }
@@ -599,7 +1133,7 @@
           "openapi": "3.0.0",
           "info": {
             "version": "1.0.0",
-            "title": "Instill-Model Connector Openapi"
+            "title": "Instill Model Connector OpenAPI"
           },
           "paths": {
             "/execute": {
@@ -617,6 +1151,7 @@
                               "type": "object",
                               "allOf": [
                                 {
+                                  "type": "object",
                                   "properties": {
                                     "task": {
                                       "const": "TASK_KEYPOINT"
@@ -631,12 +1166,22 @@
                                   ],
                                   "properties": {
                                     "image_base64": {
-                                      "type": "string"
+                                      "title": "Image",
+                                      "type": "string",
+                                      "instillFormat": "image",
+                                      "instillUpstreamTypes": [
+                                        "reference"
+                                      ]
                                     },
                                     "model_id": {
                                       "title": "Model ID",
                                       "description": "ID of the Instill Model model to be used.",
-                                      "type": "string"
+                                      "type": "string",
+                                      "instillFormat": "text",
+                                      "instillUpstreamTypes": [
+                                        "value",
+                                        "reference"
+                                      ]
                                     }
                                   }
                                 }
@@ -743,7 +1288,8 @@
                                           }
                                         }
                                       }
-                                    }
+                                    },
+                                    "instillFormat": "object"
                                   }
                                 }
                               }
@@ -762,7 +1308,7 @@
           "openapi": "3.0.0",
           "info": {
             "version": "1.0.0",
-            "title": "Instill-Model Connector Openapi"
+            "title": "Instill Model Connector OpenAPI"
           },
           "paths": {
             "/execute": {
@@ -780,6 +1326,7 @@
                               "type": "object",
                               "allOf": [
                                 {
+                                  "type": "object",
                                   "properties": {
                                     "task": {
                                       "const": "TASK_DETECTION"
@@ -794,12 +1341,22 @@
                                   ],
                                   "properties": {
                                     "image_base64": {
-                                      "type": "string"
+                                      "title": "Image",
+                                      "type": "string",
+                                      "instillFormat": "image",
+                                      "instillUpstreamTypes": [
+                                        "reference"
+                                      ]
                                     },
                                     "model_id": {
                                       "title": "Model ID",
                                       "description": "ID of the Instill Model model to be used.",
-                                      "type": "string"
+                                      "type": "string",
+                                      "instillFormat": "text",
+                                      "instillUpstreamTypes": [
+                                        "value",
+                                        "reference"
+                                      ]
                                     }
                                   }
                                 }
@@ -885,7 +1442,8 @@
                                           }
                                         }
                                       }
-                                    }
+                                    },
+                                    "instillFormat": "object"
                                   }
                                 }
                               }
@@ -904,7 +1462,7 @@
           "openapi": "3.0.0",
           "info": {
             "version": "1.0.0",
-            "title": "Instill-Model Connector Openapi"
+            "title": "Instill Model Connector OpenAPI"
           },
           "paths": {
             "/execute": {
@@ -922,6 +1480,7 @@
                               "type": "object",
                               "allOf": [
                                 {
+                                  "type": "object",
                                   "properties": {
                                     "task": {
                                       "const": "TASK_OCR"
@@ -936,12 +1495,22 @@
                                   ],
                                   "properties": {
                                     "image_base64": {
-                                      "type": "string"
+                                      "title": "Image",
+                                      "type": "string",
+                                      "instillFormat": "image",
+                                      "instillUpstreamTypes": [
+                                        "reference"
+                                      ]
                                     },
                                     "model_id": {
                                       "title": "Model ID",
                                       "description": "ID of the Instill Model model to be used.",
-                                      "type": "string"
+                                      "type": "string",
+                                      "instillFormat": "text",
+                                      "instillUpstreamTypes": [
+                                        "value",
+                                        "reference"
+                                      ]
                                     }
                                   }
                                 }
@@ -1026,7 +1595,8 @@
                                           }
                                         }
                                       }
-                                    }
+                                    },
+                                    "instillFormat": "object"
                                   }
                                 }
                               }
@@ -1045,7 +1615,7 @@
           "openapi": "3.0.0",
           "info": {
             "version": "1.0.0",
-            "title": "Instill-Model Connector Openapi"
+            "title": "Instill Model Connector OpenAPI"
           },
           "paths": {
             "/execute": {
@@ -1063,6 +1633,7 @@
                               "type": "object",
                               "allOf": [
                                 {
+                                  "type": "object",
                                   "properties": {
                                     "task": {
                                       "const": "TASK_SEMANTIC_SEGMENTATION"
@@ -1077,12 +1648,22 @@
                                   ],
                                   "properties": {
                                     "image_base64": {
-                                      "type": "string"
+                                      "title": "Image",
+                                      "type": "string",
+                                      "instillFormat": "image",
+                                      "instillUpstreamTypes": [
+                                        "reference"
+                                      ]
                                     },
                                     "model_id": {
                                       "title": "Model ID",
                                       "description": "ID of the Instill Model model to be used.",
-                                      "type": "string"
+                                      "type": "string",
+                                      "instillFormat": "text",
+                                      "instillUpstreamTypes": [
+                                        "value",
+                                        "reference"
+                                      ]
                                     }
                                   }
                                 }
@@ -1136,7 +1717,8 @@
                                           }
                                         }
                                       }
-                                    }
+                                    },
+                                    "instillFormat": "object"
                                   }
                                 }
                               }
@@ -1155,7 +1737,7 @@
           "openapi": "3.0.0",
           "info": {
             "version": "1.0.0",
-            "title": "Instill-Model Connector Openapi"
+            "title": "Instill Model Connector OpenAPI"
           },
           "paths": {
             "/execute": {
@@ -1183,25 +1765,66 @@
                                 "model_id": {
                                   "title": "Model ID",
                                   "description": "ID of the Instill Model model to be used.",
-                                  "type": "string"
+                                  "type": "string",
+                                  "instillFormat": "text",
+                                  "instillUpstreamTypes": [
+                                    "value",
+                                    "reference"
+                                  ]
                                 },
                                 "prompt": {
-                                  "type": "string"
+                                  "title": "Prompt",
+                                  "type": "string",
+                                  "instillFormat": "text",
+                                  "instillUpstreamTypes": [
+                                    "value",
+                                    "reference"
+                                  ]
                                 },
                                 "output_len": {
-                                  "type": "integer"
+                                  "title": "Output Length",
+                                  "type": "integer",
+                                  "instillFormat": "integer",
+                                  "instillUpstreamTypes": [
+                                    "value",
+                                    "reference"
+                                  ]
                                 },
                                 "bad_words_list": {
-                                  "type": "string"
+                                  "title": "Bad Words List",
+                                  "type": "string",
+                                  "instillFormat": "text",
+                                  "instillUpstreamTypes": [
+                                    "value",
+                                    "reference"
+                                  ]
                                 },
                                 "stop_words_list": {
-                                  "type": "string"
+                                  "title": "Stop Words List",
+                                  "type": "string",
+                                  "instillFormat": "text",
+                                  "instillUpstreamTypes": [
+                                    "value",
+                                    "reference"
+                                  ]
                                 },
                                 "top_k": {
-                                  "type": "integer"
+                                  "title": "Top K",
+                                  "type": "integer",
+                                  "instillFormat": "integer",
+                                  "instillUpstreamTypes": [
+                                    "value",
+                                    "reference"
+                                  ]
                                 },
                                 "seed": {
-                                  "type": "integer"
+                                  "title": "Seed",
+                                  "type": "integer",
+                                  "instillFormat": "integer",
+                                  "instillUpstreamTypes": [
+                                    "value",
+                                    "reference"
+                                  ]
                                 }
                               }
                             }
@@ -1225,7 +1848,8 @@
                                 "type": "object",
                                 "properties": {
                                   "text": {
-                                    "type": "string"
+                                    "type": "string",
+                                    "instillFormat": "object"
                                   }
                                 }
                               }
@@ -1244,7 +1868,7 @@
           "openapi": "3.0.0",
           "info": {
             "version": "1.0.0",
-            "title": "Instill-Model Connector Openapi"
+            "title": "Instill Model Connector OpenAPI"
           },
           "paths": {
             "/execute": {
@@ -1272,22 +1896,57 @@
                                 "model_id": {
                                   "title": "Model ID",
                                   "description": "ID of the Instill Model model to be used.",
-                                  "type": "string"
+                                  "type": "string",
+                                  "instillFormat": "text",
+                                  "instillUpstreamTypes": [
+                                    "value",
+                                    "reference"
+                                  ]
                                 },
                                 "prompt": {
-                                  "type": "string"
+                                  "title": "Prompt",
+                                  "type": "string",
+                                  "instillFormat": "text",
+                                  "instillUpstreamTypes": [
+                                    "value",
+                                    "reference"
+                                  ]
                                 },
                                 "cfg_scale": {
-                                  "type": "number"
+                                  "title": "CFG Scale",
+                                  "type": "number",
+                                  "instillFormat": "number",
+                                  "instillUpstreamTypes": [
+                                    "value",
+                                    "reference"
+                                  ]
                                 },
                                 "steps": {
-                                  "type": "integer"
+                                  "title": "Steps",
+                                  "type": "integer",
+                                  "instillFormat": "integer",
+                                  "instillUpstreamTypes": [
+                                    "value",
+                                    "reference"
+                                  ]
                                 },
                                 "samples": {
-                                  "type": "integer"
+                                  "title": "Samples",
+                                  "type": "integer",
+                                  "instillFormat": "integer",
+                                  "instillUpstreamTypes": [
+                                    "value",
+                                    "reference"
+                                  ]
                                 },
                                 "seed": {
-                                  "type": "integer"
+                                  "title": "Seed",
+                                  "type": "integer",
+                                  "instillFormat": "integer",
+                                  "instillUpstreamTypes": [
+                                    "value",
+                                    "reference"
+                                  ]
                                 }
                               }
                             }
@@ -1313,8 +1972,10 @@
                                   "images": {
                                     "type": "array",
                                     "items": {
-                                      "type": "string"
-                                    }
+                                      "type": "string",
+                                      "instillFormat": "image"
+                                    },
+                                    "instillFormat": "image_array"
                                   }
                                 }
                               }

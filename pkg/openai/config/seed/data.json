@@ -10,19 +10,34 @@
           "const": "TASK_SPEECH_RECOGNITION"
         },
         "audio": {
-          "$ref": "openai.json#/components/schemas/CreateTranscriptionRequest/properties/file"
+          "title": "Audio",
+          "$ref": "openai.json#/components/schemas/CreateTranscriptionRequest/properties/file",
+          "instillFormat": "audio",
+          "instillUpstreamTypes": ["reference"]
         },
         "model": {
-          "$ref": "openai.json#/components/schemas/CreateTranscriptionRequest/properties/model"
+          "title": "Model",
+          "$ref": "openai.json#/components/schemas/CreateTranscriptionRequest/properties/model",
+          "instillFormat": "text",
+          "instillUpstreamTypes": ["value", "reference"]
         },
         "temperature": {
-          "$ref": "openai.json#/components/schemas/CreateTranscriptionRequest/properties/temperature"
+          "title": "Temperature",
+          "$ref": "openai.json#/components/schemas/CreateTranscriptionRequest/properties/temperature",
+          "instillFormat": "number",
+          "instillUpstreamTypes": ["value", "reference"]
         },
         "language": {
-          "$ref": "openai.json#/components/schemas/CreateTranscriptionRequest/properties/language"
+          "title": "Language",
+          "$ref": "openai.json#/components/schemas/CreateTranscriptionRequest/properties/language",
+          "instillFormat": "text",
+          "instillUpstreamTypes": ["value", "reference"]
         },
         "prompt": {
-          "$ref": "openai.json#/components/schemas/CreateTranscriptionRequest/properties/prompt"
+          "title": "Prompt",
+          "$ref": "openai.json#/components/schemas/CreateTranscriptionRequest/properties/prompt",
+          "instillFormat": "text",
+          "instillUpstreamTypes": ["value", "reference"]
         }
       }
     },
@@ -30,7 +45,8 @@
       "type": "object",
       "properties": {
         "text": {
-          "$ref": "openai.json#/components/schemas/CreateTranscriptionResponse/properties/text"
+          "$ref": "openai.json#/components/schemas/CreateTranscriptionResponse/properties/text",
+          "instillFormat": "text"
         }
       }
     }
@@ -46,10 +62,16 @@
           "const": "TASK_TEXT_EMBEDDINGS"
         },
         "text": {
-          "type": "string"
+          "title": "Text",
+          "type": "string",
+          "instillFormat": "text",
+          "instillUpstreamTypes": ["value", "reference"]
         },
         "model": {
-          "$ref": "openai.json#/components/schemas/CreateEmbeddingRequest/properties/model"
+          "title": "Model",
+          "$ref": "openai.json#/components/schemas/CreateEmbeddingRequest/properties/model",
+          "instillFormat": "text",
+          "instillUpstreamTypes": ["value", "reference"]
         }
       }
     },
@@ -57,7 +79,8 @@
       "type": "object",
       "properties": {
         "embedding": {
-          "$ref": "https://raw.githubusercontent.com/instill-ai/connector/622978a8ce8b5c4f2242afad7e5ba7d4d18cab27/shared_schema.json#/$defs/instill_types/embedding"
+          "$ref": "https://raw.githubusercontent.com/instill-ai/connector/622978a8ce8b5c4f2242afad7e5ba7d4d18cab27/shared_schema.json#/$defs/instill_types/embedding",
+          "instillFormat": "number_array"
         }
       }
     }
@@ -73,26 +96,45 @@
           "const": "TASK_TEXT_GENERATION"
         },
         "prompt": {
-          "type": "string"
+          "title": "Prompt",
+          "type": "string",
+          "instillFormat": "text",
+          "instillUpstreamTypes": ["value", "reference"]
         },
         "model": {
-          "$ref": "openai.json#/components/schemas/CreateChatCompletionRequest/properties/model"
+          "title": "Model",
+          "$ref": "openai.json#/components/schemas/CreateChatCompletionRequest/properties/model",
+          "instillFormat": "text",
+          "instillUpstreamTypes": ["value", "reference"]
         },
         "system_message": {
           "title": "System message",
           "description": "The system message helps set the behavior of the assistant. For example, you can modify the personality of the assistant or provide specific instructions about how it should behave throughout the conversation. By default, the model’s behavior is using a generic message as \"You are a helpful assistant.\"",
           "type": "string",
           "default": "You are a helpful assistant.",
-          "maxLength": 2048
+          "maxLength": 2048,
+          "instillFormat": "text",
+          "instillUpstreamTypes": ["value", "reference"]
         },
         "temperature": {
-          "$ref": "openai.json#/components/schemas/CreateChatCompletionRequest/properties/temperature"
+          "title": "Temperature",
+          "$ref": "openai.json#/components/schemas/CreateChatCompletionRequest/properties/temperature",
+          "instillFormat": "number",
+          "instillUpstreamTypes": ["value", "reference"]
         },
         "n": {
+          "title": "N",
           "$ref": "openai.json#/components/schemas/CreateChatCompletionRequest/properties/n"
+          ,
+          "instillFormat": "integer",
+          "instillUpstreamTypes": ["value", "reference"]
         },
         "max_tokens": {
+          "title": "Max Tokens",
           "$ref": "openai.json#/components/schemas/CreateChatCompletionRequest/properties/max_tokens"
+          ,
+          "instillFormat": "integer",
+          "instillUpstreamTypes": ["value", "reference"]
         }
       }
     },
@@ -102,8 +144,10 @@
         "texts": {
           "type": "array",
           "items": {
-            "type": "string"
-          }
+            "type": "string",
+            "instillFormat": "text"
+          },
+          "instillFormat": "text_array"
         }
       }
     }

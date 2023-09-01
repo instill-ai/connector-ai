@@ -42,551 +42,322 @@
       },
       "component_specification": {
         "$schema": "http://json-schema.org/draft-07/schema#",
-        "title": "Hugging Face Connector Component Spec",
+        "title": "Hugging Face Component Setting",
         "type": "object",
-        "required": [
-          "task",
-          "model"
-        ],
         "properties": {
-          "task": {
-            "title": "Task",
-            "enum": [
-              "TEXT_GENERATION",
-              "TEXT_TO_IMAGE",
-              "FILL_MASK",
-              "SUMMARIZATION",
-              "TEXT_CLASSIFICATION",
-              "TOKEN_CLASSIFICATION",
-              "TRANSLATION",
-              "ZERO_SHOT_CLASSIFICATION",
-              "FEATURE_EXTRACTION",
-              "QUESTION_ANSWERING",
-              "TABLE_QUESTION_ANSWERING",
-              "SENTENCE_SIMILARITY",
-              "CONVERSATIONAL",
-              "IMAGE_CLASSIFICATION",
-              "IMAGE_SEGMENTATION",
-              "OBJECT_DETECTION",
-              "IMAGE_TO_TEXT",
-              "SPEECH_RECOGNITION",
-              "AUDIO_CLASSIFICATION"
-            ],
-            "default": "TEXT_GENERATION"
-          },
-          "model": {
-            "title": "Model",
-            "type": "string",
-            "default": "gpt2"
+          "input": {
+            "properties": {
+              "task": {
+                "title": "Task",
+                "enum": [
+                  "TEXT_GENERATION",
+                  "TEXT_TO_IMAGE",
+                  "FILL_MASK",
+                  "SUMMARIZATION",
+                  "TEXT_CLASSIFICATION",
+                  "TOKEN_CLASSIFICATION",
+                  "TRANSLATION",
+                  "ZERO_SHOT_CLASSIFICATION",
+                  "FEATURE_EXTRACTION",
+                  "QUESTION_ANSWERING",
+                  "TABLE_QUESTION_ANSWERING",
+                  "SENTENCE_SIMILARITY",
+                  "CONVERSATIONAL",
+                  "IMAGE_CLASSIFICATION",
+                  "IMAGE_SEGMENTATION",
+                  "OBJECT_DETECTION",
+                  "IMAGE_TO_TEXT",
+                  "SPEECH_RECOGNITION",
+                  "AUDIO_CLASSIFICATION"
+                ]
+              }
+            }
           }
         },
         "allOf": [
           {
             "if": {
               "properties": {
-                "task": {
-                  "const": "TEXT_GENERATION"
-                }
-              }
-            },
-            "then": {
-              "type": "object",
-              "required": [
-                "inputs"
-              ],
-              "properties": {
-                "inputs": {
-                  "type": "string",
-                  "format": "instill-template-text"
-                },
-                "options": {
-                  "type": "object",
+                "input": {
                   "properties": {
-                    "use_gpu": {
-                      "type": "boolean"
-                    },
-                    "use_cache": {
-                      "type": "boolean"
-                    },
-                    "wait_for_model": {
-                      "type": "boolean"
-                    }
-                  }
-                },
-                "parameters": {
-                  "type": "object",
-                  "properties": {
-                    "top_k": {
-                      "type": "integer"
-                    },
-                    "top_p": {
-                      "type": "number"
-                    },
-                    "temperature": {
-                      "type": "number"
-                    },
-                    "repetition_penalty": {
-                      "type": "number"
-                    },
-                    "max_new_tokens": {
-                      "type": "integer"
-                    },
-                    "max_time": {
-                      "type": "number"
-                    },
-                    "return_full_text": {
-                      "type": "boolean"
-                    },
-                    "num_return_sequences": {
-                      "type": "integer"
-                    },
-                    "do_sample": {
-                      "type": "boolean"
-                    }
-                  },
-                  "format": "instill-template-text"
-                }
-              }
-            }
-          },
-          {
-            "if": {
-              "properties": {
-                "task": {
-                  "const": "TEXT_TO_IMAGE"
-                }
-              }
-            },
-            "then": {
-              "type": "object",
-              "required": [
-                "inputs"
-              ],
-              "properties": {
-                "inputs": {
-                  "type": "string",
-                  "format": "instill-template-text"
-                },
-                "options": {
-                  "type": "object",
-                  "properties": {
-                    "use_gpu": {
-                      "type": "boolean"
-                    },
-                    "use_cache": {
-                      "type": "boolean"
-                    },
-                    "wait_for_model": {
-                      "type": "boolean"
-                    }
-                  }
-                },
-                "parameters": {
-                  "type": "object",
-                  "properties": {
-                    "negative_prompt": {
-                      "type": "string"
-                    },
-                    "height": {
-                      "type": "integer"
-                    },
-                    "width": {
-                      "type": "integer"
-                    },
-                    "num_inference_steps": {
-                      "type": "integer"
-                    },
-                    "guidance_scale": {
-                      "type": "number"
-                    }
-                  },
-                  "format": "instill-template-text"
-                }
-              }
-            }
-          },
-          {
-            "if": {
-              "properties": {
-                "task": {
-                  "const": "FILL_MASK"
-                }
-              }
-            },
-            "then": {
-              "type": "object",
-              "required": [
-                "inputs"
-              ],
-              "properties": {
-                "inputs": {
-                  "type": "string",
-                  "format": "instill-template-text"
-                },
-                "options": {
-                  "type": "object",
-                  "properties": {
-                    "use_gpu": {
-                      "type": "boolean"
-                    },
-                    "use_cache": {
-                      "type": "boolean"
-                    },
-                    "wait_for_model": {
-                      "type": "boolean"
+                    "task": {
+                      "const": "TEXT_GENERATION"
                     }
                   }
                 }
               }
-            }
-          },
-          {
-            "if": {
-              "properties": {
-                "task": {
-                  "const": "SUMMARIZATION"
-                }
-              }
             },
             "then": {
-              "type": "object",
-              "required": [
-                "inputs"
-              ],
               "properties": {
-                "inputs": {
-                  "type": "string",
-                  "format": "instill-template-text"
-                },
-                "options": {
-                  "type": "object",
-                  "properties": {
-                    "use_gpu": {
-                      "type": "boolean"
-                    },
-                    "use_cache": {
-                      "type": "boolean"
-                    },
-                    "wait_for_model": {
-                      "type": "boolean"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          {
-            "if": {
-              "properties": {
-                "task": {
-                  "const": "TEXT_CLASSIFICATION"
-                }
-              }
-            },
-            "then": {
-              "type": "object",
-              "required": [
-                "inputs"
-              ],
-              "properties": {
-                "inputs": {
-                  "type": "string",
-                  "format": "instill-template-text"
-                },
-                "options": {
-                  "type": "object",
-                  "properties": {
-                    "use_gpu": {
-                      "type": "boolean"
-                    },
-                    "use_cache": {
-                      "type": "boolean"
-                    },
-                    "wait_for_model": {
-                      "type": "boolean"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          {
-            "if": {
-              "properties": {
-                "task": {
-                  "const": "TOKEN_CLASSIFICATION"
-                }
-              }
-            },
-            "then": {
-              "type": "object",
-              "required": [
-                "inputs"
-              ],
-              "properties": {
-                "inputs": {
-                  "type": "string",
-                  "format": "instill-template-text"
-                },
-                "options": {
-                  "type": "object",
-                  "properties": {
-                    "use_gpu": {
-                      "type": "boolean"
-                    },
-                    "use_cache": {
-                      "type": "boolean"
-                    },
-                    "wait_for_model": {
-                      "type": "boolean"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          {
-            "if": {
-              "properties": {
-                "task": {
-                  "const": "TRANSLATION"
-                }
-              }
-            },
-            "then": {
-              "type": "object",
-              "required": [
-                "inputs"
-              ],
-              "properties": {
-                "inputs": {
-                  "type": "string",
-                  "format": "instill-template-text"
-                },
-                "options": {
-                  "type": "object",
-                  "properties": {
-                    "use_gpu": {
-                      "type": "boolean"
-                    },
-                    "use_cache": {
-                      "type": "boolean"
-                    },
-                    "wait_for_model": {
-                      "type": "boolean"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          {
-            "if": {
-              "properties": {
-                "task": {
-                  "const": "ZERO_SHOT_CLASSIFICATION"
-                }
-              }
-            },
-            "then": {
-              "type": "object",
-              "required": [
-                "inputs"
-              ],
-              "properties": {
-                "inputs": {
-                  "type": "string",
-                  "format": "instill-template-text"
-                },
-                "options": {
-                  "type": "object",
-                  "properties": {
-                    "use_gpu": {
-                      "type": "boolean"
-                    },
-                    "use_cache": {
-                      "type": "boolean"
-                    },
-                    "wait_for_model": {
-                      "type": "boolean"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          {
-            "if": {
-              "properties": {
-                "task": {
-                  "const": "FEATURE_EXTRACTION"
-                }
-              }
-            },
-            "then": {
-              "type": "object",
-              "required": [
-                "inputs"
-              ],
-              "properties": {
-                "inputs": {
-                  "type": "string",
-                  "format": "instill-template-text"
-                },
-                "options": {
-                  "type": "object",
-                  "properties": {
-                    "use_gpu": {
-                      "type": "boolean"
-                    },
-                    "use_cache": {
-                      "type": "boolean"
-                    },
-                    "wait_for_model": {
-                      "type": "boolean"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          {
-            "if": {
-              "properties": {
-                "task": {
-                  "const": "QUESTION_ANSWERING"
-                }
-              }
-            },
-            "then": {
-              "type": "object",
-              "required": [
-                "inputs"
-              ],
-              "properties": {
-                "inputs": {
-                  "type": "object",
-                  "required": [
-                    "question",
-                    "context"
-                  ],
-                  "properties": {
-                    "question": {
-                      "type": "string"
-                    },
-                    "context": {
-                      "type": "string"
-                    }
-                  }
-                },
-                "options": {
-                  "type": "object",
-                  "properties": {
-                    "use_gpu": {
-                      "type": "boolean"
-                    },
-                    "use_cache": {
-                      "type": "boolean"
-                    },
-                    "wait_for_model": {
-                      "type": "boolean"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          {
-            "if": {
-              "properties": {
-                "task": {
-                  "const": "TABLE_QUESTION_ANSWERING"
-                }
-              }
-            },
-            "then": {
-              "type": "object",
-              "required": [
-                "inputs"
-              ],
-              "properties": {
-                "inputs": {
-                  "required": [
-                    "query",
-                    "table"
-                  ],
-                  "properties": {
-                    "query": {
-                      "type": "string"
-                    },
-                    "table": {
-                      "type": "object"
-                    }
-                  },
+                "metadata": {
+                  "title": "Metadata",
                   "type": "object"
                 },
-                "options": {
+                "input": {
                   "type": "object",
-                  "properties": {
-                    "use_gpu": {
-                      "type": "boolean"
-                    },
-                    "use_cache": {
-                      "type": "boolean"
-                    },
-                    "wait_for_model": {
-                      "type": "boolean"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          {
-            "if": {
-              "properties": {
-                "task": {
-                  "const": "SENTENCE_SIMILARITY"
-                }
-              }
-            },
-            "then": {
-              "type": "object",
-              "required": [
-                "inputs"
-              ],
-              "properties": {
-                "inputs": {
                   "required": [
-                    "source_sentence",
-                    "sentences"
+                    "inputs"
                   ],
                   "properties": {
-                    "source_sentence": {
-                      "type": "string"
+                    "inputs": {
+                      "description": "",
+                      "instillFormat": "text",
+                      "instillUpstreamTypes": [
+                        "value",
+                        "reference"
+                      ],
+                      "oneOf": [
+                        {
+                          "type": "string",
+                          "instillUpstreamType": "value"
+                        },
+                        {
+                          "type": "string",
+                          "pattern": "^\\{.*\\}$",
+                          "instillUpstreamType": "reference"
+                        }
+                      ]
                     },
-                    "sentences": {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
+                    "options": {
+                      "type": "object",
+                      "properties": {
+                        "use_gpu": {
+                          "description": "",
+                          "instillFormat": "boolean",
+                          "instillUpstreamTypes": [
+                            "value",
+                            "reference"
+                          ],
+                          "oneOf": [
+                            {
+                              "type": "boolean",
+                              "instillUpstreamType": "value"
+                            },
+                            {
+                              "type": "string",
+                              "pattern": "^\\{.*\\}$",
+                              "instillUpstreamType": "reference"
+                            }
+                          ]
+                        },
+                        "use_cache": {
+                          "description": "",
+                          "instillFormat": "boolean",
+                          "instillUpstreamTypes": [
+                            "value",
+                            "reference"
+                          ],
+                          "oneOf": [
+                            {
+                              "type": "boolean",
+                              "instillUpstreamType": "value"
+                            },
+                            {
+                              "type": "string",
+                              "pattern": "^\\{.*\\}$",
+                              "instillUpstreamType": "reference"
+                            }
+                          ]
+                        },
+                        "wait_for_model": {
+                          "description": "",
+                          "instillFormat": "boolean",
+                          "instillUpstreamTypes": [
+                            "value",
+                            "reference"
+                          ],
+                          "oneOf": [
+                            {
+                              "type": "boolean",
+                              "instillUpstreamType": "value"
+                            },
+                            {
+                              "type": "string",
+                              "pattern": "^\\{.*\\}$",
+                              "instillUpstreamType": "reference"
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    "parameters": {
+                      "type": "object",
+                      "properties": {
+                        "top_k": {
+                          "description": "",
+                          "instillFormat": "integer",
+                          "instillUpstreamTypes": [
+                            "value",
+                            "reference"
+                          ],
+                          "oneOf": [
+                            {
+                              "type": "integer",
+                              "instillUpstreamType": "value"
+                            },
+                            {
+                              "type": "string",
+                              "pattern": "^\\{.*\\}$",
+                              "instillUpstreamType": "reference"
+                            }
+                          ]
+                        },
+                        "top_p": {
+                          "description": "",
+                          "instillFormat": "number",
+                          "instillUpstreamTypes": [
+                            "value",
+                            "reference"
+                          ],
+                          "oneOf": [
+                            {
+                              "type": "number",
+                              "instillUpstreamType": "value"
+                            },
+                            {
+                              "type": "string",
+                              "pattern": "^\\{.*\\}$",
+                              "instillUpstreamType": "reference"
+                            }
+                          ]
+                        },
+                        "temperature": {
+                          "description": "",
+                          "instillFormat": "number",
+                          "instillUpstreamTypes": [
+                            "value",
+                            "reference"
+                          ],
+                          "oneOf": [
+                            {
+                              "type": "number",
+                              "instillUpstreamType": "value"
+                            },
+                            {
+                              "type": "string",
+                              "pattern": "^\\{.*\\}$",
+                              "instillUpstreamType": "reference"
+                            }
+                          ]
+                        },
+                        "repetition_penalty": {
+                          "description": "",
+                          "instillFormat": "number",
+                          "instillUpstreamTypes": [
+                            "value",
+                            "reference"
+                          ],
+                          "oneOf": [
+                            {
+                              "type": "number",
+                              "instillUpstreamType": "value"
+                            },
+                            {
+                              "type": "string",
+                              "pattern": "^\\{.*\\}$",
+                              "instillUpstreamType": "reference"
+                            }
+                          ]
+                        },
+                        "max_new_tokens": {
+                          "description": "",
+                          "instillFormat": "integer",
+                          "instillUpstreamTypes": [
+                            "value",
+                            "reference"
+                          ],
+                          "oneOf": [
+                            {
+                              "type": "integer",
+                              "instillUpstreamType": "value"
+                            },
+                            {
+                              "type": "string",
+                              "pattern": "^\\{.*\\}$",
+                              "instillUpstreamType": "reference"
+                            }
+                          ]
+                        },
+                        "max_time": {
+                          "description": "",
+                          "instillFormat": "number",
+                          "instillUpstreamTypes": [
+                            "value",
+                            "reference"
+                          ],
+                          "oneOf": [
+                            {
+                              "type": "number",
+                              "instillUpstreamType": "value"
+                            },
+                            {
+                              "type": "string",
+                              "pattern": "^\\{.*\\}$",
+                              "instillUpstreamType": "reference"
+                            }
+                          ]
+                        },
+                        "return_full_text": {
+                          "description": "",
+                          "instillFormat": "boolean",
+                          "instillUpstreamTypes": [
+                            "value",
+                            "reference"
+                          ],
+                          "oneOf": [
+                            {
+                              "type": "boolean",
+                              "instillUpstreamType": "value"
+                            },
+                            {
+                              "type": "string",
+                              "pattern": "^\\{.*\\}$",
+                              "instillUpstreamType": "reference"
+                            }
+                          ]
+                        },
+                        "num_return_sequences": {
+                          "description": "",
+                          "instillFormat": "integer",
+                          "instillUpstreamTypes": [
+                            "value",
+                            "reference"
+                          ],
+                          "oneOf": [
+                            {
+                              "type": "integer",
+                              "instillUpstreamType": "value"
+                            },
+                            {
+                              "type": "string",
+                              "pattern": "^\\{.*\\}$",
+                              "instillUpstreamType": "reference"
+                            }
+                          ]
+                        },
+                        "do_sample": {
+                          "description": "",
+                          "instillFormat": "boolean",
+                          "instillUpstreamTypes": [
+                            "value",
+                            "reference"
+                          ],
+                          "oneOf": [
+                            {
+                              "type": "boolean",
+                              "instillUpstreamType": "value"
+                            },
+                            {
+                              "type": "string",
+                              "pattern": "^\\{.*\\}$",
+                              "instillUpstreamType": "reference"
+                            }
+                          ]
+                        }
                       }
                     }
                   },
-                  "type": "object"
-                },
-                "options": {
-                  "type": "object",
-                  "properties": {
-                    "use_gpu": {
-                      "type": "boolean"
-                    },
-                    "use_cache": {
-                      "type": "boolean"
-                    },
-                    "wait_for_model": {
-                      "type": "boolean"
-                    }
-                  }
+                  "title": "Data Flow"
                 }
               }
             }
@@ -594,73 +365,570 @@
           {
             "if": {
               "properties": {
-                "task": {
-                  "const": "CONVERSATIONAL"
+                "input": {
+                  "properties": {
+                    "task": {
+                      "const": "TEXT_TO_IMAGE"
+                    }
+                  }
                 }
               }
             },
             "then": {
-              "type": "object",
-              "required": [
-                "inputs"
-              ],
               "properties": {
-                "inputs": {
+                "metadata": {
+                  "title": "Metadata",
+                  "type": "object"
+                },
+                "input": {
+                  "type": "object",
                   "required": [
-                    "text"
+                    "inputs"
                   ],
                   "properties": {
-                    "text": {
-                      "type": "string"
+                    "inputs": {
+                      "description": "",
+                      "instillFormat": "text",
+                      "instillUpstreamTypes": [
+                        "value",
+                        "reference"
+                      ],
+                      "oneOf": [
+                        {
+                          "type": "string",
+                          "instillUpstreamType": "value"
+                        },
+                        {
+                          "type": "string",
+                          "pattern": "^\\{.*\\}$",
+                          "instillUpstreamType": "reference"
+                        }
+                      ]
                     },
-                    "generated_responses": {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
+                    "options": {
+                      "type": "object",
+                      "properties": {
+                        "use_gpu": {
+                          "description": "",
+                          "instillFormat": "boolean",
+                          "instillUpstreamTypes": [
+                            "value",
+                            "reference"
+                          ],
+                          "oneOf": [
+                            {
+                              "type": "boolean",
+                              "instillUpstreamType": "value"
+                            },
+                            {
+                              "type": "string",
+                              "pattern": "^\\{.*\\}$",
+                              "instillUpstreamType": "reference"
+                            }
+                          ]
+                        },
+                        "use_cache": {
+                          "description": "",
+                          "instillFormat": "boolean",
+                          "instillUpstreamTypes": [
+                            "value",
+                            "reference"
+                          ],
+                          "oneOf": [
+                            {
+                              "type": "boolean",
+                              "instillUpstreamType": "value"
+                            },
+                            {
+                              "type": "string",
+                              "pattern": "^\\{.*\\}$",
+                              "instillUpstreamType": "reference"
+                            }
+                          ]
+                        },
+                        "wait_for_model": {
+                          "description": "",
+                          "instillFormat": "boolean",
+                          "instillUpstreamTypes": [
+                            "value",
+                            "reference"
+                          ],
+                          "oneOf": [
+                            {
+                              "type": "boolean",
+                              "instillUpstreamType": "value"
+                            },
+                            {
+                              "type": "string",
+                              "pattern": "^\\{.*\\}$",
+                              "instillUpstreamType": "reference"
+                            }
+                          ]
+                        }
                       }
                     },
-                    "past_user_inputs": {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
+                    "parameters": {
+                      "type": "object",
+                      "properties": {
+                        "negative_prompt": {
+                          "description": "",
+                          "instillFormat": "text",
+                          "instillUpstreamTypes": [
+                            "value",
+                            "reference"
+                          ],
+                          "oneOf": [
+                            {
+                              "type": "string",
+                              "instillUpstreamType": "value"
+                            },
+                            {
+                              "type": "string",
+                              "pattern": "^\\{.*\\}$",
+                              "instillUpstreamType": "reference"
+                            }
+                          ]
+                        },
+                        "height": {
+                          "description": "",
+                          "instillFormat": "integer",
+                          "instillUpstreamTypes": [
+                            "value",
+                            "reference"
+                          ],
+                          "oneOf": [
+                            {
+                              "type": "integer",
+                              "instillUpstreamType": "value"
+                            },
+                            {
+                              "type": "string",
+                              "pattern": "^\\{.*\\}$",
+                              "instillUpstreamType": "reference"
+                            }
+                          ]
+                        },
+                        "width": {
+                          "description": "",
+                          "instillFormat": "integer",
+                          "instillUpstreamTypes": [
+                            "value",
+                            "reference"
+                          ],
+                          "oneOf": [
+                            {
+                              "type": "integer",
+                              "instillUpstreamType": "value"
+                            },
+                            {
+                              "type": "string",
+                              "pattern": "^\\{.*\\}$",
+                              "instillUpstreamType": "reference"
+                            }
+                          ]
+                        },
+                        "num_inference_steps": {
+                          "description": "",
+                          "instillFormat": "integer",
+                          "instillUpstreamTypes": [
+                            "value",
+                            "reference"
+                          ],
+                          "oneOf": [
+                            {
+                              "type": "integer",
+                              "instillUpstreamType": "value"
+                            },
+                            {
+                              "type": "string",
+                              "pattern": "^\\{.*\\}$",
+                              "instillUpstreamType": "reference"
+                            }
+                          ]
+                        },
+                        "guidance_scale": {
+                          "description": "",
+                          "instillFormat": "number",
+                          "instillUpstreamTypes": [
+                            "value",
+                            "reference"
+                          ],
+                          "oneOf": [
+                            {
+                              "type": "number",
+                              "instillUpstreamType": "value"
+                            },
+                            {
+                              "type": "string",
+                              "pattern": "^\\{.*\\}$",
+                              "instillUpstreamType": "reference"
+                            }
+                          ]
+                        }
                       }
                     }
                   },
-                  "type": "object"
-                },
-                "options": {
-                  "type": "object",
+                  "title": "Data Flow"
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "input": {
                   "properties": {
-                    "use_gpu": {
-                      "type": "boolean"
-                    },
-                    "use_cache": {
-                      "type": "boolean"
-                    },
-                    "wait_for_model": {
-                      "type": "boolean"
+                    "task": {
+                      "const": "FILL_MASK"
                     }
                   }
                 }
               }
+            },
+            "then": {
+              "properties": {
+                "metadata": {
+                  "title": "Metadata",
+                  "type": "object"
+                },
+                "input": {
+                  "type": "object",
+                  "required": [
+                    "inputs"
+                  ],
+                  "properties": {
+                    "inputs": {
+                      "description": "",
+                      "instillFormat": "text",
+                      "instillUpstreamTypes": [
+                        "value",
+                        "reference"
+                      ],
+                      "oneOf": [
+                        {
+                          "type": "string",
+                          "instillUpstreamType": "value"
+                        },
+                        {
+                          "type": "string",
+                          "pattern": "^\\{.*\\}$",
+                          "instillUpstreamType": "reference"
+                        }
+                      ]
+                    },
+                    "options": {
+                      "type": "object",
+                      "properties": {
+                        "use_gpu": {
+                          "description": "",
+                          "instillFormat": "boolean",
+                          "instillUpstreamTypes": [
+                            "value",
+                            "reference"
+                          ],
+                          "oneOf": [
+                            {
+                              "type": "boolean",
+                              "instillUpstreamType": "value"
+                            },
+                            {
+                              "type": "string",
+                              "pattern": "^\\{.*\\}$",
+                              "instillUpstreamType": "reference"
+                            }
+                          ]
+                        },
+                        "use_cache": {
+                          "description": "",
+                          "instillFormat": "boolean",
+                          "instillUpstreamTypes": [
+                            "value",
+                            "reference"
+                          ],
+                          "oneOf": [
+                            {
+                              "type": "boolean",
+                              "instillUpstreamType": "value"
+                            },
+                            {
+                              "type": "string",
+                              "pattern": "^\\{.*\\}$",
+                              "instillUpstreamType": "reference"
+                            }
+                          ]
+                        },
+                        "wait_for_model": {
+                          "description": "",
+                          "instillFormat": "boolean",
+                          "instillUpstreamTypes": [
+                            "value",
+                            "reference"
+                          ],
+                          "oneOf": [
+                            {
+                              "type": "boolean",
+                              "instillUpstreamType": "value"
+                            },
+                            {
+                              "type": "string",
+                              "pattern": "^\\{.*\\}$",
+                              "instillUpstreamType": "reference"
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  },
+                  "title": "Data Flow"
+                }
+              }
             }
           },
           {
             "if": {
               "properties": {
-                "task": {
-                  "const": "IMAGE_CLASSIFICATION"
+                "input": {
+                  "properties": {
+                    "task": {
+                      "const": "SUMMARIZATION"
+                    }
+                  }
                 }
               }
             },
             "then": {
-              "type": "string",
-              "required": [
-                "image"
-              ],
               "properties": {
-                "image": {
-                  "type": "string"
+                "metadata": {
+                  "title": "Metadata",
+                  "type": "object"
+                },
+                "input": {
+                  "type": "object",
+                  "required": [
+                    "inputs"
+                  ],
+                  "properties": {
+                    "inputs": {
+                      "description": "",
+                      "instillFormat": "text",
+                      "instillUpstreamTypes": [
+                        "value",
+                        "reference"
+                      ],
+                      "oneOf": [
+                        {
+                          "type": "string",
+                          "instillUpstreamType": "value"
+                        },
+                        {
+                          "type": "string",
+                          "pattern": "^\\{.*\\}$",
+                          "instillUpstreamType": "reference"
+                        }
+                      ]
+                    },
+                    "options": {
+                      "type": "object",
+                      "properties": {
+                        "use_gpu": {
+                          "description": "",
+                          "instillFormat": "boolean",
+                          "instillUpstreamTypes": [
+                            "value",
+                            "reference"
+                          ],
+                          "oneOf": [
+                            {
+                              "type": "boolean",
+                              "instillUpstreamType": "value"
+                            },
+                            {
+                              "type": "string",
+                              "pattern": "^\\{.*\\}$",
+                              "instillUpstreamType": "reference"
+                            }
+                          ]
+                        },
+                        "use_cache": {
+                          "description": "",
+                          "instillFormat": "boolean",
+                          "instillUpstreamTypes": [
+                            "value",
+                            "reference"
+                          ],
+                          "oneOf": [
+                            {
+                              "type": "boolean",
+                              "instillUpstreamType": "value"
+                            },
+                            {
+                              "type": "string",
+                              "pattern": "^\\{.*\\}$",
+                              "instillUpstreamType": "reference"
+                            }
+                          ]
+                        },
+                        "wait_for_model": {
+                          "description": "",
+                          "instillFormat": "boolean",
+                          "instillUpstreamTypes": [
+                            "value",
+                            "reference"
+                          ],
+                          "oneOf": [
+                            {
+                              "type": "boolean",
+                              "instillUpstreamType": "value"
+                            },
+                            {
+                              "type": "string",
+                              "pattern": "^\\{.*\\}$",
+                              "instillUpstreamType": "reference"
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    "parameters": {
+                      "type": "object",
+                      "properties": {
+                        "min_length": {
+                          "description": "",
+                          "instillFormat": "integer",
+                          "instillUpstreamTypes": [
+                            "value",
+                            "reference"
+                          ],
+                          "oneOf": [
+                            {
+                              "type": "integer",
+                              "instillUpstreamType": "value"
+                            },
+                            {
+                              "type": "string",
+                              "pattern": "^\\{.*\\}$",
+                              "instillUpstreamType": "reference"
+                            }
+                          ]
+                        },
+                        "max_length": {
+                          "description": "",
+                          "instillFormat": "integer",
+                          "instillUpstreamTypes": [
+                            "value",
+                            "reference"
+                          ],
+                          "oneOf": [
+                            {
+                              "type": "integer",
+                              "instillUpstreamType": "value"
+                            },
+                            {
+                              "type": "string",
+                              "pattern": "^\\{.*\\}$",
+                              "instillUpstreamType": "reference"
+                            }
+                          ]
+                        },
+                        "top_k": {
+                          "description": "",
+                          "instillFormat": "integer",
+                          "instillUpstreamTypes": [
+                            "value",
+                            "reference"
+                          ],
+                          "oneOf": [
+                            {
+                              "type": "integer",
+                              "instillUpstreamType": "value"
+                            },
+                            {
+                              "type": "string",
+                              "pattern": "^\\{.*\\}$",
+                              "instillUpstreamType": "reference"
+                            }
+                          ]
+                        },
+                        "top_p": {
+                          "description": "",
+                          "instillFormat": "number",
+                          "instillUpstreamTypes": [
+                            "value",
+                            "reference"
+                          ],
+                          "oneOf": [
+                            {
+                              "type": "number",
+                              "instillUpstreamType": "value"
+                            },
+                            {
+                              "type": "string",
+                              "pattern": "^\\{.*\\}$",
+                              "instillUpstreamType": "reference"
+                            }
+                          ]
+                        },
+                        "temperature": {
+                          "description": "",
+                          "instillFormat": "number",
+                          "instillUpstreamTypes": [
+                            "value",
+                            "reference"
+                          ],
+                          "oneOf": [
+                            {
+                              "type": "number",
+                              "instillUpstreamType": "value"
+                            },
+                            {
+                              "type": "string",
+                              "pattern": "^\\{.*\\}$",
+                              "instillUpstreamType": "reference"
+                            }
+                          ]
+                        },
+                        "repetition_penalty": {
+                          "description": "",
+                          "instillFormat": "number",
+                          "instillUpstreamTypes": [
+                            "value",
+                            "reference"
+                          ],
+                          "oneOf": [
+                            {
+                              "type": "number",
+                              "instillUpstreamType": "value"
+                            },
+                            {
+                              "type": "string",
+                              "pattern": "^\\{.*\\}$",
+                              "instillUpstreamType": "reference"
+                            }
+                          ]
+                        },
+                        "max_time": {
+                          "description": "",
+                          "instillFormat": "number",
+                          "instillUpstreamTypes": [
+                            "value",
+                            "reference"
+                          ],
+                          "oneOf": [
+                            {
+                              "type": "number",
+                              "instillUpstreamType": "value"
+                            },
+                            {
+                              "type": "string",
+                              "pattern": "^\\{.*\\}$",
+                              "instillUpstreamType": "reference"
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  },
+                  "title": "Data Flow"
                 }
               }
             }
@@ -668,19 +936,110 @@
           {
             "if": {
               "properties": {
-                "task": {
-                  "const": "IMAGE_SEGMENTATION"
+                "input": {
+                  "properties": {
+                    "task": {
+                      "const": "TEXT_CLASSIFICATION"
+                    }
+                  }
                 }
               }
             },
             "then": {
-              "type": "string",
-              "required": [
-                "image"
-              ],
               "properties": {
-                "image": {
-                  "type": "string"
+                "metadata": {
+                  "title": "Metadata",
+                  "type": "object"
+                },
+                "input": {
+                  "type": "object",
+                  "required": [
+                    "inputs"
+                  ],
+                  "properties": {
+                    "inputs": {
+                      "description": "",
+                      "instillFormat": "text",
+                      "instillUpstreamTypes": [
+                        "value",
+                        "reference"
+                      ],
+                      "oneOf": [
+                        {
+                          "type": "string",
+                          "instillUpstreamType": "value"
+                        },
+                        {
+                          "type": "string",
+                          "pattern": "^\\{.*\\}$",
+                          "instillUpstreamType": "reference"
+                        }
+                      ]
+                    },
+                    "options": {
+                      "type": "object",
+                      "properties": {
+                        "use_gpu": {
+                          "description": "",
+                          "instillFormat": "boolean",
+                          "instillUpstreamTypes": [
+                            "value",
+                            "reference"
+                          ],
+                          "oneOf": [
+                            {
+                              "type": "boolean",
+                              "instillUpstreamType": "value"
+                            },
+                            {
+                              "type": "string",
+                              "pattern": "^\\{.*\\}$",
+                              "instillUpstreamType": "reference"
+                            }
+                          ]
+                        },
+                        "use_cache": {
+                          "description": "",
+                          "instillFormat": "boolean",
+                          "instillUpstreamTypes": [
+                            "value",
+                            "reference"
+                          ],
+                          "oneOf": [
+                            {
+                              "type": "boolean",
+                              "instillUpstreamType": "value"
+                            },
+                            {
+                              "type": "string",
+                              "pattern": "^\\{.*\\}$",
+                              "instillUpstreamType": "reference"
+                            }
+                          ]
+                        },
+                        "wait_for_model": {
+                          "description": "",
+                          "instillFormat": "boolean",
+                          "instillUpstreamTypes": [
+                            "value",
+                            "reference"
+                          ],
+                          "oneOf": [
+                            {
+                              "type": "boolean",
+                              "instillUpstreamType": "value"
+                            },
+                            {
+                              "type": "string",
+                              "pattern": "^\\{.*\\}$",
+                              "instillUpstreamType": "reference"
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  },
+                  "title": "Data Flow"
                 }
               }
             }
@@ -688,19 +1047,134 @@
           {
             "if": {
               "properties": {
-                "task": {
-                  "const": "OBJECT_DETECTION"
+                "input": {
+                  "properties": {
+                    "task": {
+                      "const": "TOKEN_CLASSIFICATION"
+                    }
+                  }
                 }
               }
             },
             "then": {
-              "type": "string",
-              "required": [
-                "image"
-              ],
               "properties": {
-                "image": {
-                  "type": "string"
+                "metadata": {
+                  "title": "Metadata",
+                  "type": "object"
+                },
+                "input": {
+                  "type": "object",
+                  "required": [
+                    "inputs"
+                  ],
+                  "properties": {
+                    "inputs": {
+                      "description": "",
+                      "instillFormat": "text",
+                      "instillUpstreamTypes": [
+                        "value",
+                        "reference"
+                      ],
+                      "oneOf": [
+                        {
+                          "type": "string",
+                          "instillUpstreamType": "value"
+                        },
+                        {
+                          "type": "string",
+                          "pattern": "^\\{.*\\}$",
+                          "instillUpstreamType": "reference"
+                        }
+                      ]
+                    },
+                    "options": {
+                      "type": "object",
+                      "properties": {
+                        "use_gpu": {
+                          "description": "",
+                          "instillFormat": "boolean",
+                          "instillUpstreamTypes": [
+                            "value",
+                            "reference"
+                          ],
+                          "oneOf": [
+                            {
+                              "type": "boolean",
+                              "instillUpstreamType": "value"
+                            },
+                            {
+                              "type": "string",
+                              "pattern": "^\\{.*\\}$",
+                              "instillUpstreamType": "reference"
+                            }
+                          ]
+                        },
+                        "use_cache": {
+                          "description": "",
+                          "instillFormat": "boolean",
+                          "instillUpstreamTypes": [
+                            "value",
+                            "reference"
+                          ],
+                          "oneOf": [
+                            {
+                              "type": "boolean",
+                              "instillUpstreamType": "value"
+                            },
+                            {
+                              "type": "string",
+                              "pattern": "^\\{.*\\}$",
+                              "instillUpstreamType": "reference"
+                            }
+                          ]
+                        },
+                        "wait_for_model": {
+                          "description": "",
+                          "instillFormat": "boolean",
+                          "instillUpstreamTypes": [
+                            "value",
+                            "reference"
+                          ],
+                          "oneOf": [
+                            {
+                              "type": "boolean",
+                              "instillUpstreamType": "value"
+                            },
+                            {
+                              "type": "string",
+                              "pattern": "^\\{.*\\}$",
+                              "instillUpstreamType": "reference"
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    "parameters": {
+                      "type": "object",
+                      "properties": {
+                        "aggregation_strategy": {
+                          "description": "",
+                          "instillFormat": "text",
+                          "instillUpstreamTypes": [
+                            "value",
+                            "reference"
+                          ],
+                          "oneOf": [
+                            {
+                              "type": "string",
+                              "instillUpstreamType": "value"
+                            },
+                            {
+                              "type": "string",
+                              "pattern": "^\\{.*\\}$",
+                              "instillUpstreamType": "reference"
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  },
+                  "title": "Data Flow"
                 }
               }
             }
@@ -708,19 +1182,110 @@
           {
             "if": {
               "properties": {
-                "task": {
-                  "const": "IMAGE_TO_TEXT"
+                "input": {
+                  "properties": {
+                    "task": {
+                      "const": "TRANSLATION"
+                    }
+                  }
                 }
               }
             },
             "then": {
-              "type": "string",
-              "required": [
-                "image"
-              ],
               "properties": {
-                "image": {
-                  "type": "string"
+                "metadata": {
+                  "title": "Metadata",
+                  "type": "object"
+                },
+                "input": {
+                  "type": "object",
+                  "required": [
+                    "inputs"
+                  ],
+                  "properties": {
+                    "inputs": {
+                      "description": "",
+                      "instillFormat": "text",
+                      "instillUpstreamTypes": [
+                        "value",
+                        "reference"
+                      ],
+                      "oneOf": [
+                        {
+                          "type": "string",
+                          "instillUpstreamType": "value"
+                        },
+                        {
+                          "type": "string",
+                          "pattern": "^\\{.*\\}$",
+                          "instillUpstreamType": "reference"
+                        }
+                      ]
+                    },
+                    "options": {
+                      "type": "object",
+                      "properties": {
+                        "use_gpu": {
+                          "description": "",
+                          "instillFormat": "boolean",
+                          "instillUpstreamTypes": [
+                            "value",
+                            "reference"
+                          ],
+                          "oneOf": [
+                            {
+                              "type": "boolean",
+                              "instillUpstreamType": "value"
+                            },
+                            {
+                              "type": "string",
+                              "pattern": "^\\{.*\\}$",
+                              "instillUpstreamType": "reference"
+                            }
+                          ]
+                        },
+                        "use_cache": {
+                          "description": "",
+                          "instillFormat": "boolean",
+                          "instillUpstreamTypes": [
+                            "value",
+                            "reference"
+                          ],
+                          "oneOf": [
+                            {
+                              "type": "boolean",
+                              "instillUpstreamType": "value"
+                            },
+                            {
+                              "type": "string",
+                              "pattern": "^\\{.*\\}$",
+                              "instillUpstreamType": "reference"
+                            }
+                          ]
+                        },
+                        "wait_for_model": {
+                          "description": "",
+                          "instillFormat": "boolean",
+                          "instillUpstreamTypes": [
+                            "value",
+                            "reference"
+                          ],
+                          "oneOf": [
+                            {
+                              "type": "boolean",
+                              "instillUpstreamType": "value"
+                            },
+                            {
+                              "type": "string",
+                              "pattern": "^\\{.*\\}$",
+                              "instillUpstreamType": "reference"
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  },
+                  "title": "Data Flow"
                 }
               }
             }
@@ -728,19 +1293,160 @@
           {
             "if": {
               "properties": {
-                "task": {
-                  "const": "SPEECH_RECOGNITION"
+                "input": {
+                  "properties": {
+                    "task": {
+                      "const": "ZERO_SHOT_CLASSIFICATION"
+                    }
+                  }
                 }
               }
             },
             "then": {
-              "type": "string",
-              "required": [
-                "audio"
-              ],
               "properties": {
-                "image": {
-                  "type": "string"
+                "metadata": {
+                  "title": "Metadata",
+                  "type": "object"
+                },
+                "input": {
+                  "type": "object",
+                  "required": [
+                    "inputs",
+                    "parameters"
+                  ],
+                  "properties": {
+                    "inputs": {
+                      "description": "",
+                      "instillFormat": "text",
+                      "instillUpstreamTypes": [
+                        "value",
+                        "reference"
+                      ],
+                      "oneOf": [
+                        {
+                          "type": "string",
+                          "instillUpstreamType": "value"
+                        },
+                        {
+                          "type": "string",
+                          "pattern": "^\\{.*\\}$",
+                          "instillUpstreamType": "reference"
+                        }
+                      ]
+                    },
+                    "options": {
+                      "type": "object",
+                      "properties": {
+                        "use_gpu": {
+                          "description": "",
+                          "instillFormat": "boolean",
+                          "instillUpstreamTypes": [
+                            "value",
+                            "reference"
+                          ],
+                          "oneOf": [
+                            {
+                              "type": "boolean",
+                              "instillUpstreamType": "value"
+                            },
+                            {
+                              "type": "string",
+                              "pattern": "^\\{.*\\}$",
+                              "instillUpstreamType": "reference"
+                            }
+                          ]
+                        },
+                        "use_cache": {
+                          "description": "",
+                          "instillFormat": "boolean",
+                          "instillUpstreamTypes": [
+                            "value",
+                            "reference"
+                          ],
+                          "oneOf": [
+                            {
+                              "type": "boolean",
+                              "instillUpstreamType": "value"
+                            },
+                            {
+                              "type": "string",
+                              "pattern": "^\\{.*\\}$",
+                              "instillUpstreamType": "reference"
+                            }
+                          ]
+                        },
+                        "wait_for_model": {
+                          "description": "",
+                          "instillFormat": "boolean",
+                          "instillUpstreamTypes": [
+                            "value",
+                            "reference"
+                          ],
+                          "oneOf": [
+                            {
+                              "type": "boolean",
+                              "instillUpstreamType": "value"
+                            },
+                            {
+                              "type": "string",
+                              "pattern": "^\\{.*\\}$",
+                              "instillUpstreamType": "reference"
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    "parameters": {
+                      "type": "object",
+                      "required": [
+                        "candidate_labels"
+                      ],
+                      "properties": {
+                        "candidate_labels": {
+                          "description": "",
+                          "instillFormat": "text_array",
+                          "instillUpstreamTypes": [
+                            "value",
+                            "reference"
+                          ],
+                          "oneOf": [
+                            {
+                              "type": "array",
+                              "items": {
+                                "type": "string"
+                              },
+                              "instillUpstreamType": "value"
+                            },
+                            {
+                              "type": "string",
+                              "pattern": "^\\{.*\\}$",
+                              "instillUpstreamType": "reference"
+                            }
+                          ]
+                        },
+                        "multi_label": {
+                          "description": "",
+                          "instillFormat": "boolean_array",
+                          "instillUpstreamTypes": [
+                            "value",
+                            "reference"
+                          ],
+                          "oneOf": [
+                            {
+                              "type": "boolean",
+                              "instillUpstreamType": "value"
+                            },
+                            {
+                              "type": "string",
+                              "pattern": "^\\{.*\\}$",
+                              "instillUpstreamType": "reference"
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  },
+                  "title": "Data Flow"
                 }
               }
             }
@@ -748,19 +1454,1081 @@
           {
             "if": {
               "properties": {
-                "task": {
-                  "const": "AUDIO_CLASSIFICATION"
+                "input": {
+                  "properties": {
+                    "task": {
+                      "const": "FEATURE_EXTRACTION"
+                    }
+                  }
                 }
               }
             },
             "then": {
-              "type": "string",
-              "required": [
-                "audio"
-              ],
               "properties": {
-                "image": {
-                  "type": "string"
+                "metadata": {
+                  "title": "Metadata",
+                  "type": "object"
+                },
+                "input": {
+                  "type": "object",
+                  "required": [
+                    "inputs"
+                  ],
+                  "properties": {
+                    "inputs": {
+                      "description": "",
+                      "instillFormat": "text",
+                      "instillUpstreamTypes": [
+                        "value",
+                        "reference"
+                      ],
+                      "oneOf": [
+                        {
+                          "type": "string",
+                          "instillUpstreamType": "value"
+                        },
+                        {
+                          "type": "string",
+                          "pattern": "^\\{.*\\}$",
+                          "instillUpstreamType": "reference"
+                        }
+                      ]
+                    },
+                    "options": {
+                      "type": "object",
+                      "properties": {
+                        "use_gpu": {
+                          "description": "",
+                          "instillFormat": "boolean",
+                          "instillUpstreamTypes": [
+                            "value",
+                            "reference"
+                          ],
+                          "oneOf": [
+                            {
+                              "type": "boolean",
+                              "instillUpstreamType": "value"
+                            },
+                            {
+                              "type": "string",
+                              "pattern": "^\\{.*\\}$",
+                              "instillUpstreamType": "reference"
+                            }
+                          ]
+                        },
+                        "use_cache": {
+                          "description": "",
+                          "instillFormat": "boolean",
+                          "instillUpstreamTypes": [
+                            "value",
+                            "reference"
+                          ],
+                          "oneOf": [
+                            {
+                              "type": "boolean",
+                              "instillUpstreamType": "value"
+                            },
+                            {
+                              "type": "string",
+                              "pattern": "^\\{.*\\}$",
+                              "instillUpstreamType": "reference"
+                            }
+                          ]
+                        },
+                        "wait_for_model": {
+                          "description": "",
+                          "instillFormat": "boolean",
+                          "instillUpstreamTypes": [
+                            "value",
+                            "reference"
+                          ],
+                          "oneOf": [
+                            {
+                              "type": "boolean",
+                              "instillUpstreamType": "value"
+                            },
+                            {
+                              "type": "string",
+                              "pattern": "^\\{.*\\}$",
+                              "instillUpstreamType": "reference"
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  },
+                  "title": "Data Flow"
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "input": {
+                  "properties": {
+                    "task": {
+                      "const": "QUESTION_ANSWERING"
+                    }
+                  }
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "metadata": {
+                  "title": "Metadata",
+                  "type": "object"
+                },
+                "input": {
+                  "type": "object",
+                  "required": [
+                    "inputs"
+                  ],
+                  "properties": {
+                    "inputs": {
+                      "type": "object",
+                      "required": [
+                        "question",
+                        "context"
+                      ],
+                      "properties": {
+                        "question": {
+                          "description": "",
+                          "instillFormat": "text",
+                          "instillUpstreamTypes": [
+                            "value",
+                            "reference"
+                          ],
+                          "oneOf": [
+                            {
+                              "type": "string",
+                              "instillUpstreamType": "value"
+                            },
+                            {
+                              "type": "string",
+                              "pattern": "^\\{.*\\}$",
+                              "instillUpstreamType": "reference"
+                            }
+                          ]
+                        },
+                        "context": {
+                          "description": "",
+                          "instillFormat": "text",
+                          "instillUpstreamTypes": [
+                            "value",
+                            "reference"
+                          ],
+                          "oneOf": [
+                            {
+                              "type": "string",
+                              "instillUpstreamType": "value"
+                            },
+                            {
+                              "type": "string",
+                              "pattern": "^\\{.*\\}$",
+                              "instillUpstreamType": "reference"
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    "options": {
+                      "type": "object",
+                      "properties": {
+                        "use_gpu": {
+                          "description": "",
+                          "instillFormat": "boolean",
+                          "instillUpstreamTypes": [
+                            "value",
+                            "reference"
+                          ],
+                          "oneOf": [
+                            {
+                              "type": "boolean",
+                              "instillUpstreamType": "value"
+                            },
+                            {
+                              "type": "string",
+                              "pattern": "^\\{.*\\}$",
+                              "instillUpstreamType": "reference"
+                            }
+                          ]
+                        },
+                        "use_cache": {
+                          "description": "",
+                          "instillFormat": "boolean",
+                          "instillUpstreamTypes": [
+                            "value",
+                            "reference"
+                          ],
+                          "oneOf": [
+                            {
+                              "type": "boolean",
+                              "instillUpstreamType": "value"
+                            },
+                            {
+                              "type": "string",
+                              "pattern": "^\\{.*\\}$",
+                              "instillUpstreamType": "reference"
+                            }
+                          ]
+                        },
+                        "wait_for_model": {
+                          "description": "",
+                          "instillFormat": "boolean",
+                          "instillUpstreamTypes": [
+                            "value",
+                            "reference"
+                          ],
+                          "oneOf": [
+                            {
+                              "type": "boolean",
+                              "instillUpstreamType": "value"
+                            },
+                            {
+                              "type": "string",
+                              "pattern": "^\\{.*\\}$",
+                              "instillUpstreamType": "reference"
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  },
+                  "title": "Data Flow"
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "input": {
+                  "properties": {
+                    "task": {
+                      "const": "TABLE_QUESTION_ANSWERING"
+                    }
+                  }
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "metadata": {
+                  "title": "Metadata",
+                  "type": "object"
+                },
+                "input": {
+                  "type": "object",
+                  "required": [
+                    "inputs"
+                  ],
+                  "properties": {
+                    "inputs": {
+                      "required": [
+                        "query",
+                        "table"
+                      ],
+                      "properties": {
+                        "query": {
+                          "description": "",
+                          "instillFormat": "text",
+                          "instillUpstreamTypes": [
+                            "value",
+                            "reference"
+                          ],
+                          "oneOf": [
+                            {
+                              "type": "string",
+                              "instillUpstreamType": "value"
+                            },
+                            {
+                              "type": "string",
+                              "pattern": "^\\{.*\\}$",
+                              "instillUpstreamType": "reference"
+                            }
+                          ]
+                        },
+                        "table": {
+                          "type": "object",
+                          "instillFormat": "text",
+                          "instillUpstreamTypes": [
+                            "value",
+                            "reference"
+                          ]
+                        }
+                      }
+                    },
+                    "options": {
+                      "type": "object",
+                      "properties": {
+                        "use_gpu": {
+                          "description": "",
+                          "instillFormat": "boolean",
+                          "instillUpstreamTypes": [
+                            "value",
+                            "reference"
+                          ],
+                          "oneOf": [
+                            {
+                              "type": "boolean",
+                              "instillUpstreamType": "value"
+                            },
+                            {
+                              "type": "string",
+                              "pattern": "^\\{.*\\}$",
+                              "instillUpstreamType": "reference"
+                            }
+                          ]
+                        },
+                        "use_cache": {
+                          "description": "",
+                          "instillFormat": "boolean",
+                          "instillUpstreamTypes": [
+                            "value",
+                            "reference"
+                          ],
+                          "oneOf": [
+                            {
+                              "type": "boolean",
+                              "instillUpstreamType": "value"
+                            },
+                            {
+                              "type": "string",
+                              "pattern": "^\\{.*\\}$",
+                              "instillUpstreamType": "reference"
+                            }
+                          ]
+                        },
+                        "wait_for_model": {
+                          "description": "",
+                          "instillFormat": "boolean",
+                          "instillUpstreamTypes": [
+                            "value",
+                            "reference"
+                          ],
+                          "oneOf": [
+                            {
+                              "type": "boolean",
+                              "instillUpstreamType": "value"
+                            },
+                            {
+                              "type": "string",
+                              "pattern": "^\\{.*\\}$",
+                              "instillUpstreamType": "reference"
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  },
+                  "title": "Data Flow"
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "input": {
+                  "properties": {
+                    "task": {
+                      "const": "SENTENCE_SIMILARITY"
+                    }
+                  }
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "metadata": {
+                  "title": "Metadata",
+                  "type": "object"
+                },
+                "input": {
+                  "type": "object",
+                  "required": [
+                    "inputs"
+                  ],
+                  "properties": {
+                    "inputs": {
+                      "required": [
+                        "source_sentence",
+                        "sentences"
+                      ],
+                      "properties": {
+                        "source_sentence": {
+                          "description": "",
+                          "instillFormat": "text",
+                          "instillUpstreamTypes": [
+                            "value",
+                            "reference"
+                          ],
+                          "oneOf": [
+                            {
+                              "type": "string",
+                              "instillUpstreamType": "value"
+                            },
+                            {
+                              "type": "string",
+                              "pattern": "^\\{.*\\}$",
+                              "instillUpstreamType": "reference"
+                            }
+                          ]
+                        },
+                        "sentences": {
+                          "description": "",
+                          "instillFormat": "text_array",
+                          "instillUpstreamTypes": [
+                            "value",
+                            "reference"
+                          ],
+                          "oneOf": [
+                            {
+                              "type": "array",
+                              "items": {
+                                "type": "string"
+                              },
+                              "instillUpstreamType": "value"
+                            },
+                            {
+                              "type": "string",
+                              "pattern": "^\\{.*\\}$",
+                              "instillUpstreamType": "reference"
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    "options": {
+                      "type": "object",
+                      "properties": {
+                        "use_gpu": {
+                          "description": "",
+                          "instillFormat": "boolean",
+                          "instillUpstreamTypes": [
+                            "value",
+                            "reference"
+                          ],
+                          "oneOf": [
+                            {
+                              "type": "boolean",
+                              "instillUpstreamType": "value"
+                            },
+                            {
+                              "type": "string",
+                              "pattern": "^\\{.*\\}$",
+                              "instillUpstreamType": "reference"
+                            }
+                          ]
+                        },
+                        "use_cache": {
+                          "description": "",
+                          "instillFormat": "boolean",
+                          "instillUpstreamTypes": [
+                            "value",
+                            "reference"
+                          ],
+                          "oneOf": [
+                            {
+                              "type": "boolean",
+                              "instillUpstreamType": "value"
+                            },
+                            {
+                              "type": "string",
+                              "pattern": "^\\{.*\\}$",
+                              "instillUpstreamType": "reference"
+                            }
+                          ]
+                        },
+                        "wait_for_model": {
+                          "description": "",
+                          "instillFormat": "boolean",
+                          "instillUpstreamTypes": [
+                            "value",
+                            "reference"
+                          ],
+                          "oneOf": [
+                            {
+                              "type": "boolean",
+                              "instillUpstreamType": "value"
+                            },
+                            {
+                              "type": "string",
+                              "pattern": "^\\{.*\\}$",
+                              "instillUpstreamType": "reference"
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  },
+                  "title": "Data Flow"
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "input": {
+                  "properties": {
+                    "task": {
+                      "const": "CONVERSATIONAL"
+                    }
+                  }
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "metadata": {
+                  "title": "Metadata",
+                  "type": "object"
+                },
+                "input": {
+                  "type": "object",
+                  "required": [
+                    "inputs"
+                  ],
+                  "properties": {
+                    "inputs": {
+                      "required": [
+                        "text"
+                      ],
+                      "properties": {
+                        "text": {
+                          "description": "",
+                          "instillFormat": "text",
+                          "instillUpstreamTypes": [
+                            "value",
+                            "reference"
+                          ],
+                          "oneOf": [
+                            {
+                              "type": "string",
+                              "instillUpstreamType": "value"
+                            },
+                            {
+                              "type": "string",
+                              "pattern": "^\\{.*\\}$",
+                              "instillUpstreamType": "reference"
+                            }
+                          ]
+                        },
+                        "generated_responses": {
+                          "description": "",
+                          "instillFormat": "text_array",
+                          "instillUpstreamTypes": [
+                            "value",
+                            "reference"
+                          ],
+                          "oneOf": [
+                            {
+                              "type": "array",
+                              "items": {
+                                "type": "string"
+                              },
+                              "instillUpstreamType": "value"
+                            },
+                            {
+                              "type": "string",
+                              "pattern": "^\\{.*\\}$",
+                              "instillUpstreamType": "reference"
+                            }
+                          ]
+                        },
+                        "past_user_inputs": {
+                          "description": "",
+                          "instillFormat": "text_array",
+                          "instillUpstreamTypes": [
+                            "value",
+                            "reference"
+                          ],
+                          "oneOf": [
+                            {
+                              "type": "array",
+                              "items": {
+                                "type": "string"
+                              },
+                              "instillUpstreamType": "value"
+                            },
+                            {
+                              "type": "string",
+                              "pattern": "^\\{.*\\}$",
+                              "instillUpstreamType": "reference"
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    "options": {
+                      "type": "object",
+                      "properties": {
+                        "use_gpu": {
+                          "description": "",
+                          "instillFormat": "boolean",
+                          "instillUpstreamTypes": [
+                            "value",
+                            "reference"
+                          ],
+                          "oneOf": [
+                            {
+                              "type": "boolean",
+                              "instillUpstreamType": "value"
+                            },
+                            {
+                              "type": "string",
+                              "pattern": "^\\{.*\\}$",
+                              "instillUpstreamType": "reference"
+                            }
+                          ]
+                        },
+                        "use_cache": {
+                          "description": "",
+                          "instillFormat": "boolean",
+                          "instillUpstreamTypes": [
+                            "value",
+                            "reference"
+                          ],
+                          "oneOf": [
+                            {
+                              "type": "boolean",
+                              "instillUpstreamType": "value"
+                            },
+                            {
+                              "type": "string",
+                              "pattern": "^\\{.*\\}$",
+                              "instillUpstreamType": "reference"
+                            }
+                          ]
+                        },
+                        "wait_for_model": {
+                          "description": "",
+                          "instillFormat": "boolean",
+                          "instillUpstreamTypes": [
+                            "value",
+                            "reference"
+                          ],
+                          "oneOf": [
+                            {
+                              "type": "boolean",
+                              "instillUpstreamType": "value"
+                            },
+                            {
+                              "type": "string",
+                              "pattern": "^\\{.*\\}$",
+                              "instillUpstreamType": "reference"
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    "parameters": {
+                      "type": "object",
+                      "properties": {
+                        "min_length": {
+                          "description": "",
+                          "instillFormat": "integer",
+                          "instillUpstreamTypes": [
+                            "value",
+                            "reference"
+                          ],
+                          "oneOf": [
+                            {
+                              "type": "integer",
+                              "instillUpstreamType": "value"
+                            },
+                            {
+                              "type": "string",
+                              "pattern": "^\\{.*\\}$",
+                              "instillUpstreamType": "reference"
+                            }
+                          ]
+                        },
+                        "max_length": {
+                          "description": "",
+                          "instillFormat": "integer",
+                          "instillUpstreamTypes": [
+                            "value",
+                            "reference"
+                          ],
+                          "oneOf": [
+                            {
+                              "type": "integer",
+                              "instillUpstreamType": "value"
+                            },
+                            {
+                              "type": "string",
+                              "pattern": "^\\{.*\\}$",
+                              "instillUpstreamType": "reference"
+                            }
+                          ]
+                        },
+                        "top_k": {
+                          "description": "",
+                          "instillFormat": "integer",
+                          "instillUpstreamTypes": [
+                            "value",
+                            "reference"
+                          ],
+                          "oneOf": [
+                            {
+                              "type": "integer",
+                              "instillUpstreamType": "value"
+                            },
+                            {
+                              "type": "string",
+                              "pattern": "^\\{.*\\}$",
+                              "instillUpstreamType": "reference"
+                            }
+                          ]
+                        },
+                        "top_p": {
+                          "description": "",
+                          "instillFormat": "number",
+                          "instillUpstreamTypes": [
+                            "value",
+                            "reference"
+                          ],
+                          "oneOf": [
+                            {
+                              "type": "number",
+                              "instillUpstreamType": "value"
+                            },
+                            {
+                              "type": "string",
+                              "pattern": "^\\{.*\\}$",
+                              "instillUpstreamType": "reference"
+                            }
+                          ]
+                        },
+                        "temperature": {
+                          "description": "",
+                          "instillFormat": "number",
+                          "instillUpstreamTypes": [
+                            "value",
+                            "reference"
+                          ],
+                          "oneOf": [
+                            {
+                              "type": "number",
+                              "instillUpstreamType": "value"
+                            },
+                            {
+                              "type": "string",
+                              "pattern": "^\\{.*\\}$",
+                              "instillUpstreamType": "reference"
+                            }
+                          ]
+                        },
+                        "repetition_penalty": {
+                          "description": "",
+                          "instillFormat": "number",
+                          "instillUpstreamTypes": [
+                            "value",
+                            "reference"
+                          ],
+                          "oneOf": [
+                            {
+                              "type": "number",
+                              "instillUpstreamType": "value"
+                            },
+                            {
+                              "type": "string",
+                              "pattern": "^\\{.*\\}$",
+                              "instillUpstreamType": "reference"
+                            }
+                          ]
+                        },
+                        "max_time": {
+                          "description": "",
+                          "instillFormat": "number",
+                          "instillUpstreamTypes": [
+                            "value",
+                            "reference"
+                          ],
+                          "oneOf": [
+                            {
+                              "type": "number",
+                              "instillUpstreamType": "value"
+                            },
+                            {
+                              "type": "string",
+                              "pattern": "^\\{.*\\}$",
+                              "instillUpstreamType": "reference"
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  },
+                  "title": "Data Flow"
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "input": {
+                  "properties": {
+                    "task": {
+                      "const": "IMAGE_CLASSIFICATION"
+                    }
+                  }
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "metadata": {
+                  "title": "Metadata",
+                  "type": "object"
+                },
+                "input": {
+                  "type": "object",
+                  "required": [
+                    "image"
+                  ],
+                  "properties": {
+                    "image": {
+                      "description": "",
+                      "instillFormat": "image",
+                      "instillUpstreamTypes": [
+                        "reference"
+                      ],
+                      "oneOf": [
+                        {
+                          "type": "string",
+                          "pattern": "^\\{.*\\}$",
+                          "instillUpstreamType": "reference"
+                        }
+                      ]
+                    }
+                  },
+                  "title": "Data Flow"
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "input": {
+                  "properties": {
+                    "task": {
+                      "const": "IMAGE_SEGMENTATION"
+                    }
+                  }
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "metadata": {
+                  "title": "Metadata",
+                  "type": "object"
+                },
+                "input": {
+                  "type": "object",
+                  "required": [
+                    "image"
+                  ],
+                  "properties": {
+                    "image": {
+                      "description": "",
+                      "instillFormat": "image",
+                      "instillUpstreamTypes": [
+                        "reference"
+                      ],
+                      "oneOf": [
+                        {
+                          "type": "string",
+                          "pattern": "^\\{.*\\}$",
+                          "instillUpstreamType": "reference"
+                        }
+                      ]
+                    }
+                  },
+                  "title": "Data Flow"
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "input": {
+                  "properties": {
+                    "task": {
+                      "const": "OBJECT_DETECTION"
+                    }
+                  }
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "metadata": {
+                  "title": "Metadata",
+                  "type": "object"
+                },
+                "input": {
+                  "type": "object",
+                  "required": [
+                    "image"
+                  ],
+                  "properties": {
+                    "image": {
+                      "description": "",
+                      "instillFormat": "image",
+                      "instillUpstreamTypes": [
+                        "reference"
+                      ],
+                      "oneOf": [
+                        {
+                          "type": "string",
+                          "pattern": "^\\{.*\\}$",
+                          "instillUpstreamType": "reference"
+                        }
+                      ]
+                    }
+                  },
+                  "title": "Data Flow"
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "input": {
+                  "properties": {
+                    "task": {
+                      "const": "IMAGE_TO_TEXT"
+                    }
+                  }
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "metadata": {
+                  "title": "Metadata",
+                  "type": "object"
+                },
+                "input": {
+                  "type": "object",
+                  "required": [
+                    "image"
+                  ],
+                  "properties": {
+                    "image": {
+                      "description": "",
+                      "instillFormat": "image",
+                      "instillUpstreamTypes": [
+                        "reference"
+                      ],
+                      "oneOf": [
+                        {
+                          "type": "string",
+                          "pattern": "^\\{.*\\}$",
+                          "instillUpstreamType": "reference"
+                        }
+                      ]
+                    }
+                  },
+                  "title": "Data Flow"
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "input": {
+                  "properties": {
+                    "task": {
+                      "const": "SPEECH_RECOGNITION"
+                    }
+                  }
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "metadata": {
+                  "title": "Metadata",
+                  "type": "object"
+                },
+                "input": {
+                  "type": "object",
+                  "required": [
+                    "audio"
+                  ],
+                  "properties": {
+                    "audio": {
+                      "description": "",
+                      "instillFormat": "audio",
+                      "instillUpstreamTypes": [
+                        "reference"
+                      ],
+                      "oneOf": [
+                        {
+                          "type": "string",
+                          "pattern": "^\\{.*\\}$",
+                          "instillUpstreamType": "reference"
+                        }
+                      ]
+                    }
+                  },
+                  "title": "Data Flow"
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "input": {
+                  "properties": {
+                    "task": {
+                      "const": "AUDIO_CLASSIFICATION"
+                    }
+                  }
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "metadata": {
+                  "title": "Metadata",
+                  "type": "object"
+                },
+                "input": {
+                  "type": "object",
+                  "required": [
+                    "audio"
+                  ],
+                  "properties": {
+                    "audio": {
+                      "description": "",
+                      "instillFormat": "audio",
+                      "instillUpstreamTypes": [
+                        "reference"
+                      ],
+                      "oneOf": [
+                        {
+                          "type": "string",
+                          "pattern": "^\\{.*\\}$",
+                          "instillUpstreamType": "reference"
+                        }
+                      ]
+                    }
+                  },
+                  "title": "Data Flow"
                 }
               }
             }
@@ -772,7 +2540,7 @@
           "openapi": "3.0.0",
           "info": {
             "version": "1.0.0",
-            "title": "Hugging Face AI Connector Openapi"
+            "title": "Hugging Face Connector OpenAPI"
           },
           "paths": {
             "/execute": {
@@ -793,19 +2561,39 @@
                               ],
                               "properties": {
                                 "inputs": {
-                                  "type": "string"
+                                  "type": "string",
+                                  "instillFormat": "text",
+                                  "instillUpstreamTypes": [
+                                    "value",
+                                    "reference"
+                                  ]
                                 },
                                 "options": {
                                   "type": "object",
                                   "properties": {
                                     "use_gpu": {
-                                      "type": "boolean"
+                                      "type": "boolean",
+                                      "instillFormat": "boolean",
+                                      "instillUpstreamTypes": [
+                                        "value",
+                                        "reference"
+                                      ]
                                     },
                                     "use_cache": {
-                                      "type": "boolean"
+                                      "type": "boolean",
+                                      "instillFormat": "boolean",
+                                      "instillUpstreamTypes": [
+                                        "value",
+                                        "reference"
+                                      ]
                                     },
                                     "wait_for_model": {
-                                      "type": "boolean"
+                                      "type": "boolean",
+                                      "instillFormat": "boolean",
+                                      "instillUpstreamTypes": [
+                                        "value",
+                                        "reference"
+                                      ]
                                     }
                                   }
                                 },
@@ -813,31 +2601,76 @@
                                   "type": "object",
                                   "properties": {
                                     "top_k": {
-                                      "type": "integer"
+                                      "type": "integer",
+                                      "instillFormat": "integer",
+                                      "instillUpstreamTypes": [
+                                        "value",
+                                        "reference"
+                                      ]
                                     },
                                     "top_p": {
-                                      "type": "number"
+                                      "type": "number",
+                                      "instillFormat": "number",
+                                      "instillUpstreamTypes": [
+                                        "value",
+                                        "reference"
+                                      ]
                                     },
                                     "temperature": {
-                                      "type": "number"
+                                      "type": "number",
+                                      "instillFormat": "number",
+                                      "instillUpstreamTypes": [
+                                        "value",
+                                        "reference"
+                                      ]
                                     },
                                     "repetition_penalty": {
-                                      "type": "number"
+                                      "type": "number",
+                                      "instillFormat": "number",
+                                      "instillUpstreamTypes": [
+                                        "value",
+                                        "reference"
+                                      ]
                                     },
                                     "max_new_tokens": {
-                                      "type": "integer"
+                                      "type": "integer",
+                                      "instillFormat": "integer",
+                                      "instillUpstreamTypes": [
+                                        "value",
+                                        "reference"
+                                      ]
                                     },
                                     "max_time": {
-                                      "type": "number"
+                                      "type": "number",
+                                      "instillFormat": "number",
+                                      "instillUpstreamTypes": [
+                                        "value",
+                                        "reference"
+                                      ]
                                     },
                                     "return_full_text": {
-                                      "type": "boolean"
+                                      "type": "boolean",
+                                      "instillFormat": "boolean",
+                                      "instillUpstreamTypes": [
+                                        "value",
+                                        "reference"
+                                      ]
                                     },
                                     "num_return_sequences": {
-                                      "type": "integer"
+                                      "type": "integer",
+                                      "instillFormat": "integer",
+                                      "instillUpstreamTypes": [
+                                        "value",
+                                        "reference"
+                                      ]
                                     },
                                     "do_sample": {
-                                      "type": "boolean"
+                                      "type": "boolean",
+                                      "instillFormat": "boolean",
+                                      "instillUpstreamTypes": [
+                                        "value",
+                                        "reference"
+                                      ]
                                     }
                                   }
                                 }
@@ -893,7 +2726,7 @@
           "openapi": "3.0.0",
           "info": {
             "version": "1.0.0",
-            "title": "Hugging Face AI Connector Openapi"
+            "title": "Hugging Face Connector OpenAPI"
           },
           "paths": {
             "/execute": {
@@ -914,19 +2747,39 @@
                               ],
                               "properties": {
                                 "inputs": {
-                                  "type": "string"
+                                  "type": "string",
+                                  "instillFormat": "text",
+                                  "instillUpstreamTypes": [
+                                    "value",
+                                    "reference"
+                                  ]
                                 },
                                 "options": {
                                   "type": "object",
                                   "properties": {
                                     "use_gpu": {
-                                      "type": "boolean"
+                                      "type": "boolean",
+                                      "instillFormat": "boolean",
+                                      "instillUpstreamTypes": [
+                                        "value",
+                                        "reference"
+                                      ]
                                     },
                                     "use_cache": {
-                                      "type": "boolean"
+                                      "type": "boolean",
+                                      "instillFormat": "boolean",
+                                      "instillUpstreamTypes": [
+                                        "value",
+                                        "reference"
+                                      ]
                                     },
                                     "wait_for_model": {
-                                      "type": "boolean"
+                                      "type": "boolean",
+                                      "instillFormat": "boolean",
+                                      "instillUpstreamTypes": [
+                                        "value",
+                                        "reference"
+                                      ]
                                     }
                                   }
                                 },
@@ -934,19 +2787,44 @@
                                   "type": "object",
                                   "properties": {
                                     "negative_prompt": {
-                                      "type": "string"
+                                      "type": "string",
+                                      "instillFormat": "text",
+                                      "instillUpstreamTypes": [
+                                        "value",
+                                        "reference"
+                                      ]
                                     },
                                     "height": {
-                                      "type": "integer"
+                                      "type": "integer",
+                                      "instillFormat": "integer",
+                                      "instillUpstreamTypes": [
+                                        "value",
+                                        "reference"
+                                      ]
                                     },
                                     "width": {
-                                      "type": "integer"
+                                      "type": "integer",
+                                      "instillFormat": "integer",
+                                      "instillUpstreamTypes": [
+                                        "value",
+                                        "reference"
+                                      ]
                                     },
                                     "num_inference_steps": {
-                                      "type": "integer"
+                                      "type": "integer",
+                                      "instillFormat": "integer",
+                                      "instillUpstreamTypes": [
+                                        "value",
+                                        "reference"
+                                      ]
                                     },
                                     "guidance_scale": {
-                                      "type": "number"
+                                      "type": "number",
+                                      "instillFormat": "number",
+                                      "instillUpstreamTypes": [
+                                        "value",
+                                        "reference"
+                                      ]
                                     }
                                   }
                                 }
@@ -991,7 +2869,7 @@
           "openapi": "3.0.0",
           "info": {
             "version": "1.0.0",
-            "title": "Hugging Face AI Connector Openapi"
+            "title": "Hugging Face Connector OpenAPI"
           },
           "paths": {
             "/execute": {
@@ -1012,19 +2890,39 @@
                               ],
                               "properties": {
                                 "inputs": {
-                                  "type": "string"
+                                  "type": "string",
+                                  "instillFormat": "text",
+                                  "instillUpstreamTypes": [
+                                    "value",
+                                    "reference"
+                                  ]
                                 },
                                 "options": {
                                   "type": "object",
                                   "properties": {
                                     "use_gpu": {
-                                      "type": "boolean"
+                                      "type": "boolean",
+                                      "instillFormat": "boolean",
+                                      "instillUpstreamTypes": [
+                                        "value",
+                                        "reference"
+                                      ]
                                     },
                                     "use_cache": {
-                                      "type": "boolean"
+                                      "type": "boolean",
+                                      "instillFormat": "boolean",
+                                      "instillUpstreamTypes": [
+                                        "value",
+                                        "reference"
+                                      ]
                                     },
                                     "wait_for_model": {
-                                      "type": "boolean"
+                                      "type": "boolean",
+                                      "instillFormat": "boolean",
+                                      "instillUpstreamTypes": [
+                                        "value",
+                                        "reference"
+                                      ]
                                     }
                                   }
                                 }
@@ -1055,16 +2953,36 @@
                                       "type": "object",
                                       "properties": {
                                         "sequence": {
-                                          "type": "string"
+                                          "type": "string",
+                                          "instillFormat": "text",
+                                          "instillUpstreamTypes": [
+                                            "value",
+                                            "reference"
+                                          ]
                                         },
                                         "score": {
-                                          "type": "number"
+                                          "type": "number",
+                                          "instillFormat": "number",
+                                          "instillUpstreamTypes": [
+                                            "value",
+                                            "reference"
+                                          ]
                                         },
                                         "token": {
-                                          "type": "integer"
+                                          "type": "integer",
+                                          "instillFormat": "integer",
+                                          "instillUpstreamTypes": [
+                                            "value",
+                                            "reference"
+                                          ]
                                         },
                                         "token_str": {
-                                          "type": "string"
+                                          "type": "string",
+                                          "instillFormat": "text",
+                                          "instillUpstreamTypes": [
+                                            "value",
+                                            "reference"
+                                          ]
                                         }
                                       }
                                     }
@@ -1086,7 +3004,7 @@
           "openapi": "3.0.0",
           "info": {
             "version": "1.0.0",
-            "title": "Hugging Face AI Connector Openapi"
+            "title": "Hugging Face Connector OpenAPI"
           },
           "paths": {
             "/execute": {
@@ -1107,19 +3025,39 @@
                               ],
                               "properties": {
                                 "inputs": {
-                                  "type": "string"
+                                  "type": "string",
+                                  "instillFormat": "text",
+                                  "instillUpstreamTypes": [
+                                    "value",
+                                    "reference"
+                                  ]
                                 },
                                 "options": {
                                   "type": "object",
                                   "properties": {
                                     "use_gpu": {
-                                      "type": "boolean"
+                                      "type": "boolean",
+                                      "instillFormat": "boolean",
+                                      "instillUpstreamTypes": [
+                                        "value",
+                                        "reference"
+                                      ]
                                     },
                                     "use_cache": {
-                                      "type": "boolean"
+                                      "type": "boolean",
+                                      "instillFormat": "boolean",
+                                      "instillUpstreamTypes": [
+                                        "value",
+                                        "reference"
+                                      ]
                                     },
                                     "wait_for_model": {
-                                      "type": "boolean"
+                                      "type": "boolean",
+                                      "instillFormat": "boolean",
+                                      "instillUpstreamTypes": [
+                                        "value",
+                                        "reference"
+                                      ]
                                     }
                                   }
                                 },
@@ -1127,25 +3065,60 @@
                                   "type": "object",
                                   "properties": {
                                     "min_length": {
-                                      "type": "integer"
+                                      "type": "integer",
+                                      "instillFormat": "integer",
+                                      "instillUpstreamTypes": [
+                                        "value",
+                                        "reference"
+                                      ]
                                     },
                                     "max_length": {
-                                      "type": "integer"
+                                      "type": "integer",
+                                      "instillFormat": "integer",
+                                      "instillUpstreamTypes": [
+                                        "value",
+                                        "reference"
+                                      ]
                                     },
                                     "top_k": {
-                                      "type": "integer"
+                                      "type": "integer",
+                                      "instillFormat": "integer",
+                                      "instillUpstreamTypes": [
+                                        "value",
+                                        "reference"
+                                      ]
                                     },
                                     "top_p": {
-                                      "type": "number"
+                                      "type": "number",
+                                      "instillFormat": "number",
+                                      "instillUpstreamTypes": [
+                                        "value",
+                                        "reference"
+                                      ]
                                     },
                                     "temperature": {
-                                      "type": "number"
+                                      "type": "number",
+                                      "instillFormat": "number",
+                                      "instillUpstreamTypes": [
+                                        "value",
+                                        "reference"
+                                      ]
                                     },
                                     "repetition_penalty": {
-                                      "type": "number"
+                                      "type": "number",
+                                      "instillFormat": "number",
+                                      "instillUpstreamTypes": [
+                                        "value",
+                                        "reference"
+                                      ]
                                     },
                                     "max_time": {
-                                      "type": "number"
+                                      "type": "number",
+                                      "instillFormat": "number",
+                                      "instillUpstreamTypes": [
+                                        "value",
+                                        "reference"
+                                      ]
                                     }
                                   }
                                 }
@@ -1193,7 +3166,7 @@
           "openapi": "3.0.0",
           "info": {
             "version": "1.0.0",
-            "title": "Hugging Face AI Connector Openapi"
+            "title": "Hugging Face Connector OpenAPI"
           },
           "paths": {
             "/execute": {
@@ -1214,19 +3187,39 @@
                               ],
                               "properties": {
                                 "inputs": {
-                                  "type": "string"
+                                  "type": "string",
+                                  "instillFormat": "text",
+                                  "instillUpstreamTypes": [
+                                    "value",
+                                    "reference"
+                                  ]
                                 },
                                 "options": {
                                   "type": "object",
                                   "properties": {
                                     "use_gpu": {
-                                      "type": "boolean"
+                                      "type": "boolean",
+                                      "instillFormat": "boolean",
+                                      "instillUpstreamTypes": [
+                                        "value",
+                                        "reference"
+                                      ]
                                     },
                                     "use_cache": {
-                                      "type": "boolean"
+                                      "type": "boolean",
+                                      "instillFormat": "boolean",
+                                      "instillUpstreamTypes": [
+                                        "value",
+                                        "reference"
+                                      ]
                                     },
                                     "wait_for_model": {
-                                      "type": "boolean"
+                                      "type": "boolean",
+                                      "instillFormat": "boolean",
+                                      "instillUpstreamTypes": [
+                                        "value",
+                                        "reference"
+                                      ]
                                     }
                                   }
                                 }
@@ -1282,7 +3275,7 @@
           "openapi": "3.0.0",
           "info": {
             "version": "1.0.0",
-            "title": "Hugging Face AI Connector Openapi"
+            "title": "Hugging Face Connector OpenAPI"
           },
           "paths": {
             "/execute": {
@@ -1303,19 +3296,39 @@
                               ],
                               "properties": {
                                 "inputs": {
-                                  "type": "string"
+                                  "type": "string",
+                                  "instillFormat": "text",
+                                  "instillUpstreamTypes": [
+                                    "value",
+                                    "reference"
+                                  ]
                                 },
                                 "options": {
                                   "type": "object",
                                   "properties": {
                                     "use_gpu": {
-                                      "type": "boolean"
+                                      "type": "boolean",
+                                      "instillFormat": "boolean",
+                                      "instillUpstreamTypes": [
+                                        "value",
+                                        "reference"
+                                      ]
                                     },
                                     "use_cache": {
-                                      "type": "boolean"
+                                      "type": "boolean",
+                                      "instillFormat": "boolean",
+                                      "instillUpstreamTypes": [
+                                        "value",
+                                        "reference"
+                                      ]
                                     },
                                     "wait_for_model": {
-                                      "type": "boolean"
+                                      "type": "boolean",
+                                      "instillFormat": "boolean",
+                                      "instillUpstreamTypes": [
+                                        "value",
+                                        "reference"
+                                      ]
                                     }
                                   }
                                 },
@@ -1323,7 +3336,12 @@
                                   "type": "object",
                                   "properties": {
                                     "aggregation_strategy": {
-                                      "type": "string"
+                                      "type": "string",
+                                      "instillFormat": "text",
+                                      "instillUpstreamTypes": [
+                                        "value",
+                                        "reference"
+                                      ]
                                     }
                                   }
                                 }
@@ -1388,7 +3406,7 @@
           "openapi": "3.0.0",
           "info": {
             "version": "1.0.0",
-            "title": "Hugging Face AI Connector Openapi"
+            "title": "Hugging Face Connector OpenAPI"
           },
           "paths": {
             "/execute": {
@@ -1409,19 +3427,39 @@
                               ],
                               "properties": {
                                 "inputs": {
-                                  "type": "string"
+                                  "type": "string",
+                                  "instillFormat": "text",
+                                  "instillUpstreamTypes": [
+                                    "value",
+                                    "reference"
+                                  ]
                                 },
                                 "options": {
                                   "type": "object",
                                   "properties": {
                                     "use_gpu": {
-                                      "type": "boolean"
+                                      "type": "boolean",
+                                      "instillFormat": "boolean",
+                                      "instillUpstreamTypes": [
+                                        "value",
+                                        "reference"
+                                      ]
                                     },
                                     "use_cache": {
-                                      "type": "boolean"
+                                      "type": "boolean",
+                                      "instillFormat": "boolean",
+                                      "instillUpstreamTypes": [
+                                        "value",
+                                        "reference"
+                                      ]
                                     },
                                     "wait_for_model": {
-                                      "type": "boolean"
+                                      "type": "boolean",
+                                      "instillFormat": "boolean",
+                                      "instillUpstreamTypes": [
+                                        "value",
+                                        "reference"
+                                      ]
                                     }
                                   }
                                 }
@@ -1469,7 +3507,7 @@
           "openapi": "3.0.0",
           "info": {
             "version": "1.0.0",
-            "title": "Hugging Face AI Connector Openapi"
+            "title": "Hugging Face Connector OpenAPI"
           },
           "paths": {
             "/execute": {
@@ -1491,19 +3529,39 @@
                               ],
                               "properties": {
                                 "inputs": {
-                                  "type": "string"
+                                  "type": "string",
+                                  "instillFormat": "text",
+                                  "instillUpstreamTypes": [
+                                    "value",
+                                    "reference"
+                                  ]
                                 },
                                 "options": {
                                   "type": "object",
                                   "properties": {
                                     "use_gpu": {
-                                      "type": "boolean"
+                                      "type": "boolean",
+                                      "instillFormat": "boolean",
+                                      "instillUpstreamTypes": [
+                                        "value",
+                                        "reference"
+                                      ]
                                     },
                                     "use_cache": {
-                                      "type": "boolean"
+                                      "type": "boolean",
+                                      "instillFormat": "boolean",
+                                      "instillUpstreamTypes": [
+                                        "value",
+                                        "reference"
+                                      ]
                                     },
                                     "wait_for_model": {
-                                      "type": "boolean"
+                                      "type": "boolean",
+                                      "instillFormat": "boolean",
+                                      "instillUpstreamTypes": [
+                                        "value",
+                                        "reference"
+                                      ]
                                     }
                                   }
                                 },
@@ -1517,10 +3575,20 @@
                                       "type": "array",
                                       "items": {
                                         "type": "string"
-                                      }
+                                      },
+                                      "instillFormat": "text_array",
+                                      "instillUpstreamTypes": [
+                                        "value",
+                                        "reference"
+                                      ]
                                     },
                                     "multi_label": {
-                                      "type": "boolean"
+                                      "type": "boolean",
+                                      "instillFormat": "boolean_array",
+                                      "instillUpstreamTypes": [
+                                        "value",
+                                        "reference"
+                                      ]
                                     }
                                   }
                                 }
@@ -1568,7 +3636,7 @@
           "openapi": "3.0.0",
           "info": {
             "version": "1.0.0",
-            "title": "Hugging Face AI Connector Openapi"
+            "title": "Hugging Face Connector OpenAPI"
           },
           "paths": {
             "/execute": {
@@ -1589,19 +3657,39 @@
                               ],
                               "properties": {
                                 "inputs": {
-                                  "type": "string"
+                                  "type": "string",
+                                  "instillFormat": "text",
+                                  "instillUpstreamTypes": [
+                                    "value",
+                                    "reference"
+                                  ]
                                 },
                                 "options": {
                                   "type": "object",
                                   "properties": {
                                     "use_gpu": {
-                                      "type": "boolean"
+                                      "type": "boolean",
+                                      "instillFormat": "boolean",
+                                      "instillUpstreamTypes": [
+                                        "value",
+                                        "reference"
+                                      ]
                                     },
                                     "use_cache": {
-                                      "type": "boolean"
+                                      "type": "boolean",
+                                      "instillFormat": "boolean",
+                                      "instillUpstreamTypes": [
+                                        "value",
+                                        "reference"
+                                      ]
                                     },
                                     "wait_for_model": {
-                                      "type": "boolean"
+                                      "type": "boolean",
+                                      "instillFormat": "boolean",
+                                      "instillUpstreamTypes": [
+                                        "value",
+                                        "reference"
+                                      ]
                                     }
                                   }
                                 }
@@ -1652,7 +3740,7 @@
           "openapi": "3.0.0",
           "info": {
             "version": "1.0.0",
-            "title": "Hugging Face AI Connector Openapi"
+            "title": "Hugging Face Connector OpenAPI"
           },
           "paths": {
             "/execute": {
@@ -1680,10 +3768,20 @@
                                   ],
                                   "properties": {
                                     "question": {
-                                      "type": "string"
+                                      "type": "string",
+                                      "instillFormat": "text",
+                                      "instillUpstreamTypes": [
+                                        "value",
+                                        "reference"
+                                      ]
                                     },
                                     "context": {
-                                      "type": "string"
+                                      "type": "string",
+                                      "instillFormat": "text",
+                                      "instillUpstreamTypes": [
+                                        "value",
+                                        "reference"
+                                      ]
                                     }
                                   }
                                 },
@@ -1691,13 +3789,28 @@
                                   "type": "object",
                                   "properties": {
                                     "use_gpu": {
-                                      "type": "boolean"
+                                      "type": "boolean",
+                                      "instillFormat": "boolean",
+                                      "instillUpstreamTypes": [
+                                        "value",
+                                        "reference"
+                                      ]
                                     },
                                     "use_cache": {
-                                      "type": "boolean"
+                                      "type": "boolean",
+                                      "instillFormat": "boolean",
+                                      "instillUpstreamTypes": [
+                                        "value",
+                                        "reference"
+                                      ]
                                     },
                                     "wait_for_model": {
-                                      "type": "boolean"
+                                      "type": "boolean",
+                                      "instillFormat": "boolean",
+                                      "instillUpstreamTypes": [
+                                        "value",
+                                        "reference"
+                                      ]
                                     }
                                   }
                                 }
@@ -1751,7 +3864,7 @@
           "openapi": "3.0.0",
           "info": {
             "version": "1.0.0",
-            "title": "Hugging Face AI Connector Openapi"
+            "title": "Hugging Face Connector OpenAPI"
           },
           "paths": {
             "/execute": {
@@ -1778,10 +3891,20 @@
                                   ],
                                   "properties": {
                                     "query": {
-                                      "type": "string"
+                                      "type": "string",
+                                      "instillFormat": "text",
+                                      "instillUpstreamTypes": [
+                                        "value",
+                                        "reference"
+                                      ]
                                     },
                                     "table": {
-                                      "type": "object"
+                                      "type": "object",
+                                      "instillFormat": "text",
+                                      "instillUpstreamTypes": [
+                                        "value",
+                                        "reference"
+                                      ]
                                     }
                                   }
                                 },
@@ -1789,13 +3912,28 @@
                                   "type": "object",
                                   "properties": {
                                     "use_gpu": {
-                                      "type": "boolean"
+                                      "type": "boolean",
+                                      "instillFormat": "boolean",
+                                      "instillUpstreamTypes": [
+                                        "value",
+                                        "reference"
+                                      ]
                                     },
                                     "use_cache": {
-                                      "type": "boolean"
+                                      "type": "boolean",
+                                      "instillFormat": "boolean",
+                                      "instillUpstreamTypes": [
+                                        "value",
+                                        "reference"
+                                      ]
                                     },
                                     "wait_for_model": {
-                                      "type": "boolean"
+                                      "type": "boolean",
+                                      "instillFormat": "boolean",
+                                      "instillUpstreamTypes": [
+                                        "value",
+                                        "reference"
+                                      ]
                                     }
                                   }
                                 }
@@ -1858,7 +3996,7 @@
           "openapi": "3.0.0",
           "info": {
             "version": "1.0.0",
-            "title": "Hugging Face AI Connector Openapi"
+            "title": "Hugging Face Connector OpenAPI"
           },
           "paths": {
             "/execute": {
@@ -1885,13 +4023,23 @@
                                   ],
                                   "properties": {
                                     "source_sentence": {
-                                      "type": "string"
+                                      "type": "string",
+                                      "instillFormat": "text",
+                                      "instillUpstreamTypes": [
+                                        "value",
+                                        "reference"
+                                      ]
                                     },
                                     "sentences": {
                                       "type": "array",
                                       "items": {
                                         "type": "string"
-                                      }
+                                      },
+                                      "instillFormat": "text_array",
+                                      "instillUpstreamTypes": [
+                                        "value",
+                                        "reference"
+                                      ]
                                     }
                                   }
                                 },
@@ -1899,13 +4047,28 @@
                                   "type": "object",
                                   "properties": {
                                     "use_gpu": {
-                                      "type": "boolean"
+                                      "type": "boolean",
+                                      "instillFormat": "boolean",
+                                      "instillUpstreamTypes": [
+                                        "value",
+                                        "reference"
+                                      ]
                                     },
                                     "use_cache": {
-                                      "type": "boolean"
+                                      "type": "boolean",
+                                      "instillFormat": "boolean",
+                                      "instillUpstreamTypes": [
+                                        "value",
+                                        "reference"
+                                      ]
                                     },
                                     "wait_for_model": {
-                                      "type": "boolean"
+                                      "type": "boolean",
+                                      "instillFormat": "boolean",
+                                      "instillUpstreamTypes": [
+                                        "value",
+                                        "reference"
+                                      ]
                                     }
                                   }
                                 }
@@ -1953,7 +4116,7 @@
           "openapi": "3.0.0",
           "info": {
             "version": "1.0.0",
-            "title": "Hugging Face AI Connector Openapi"
+            "title": "Hugging Face Connector OpenAPI"
           },
           "paths": {
             "/execute": {
@@ -1979,19 +4142,34 @@
                                   ],
                                   "properties": {
                                     "text": {
-                                      "type": "string"
+                                      "type": "string",
+                                      "instillFormat": "text",
+                                      "instillUpstreamTypes": [
+                                        "value",
+                                        "reference"
+                                      ]
                                     },
                                     "generated_responses": {
                                       "type": "array",
                                       "items": {
                                         "type": "string"
-                                      }
+                                      },
+                                      "instillFormat": "text_array",
+                                      "instillUpstreamTypes": [
+                                        "value",
+                                        "reference"
+                                      ]
                                     },
                                     "past_user_inputs": {
                                       "type": "array",
                                       "items": {
                                         "type": "string"
-                                      }
+                                      },
+                                      "instillFormat": "text_array",
+                                      "instillUpstreamTypes": [
+                                        "value",
+                                        "reference"
+                                      ]
                                     }
                                   }
                                 },
@@ -1999,13 +4177,28 @@
                                   "type": "object",
                                   "properties": {
                                     "use_gpu": {
-                                      "type": "boolean"
+                                      "type": "boolean",
+                                      "instillFormat": "boolean",
+                                      "instillUpstreamTypes": [
+                                        "value",
+                                        "reference"
+                                      ]
                                     },
                                     "use_cache": {
-                                      "type": "boolean"
+                                      "type": "boolean",
+                                      "instillFormat": "boolean",
+                                      "instillUpstreamTypes": [
+                                        "value",
+                                        "reference"
+                                      ]
                                     },
                                     "wait_for_model": {
-                                      "type": "boolean"
+                                      "type": "boolean",
+                                      "instillFormat": "boolean",
+                                      "instillUpstreamTypes": [
+                                        "value",
+                                        "reference"
+                                      ]
                                     }
                                   }
                                 },
@@ -2013,25 +4206,60 @@
                                   "type": "object",
                                   "properties": {
                                     "min_length": {
-                                      "type": "integer"
+                                      "type": "integer",
+                                      "instillFormat": "integer",
+                                      "instillUpstreamTypes": [
+                                        "value",
+                                        "reference"
+                                      ]
                                     },
                                     "max_length": {
-                                      "type": "integer"
+                                      "type": "integer",
+                                      "instillFormat": "integer",
+                                      "instillUpstreamTypes": [
+                                        "value",
+                                        "reference"
+                                      ]
                                     },
                                     "top_k": {
-                                      "type": "integer"
+                                      "type": "integer",
+                                      "instillFormat": "integer",
+                                      "instillUpstreamTypes": [
+                                        "value",
+                                        "reference"
+                                      ]
                                     },
                                     "top_p": {
-                                      "type": "number"
+                                      "type": "number",
+                                      "instillFormat": "number",
+                                      "instillUpstreamTypes": [
+                                        "value",
+                                        "reference"
+                                      ]
                                     },
                                     "temperature": {
-                                      "type": "number"
+                                      "type": "number",
+                                      "instillFormat": "number",
+                                      "instillUpstreamTypes": [
+                                        "value",
+                                        "reference"
+                                      ]
                                     },
                                     "repetition_penalty": {
-                                      "type": "number"
+                                      "type": "number",
+                                      "instillFormat": "number",
+                                      "instillUpstreamTypes": [
+                                        "value",
+                                        "reference"
+                                      ]
                                     },
                                     "max_time": {
-                                      "type": "number"
+                                      "type": "number",
+                                      "instillFormat": "number",
+                                      "instillUpstreamTypes": [
+                                        "value",
+                                        "reference"
+                                      ]
                                     }
                                   }
                                 }
@@ -2093,7 +4321,7 @@
           "openapi": "3.0.0",
           "info": {
             "version": "1.0.0",
-            "title": "Hugging Face AI Connector Openapi"
+            "title": "Hugging Face Connector OpenAPI"
           },
           "paths": {
             "/execute": {
@@ -2114,7 +4342,11 @@
                               ],
                               "properties": {
                                 "image": {
-                                  "type": "string"
+                                  "type": "string",
+                                  "instillFormat": "image",
+                                  "instillUpstreamTypes": [
+                                    "reference"
+                                  ]
                                 }
                               }
                             }
@@ -2168,7 +4400,7 @@
           "openapi": "3.0.0",
           "info": {
             "version": "1.0.0",
-            "title": "Hugging Face AI Connector Openapi"
+            "title": "Hugging Face Connector OpenAPI"
           },
           "paths": {
             "/execute": {
@@ -2189,7 +4421,11 @@
                               ],
                               "properties": {
                                 "image": {
-                                  "type": "string"
+                                  "type": "string",
+                                  "instillFormat": "image",
+                                  "instillUpstreamTypes": [
+                                    "reference"
+                                  ]
                                 }
                               }
                             }
@@ -2246,7 +4482,7 @@
           "openapi": "3.0.0",
           "info": {
             "version": "1.0.0",
-            "title": "Hugging Face AI Connector Openapi"
+            "title": "Hugging Face Connector OpenAPI"
           },
           "paths": {
             "/execute": {
@@ -2267,7 +4503,11 @@
                               ],
                               "properties": {
                                 "image": {
-                                  "type": "string"
+                                  "type": "string",
+                                  "instillFormat": "image",
+                                  "instillUpstreamTypes": [
+                                    "reference"
+                                  ]
                                 }
                               }
                             }
@@ -2338,7 +4578,7 @@
           "openapi": "3.0.0",
           "info": {
             "version": "1.0.0",
-            "title": "Hugging Face AI Connector Openapi"
+            "title": "Hugging Face Connector OpenAPI"
           },
           "paths": {
             "/execute": {
@@ -2359,7 +4599,11 @@
                               ],
                               "properties": {
                                 "image": {
-                                  "type": "string"
+                                  "type": "string",
+                                  "instillFormat": "image",
+                                  "instillUpstreamTypes": [
+                                    "reference"
+                                  ]
                                 }
                               }
                             }
@@ -2402,7 +4646,7 @@
           "openapi": "3.0.0",
           "info": {
             "version": "1.0.0",
-            "title": "Hugging Face AI Connector Openapi"
+            "title": "Hugging Face Connector OpenAPI"
           },
           "paths": {
             "/execute": {
@@ -2423,7 +4667,11 @@
                               ],
                               "properties": {
                                 "audio": {
-                                  "type": "string"
+                                  "type": "string",
+                                  "instillFormat": "audio",
+                                  "instillUpstreamTypes": [
+                                    "reference"
+                                  ]
                                 }
                               }
                             }
@@ -2466,7 +4714,7 @@
           "openapi": "3.0.0",
           "info": {
             "version": "1.0.0",
-            "title": "Hugging Face AI Connector Openapi"
+            "title": "Hugging Face Connector OpenAPI"
           },
           "paths": {
             "/execute": {
@@ -2487,7 +4735,11 @@
                               ],
                               "properties": {
                                 "audio": {
-                                  "type": "string"
+                                  "type": "string",
+                                  "instillFormat": "audio",
+                                  "instillUpstreamTypes": [
+                                    "reference"
+                                  ]
                                 }
                               }
                             }
