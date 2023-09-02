@@ -1,19 +1,27 @@
 {
   "$defs": {
     "string_input": {
-      "type": "string"
+      "type": "string",
+      "instillFormat": "text",
+      "instillUpstreamTypes": ["value", "reference"]
     },
     "options": {
       "type": "object",
       "properties": {
         "use_gpu": {
-          "type": "boolean"
+          "type": "boolean",
+          "instillFormat": "boolean",
+          "instillUpstreamTypes": ["value", "reference"]
         },
         "use_cache": {
-          "type": "boolean"
+          "type": "boolean",
+          "instillFormat": "boolean",
+          "instillUpstreamTypes": ["value", "reference"]
         },
         "wait_for_model": {
-          "type": "boolean"
+          "type": "boolean",
+          "instillFormat": "boolean",
+          "instillUpstreamTypes": ["value", "reference"]
         }
       }
     }
@@ -35,31 +43,49 @@
           "type": "object",
           "properties": {
             "top_k": {
-              "type": "integer"
+              "type": "integer",
+              "instillFormat": "integer",
+              "instillUpstreamTypes": ["value", "reference"]
             },
             "top_p": {
-              "type": "number"
+              "type": "number",
+              "instillFormat": "number",
+              "instillUpstreamTypes": ["value", "reference"]
             },
             "temperature": {
-              "type": "number"
+              "type": "number",
+              "instillFormat": "number",
+              "instillUpstreamTypes": ["value", "reference"]
             },
             "repetition_penalty": {
-              "type": "number"
+              "type": "number",
+              "instillFormat": "number",
+              "instillUpstreamTypes": ["value", "reference"]
             },
             "max_new_tokens": {
-              "type": "integer"
+              "type": "integer",
+              "instillFormat": "integer",
+              "instillUpstreamTypes": ["value", "reference"]
             },
             "max_time": {
-              "type": "number"
+              "type": "number",
+              "instillFormat": "number",
+              "instillUpstreamTypes": ["value", "reference"]
             },
             "return_full_text": {
-              "type": "boolean"
+              "type": "boolean",
+              "instillFormat": "boolean",
+              "instillUpstreamTypes": ["value", "reference"]
             },
             "num_return_sequences": {
-              "type": "integer"
+              "type": "integer",
+              "instillFormat": "integer",
+              "instillUpstreamTypes": ["value", "reference"]
             },
             "do_sample": {
-              "type": "boolean"
+              "type": "boolean",
+              "instillFormat": "boolean",
+              "instillUpstreamTypes": ["value", "reference"]
             }
           }
         }
@@ -102,19 +128,29 @@
           "type": "object",
           "properties": {
             "negative_prompt": {
-              "type": "string"
+              "type": "string",
+              "instillFormat": "text",
+              "instillUpstreamTypes": ["value", "reference"]
             },
             "height": {
-              "type": "integer"
+              "type": "integer",
+              "instillFormat": "integer",
+              "instillUpstreamTypes": ["value", "reference"]
             },
             "width": {
-              "type": "integer"
+              "type": "integer",
+              "instillFormat": "integer",
+              "instillUpstreamTypes": ["value", "reference"]
             },
             "num_inference_steps": {
-              "type": "integer"
+              "type": "integer",
+              "instillFormat": "integer",
+              "instillUpstreamTypes": ["value", "reference"]
             },
             "guidance_scale": {
-              "type": "number"
+              "type": "number",
+              "instillFormat": "number",
+              "instillUpstreamTypes": ["value", "reference"]
             }
           }
         }
@@ -153,16 +189,24 @@
             "type": "object",
             "properties": {
               "sequence": {
-                "type": "string"
+                "type": "string",
+                "instillFormat": "text",
+                "instillUpstreamTypes": ["value", "reference"]
               },
               "score": {
-                "type": "number"
+                "type": "number",
+                "instillFormat": "number",
+                "instillUpstreamTypes": ["value", "reference"]
               },
               "token": {
-                "type": "integer"
+                "type": "integer",
+                "instillFormat": "integer",
+                "instillUpstreamTypes": ["value", "reference"]
               },
               "token_str": {
-                "type": "string"
+                "type": "string",
+                "instillFormat": "text",
+                "instillUpstreamTypes": ["value", "reference"]
               }
             }
           }
@@ -187,25 +231,39 @@
           "type": "object",
           "properties": {
             "min_length": {
-              "type": "integer"
+              "type": "integer",
+              "instillFormat": "integer",
+              "instillUpstreamTypes": ["value", "reference"]
             },
             "max_length": {
-              "type": "integer"
+              "type": "integer",
+              "instillFormat": "integer",
+              "instillUpstreamTypes": ["value", "reference"]
             },
             "top_k": {
-              "type": "integer"
+              "type": "integer",
+              "instillFormat": "integer",
+              "instillUpstreamTypes": ["value", "reference"]
             },
             "top_p": {
-              "type": "number"
+              "type": "number",
+              "instillFormat": "number",
+              "instillUpstreamTypes": ["value", "reference"]
             },
             "temperature": {
-              "type": "number"
+              "type": "number",
+              "instillFormat": "number",
+              "instillUpstreamTypes": ["value", "reference"]
             },
             "repetition_penalty": {
-              "type": "number"
+              "type": "number",
+              "instillFormat": "number",
+              "instillUpstreamTypes": ["value", "reference"]
             },
             "max_time": {
-              "type": "number"
+              "type": "number",
+              "instillFormat": "number",
+              "instillUpstreamTypes": ["value", "reference"]
             }
           }
         }
@@ -275,7 +333,9 @@
           "type": "object",
           "properties": {
             "aggregation_strategy": {
-              "type": "string"
+              "type": "string",
+              "instillFormat": "text",
+              "instillUpstreamTypes": ["value", "reference"]
             }
           }
         }
@@ -361,10 +421,14 @@
               "type": "array",
               "items": {
                 "type": "string"
-              }
+              },
+              "instillFormat": "text_array",
+              "instillUpstreamTypes": ["value", "reference"]
             },
             "multi_label": {
-              "type": "boolean"
+              "type": "boolean",
+              "instillFormat": "boolean_array",
+              "instillUpstreamTypes": ["value", "reference"]
             }
           }
         }
@@ -427,10 +491,14 @@
           ],
           "properties": {
             "question": {
-              "type": "string"
+              "type": "string",
+              "instillFormat": "text",
+              "instillUpstreamTypes": ["value", "reference"]
             },
             "context": {
-              "type": "string"
+              "type": "string",
+              "instillFormat": "text",
+              "instillUpstreamTypes": ["value", "reference"]
             }
           }
         },
@@ -471,10 +539,14 @@
           ],
           "properties": {
             "query": {
-              "type": "string"
+              "type": "string",
+              "instillFormat": "text",
+              "instillUpstreamTypes": ["value", "reference"]
             },
             "table": {
-              "type": "object"
+              "type": "object",
+              "instillFormat": "text",
+              "instillUpstreamTypes": ["value", "reference"]
             }
           }
         },
@@ -524,13 +596,17 @@
           ],
           "properties": {
             "source_sentence": {
-              "type": "string"
+              "type": "string",
+              "instillFormat": "text",
+              "instillUpstreamTypes": ["value", "reference"]
             },
             "sentences": {
               "type": "array",
               "items": {
                 "type": "string"
-              }
+              },
+              "instillFormat": "text_array",
+              "instillUpstreamTypes": ["value", "reference"]
             }
           }
         },
@@ -564,19 +640,25 @@
           ],
           "properties": {
             "text": {
-              "type": "string"
+              "type": "string",
+              "instillFormat": "text",
+              "instillUpstreamTypes": ["value", "reference"]
             },
             "generated_responses": {
               "type": "array",
               "items": {
                 "type": "string"
-              }
+              },
+              "instillFormat": "text_array",
+              "instillUpstreamTypes": ["value", "reference"]
             },
             "past_user_inputs": {
               "type": "array",
               "items": {
                 "type": "string"
-              }
+              },
+              "instillFormat": "text_array",
+              "instillUpstreamTypes": ["value", "reference"]
             }
           }
         },
@@ -587,25 +669,39 @@
           "type": "object",
           "properties": {
             "min_length": {
-              "type": "integer"
+              "type": "integer",
+              "instillFormat": "integer",
+              "instillUpstreamTypes": ["value", "reference"]
             },
             "max_length": {
-              "type": "integer"
+              "type": "integer",
+              "instillFormat": "integer",
+              "instillUpstreamTypes": ["value", "reference"]
             },
             "top_k": {
-              "type": "integer"
+              "type": "integer",
+              "instillFormat": "integer",
+              "instillUpstreamTypes": ["value", "reference"]
             },
             "top_p": {
-              "type": "number"
+              "type": "number",
+              "instillFormat": "number",
+              "instillUpstreamTypes": ["value", "reference"]
             },
             "temperature": {
-              "type": "number"
+              "type": "number",
+              "instillFormat": "number",
+              "instillUpstreamTypes": ["value", "reference"]
             },
             "repetition_penalty": {
-              "type": "number"
+              "type": "number",
+              "instillFormat": "number",
+              "instillUpstreamTypes": ["value", "reference"]
             },
             "max_time": {
-              "type": "number"
+              "type": "number",
+              "instillFormat": "number",
+              "instillUpstreamTypes": ["value", "reference"]
             }
           }
         }
@@ -645,7 +741,9 @@
       ],
       "properties": {
         "image": {
-          "type": "string"
+          "type": "string",
+          "instillFormat": "image",
+          "instillUpstreamTypes": ["reference"]
         }
       }
     },
@@ -677,7 +775,9 @@
       ],
       "properties": {
         "image": {
-          "type": "string"
+          "type": "string",
+          "instillFormat": "image",
+          "instillUpstreamTypes": ["reference"]
         }
       }
     },
@@ -712,7 +812,9 @@
       ],
       "properties": {
         "image": {
-          "type": "string"
+          "type": "string",
+          "instillFormat": "image",
+          "instillUpstreamTypes": ["reference"]
         }
       }
     },
@@ -761,7 +863,9 @@
       ],
       "properties": {
         "image": {
-          "type": "string"
+          "type": "string",
+          "instillFormat": "image",
+          "instillUpstreamTypes": ["reference"]
         }
       }
     },
@@ -782,7 +886,9 @@
       ],
       "properties": {
         "audio": {
-          "type": "string"
+          "type": "string",
+          "instillFormat": "audio",
+          "instillUpstreamTypes": ["reference"]
         }
       }
     },
@@ -803,7 +909,9 @@
       ],
       "properties": {
         "audio": {
-          "type": "string"
+          "type": "string",
+          "instillFormat": "audio",
+          "instillUpstreamTypes": ["reference"]
         }
       }
     },
