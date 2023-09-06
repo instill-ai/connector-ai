@@ -142,7 +142,7 @@ def convert_field(field):
             "description": field.get("description", ""),
             "instillFormat": field["instillFormat"],
             "instillUpstreamTypes": field["instillUpstreamTypes"],
-            "oneOf": []
+            "anyOf": []
         }
         if title != "":
             field["title"] = title
@@ -151,9 +151,9 @@ def convert_field(field):
         for instillUpstreamType in instill_upstream_types:
             if instillUpstreamType == "value":
                 original_field["instillUpstreamType"] = instillUpstreamType
-                field["oneOf"].append(original_field)
+                field["anyOf"].append(original_field)
             if instillUpstreamType == "reference":
-                field["oneOf"].append({
+                field["anyOf"].append({
                     "type": "string",
                     "pattern": "^\\{.*\\}$",
                     "instillUpstreamType": instillUpstreamType
