@@ -85,7 +85,7 @@
                         "value",
                         "reference"
                       ],
-                      "oneOf": [
+                      "anyOf": [
                         {
                           "type": "string",
                           "instillUpstreamType": "value"
@@ -137,7 +137,7 @@
                         "value",
                         "reference"
                       ],
-                      "oneOf": [
+                      "anyOf": [
                         {
                           "type": "string",
                           "default": "You are a helpful assistant.",
@@ -159,7 +159,7 @@
                         "value",
                         "reference"
                       ],
-                      "oneOf": [
+                      "anyOf": [
                         {
                           "type": "number",
                           "minimum": 0,
@@ -184,7 +184,7 @@
                         "value",
                         "reference"
                       ],
-                      "oneOf": [
+                      "anyOf": [
                         {
                           "type": "integer",
                           "minimum": 1,
@@ -209,7 +209,7 @@
                         "value",
                         "reference"
                       ],
-                      "oneOf": [
+                      "anyOf": [
                         {
                           "default": "inf",
                           "type": "integer",
@@ -265,7 +265,7 @@
                         "value",
                         "reference"
                       ],
-                      "oneOf": [
+                      "anyOf": [
                         {
                           "type": "string",
                           "instillUpstreamType": "value"
@@ -341,7 +341,7 @@
                       "instillUpstreamTypes": [
                         "reference"
                       ],
-                      "oneOf": [
+                      "anyOf": [
                         {
                           "type": "string",
                           "pattern": "^\\{.*\\}$",
@@ -379,7 +379,7 @@
                         "value",
                         "reference"
                       ],
-                      "oneOf": [
+                      "anyOf": [
                         {
                           "type": "number",
                           "default": 0,
@@ -400,7 +400,7 @@
                         "value",
                         "reference"
                       ],
-                      "oneOf": [
+                      "anyOf": [
                         {
                           "type": "string",
                           "instillUpstreamType": "value"
@@ -420,7 +420,7 @@
                         "value",
                         "reference"
                       ],
-                      "oneOf": [
+                      "anyOf": [
                         {
                           "type": "string",
                           "instillUpstreamType": "value"

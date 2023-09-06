@@ -97,7 +97,7 @@
                           "instillUpstreamTypes": [
                             "reference"
                           ],
-                          "oneOf": [
+                          "anyOf": [
                             {
                               "type": "string",
                               "pattern": "^\\{.*\\}$",
@@ -113,7 +113,7 @@
                             "value",
                             "reference"
                           ],
-                          "oneOf": [
+                          "anyOf": [
                             {
                               "type": "string",
                               "instillUpstreamType": "value"
@@ -176,7 +176,7 @@
                           "instillUpstreamTypes": [
                             "reference"
                           ],
-                          "oneOf": [
+                          "anyOf": [
                             {
                               "type": "string",
                               "pattern": "^\\{.*\\}$",
@@ -192,7 +192,7 @@
                             "value",
                             "reference"
                           ],
-                          "oneOf": [
+                          "anyOf": [
                             {
                               "type": "string",
                               "instillUpstreamType": "value"
@@ -255,7 +255,7 @@
                           "instillUpstreamTypes": [
                             "reference"
                           ],
-                          "oneOf": [
+                          "anyOf": [
                             {
                               "type": "string",
                               "pattern": "^\\{.*\\}$",
@@ -271,7 +271,7 @@
                             "value",
                             "reference"
                           ],
-                          "oneOf": [
+                          "anyOf": [
                             {
                               "type": "string",
                               "instillUpstreamType": "value"
@@ -334,7 +334,7 @@
                           "instillUpstreamTypes": [
                             "reference"
                           ],
-                          "oneOf": [
+                          "anyOf": [
                             {
                               "type": "string",
                               "pattern": "^\\{.*\\}$",
@@ -350,7 +350,7 @@
                             "value",
                             "reference"
                           ],
-                          "oneOf": [
+                          "anyOf": [
                             {
                               "type": "string",
                               "instillUpstreamType": "value"
@@ -413,7 +413,7 @@
                           "instillUpstreamTypes": [
                             "reference"
                           ],
-                          "oneOf": [
+                          "anyOf": [
                             {
                               "type": "string",
                               "pattern": "^\\{.*\\}$",
@@ -429,7 +429,7 @@
                             "value",
                             "reference"
                           ],
-                          "oneOf": [
+                          "anyOf": [
                             {
                               "type": "string",
                               "instillUpstreamType": "value"
@@ -492,7 +492,7 @@
                           "instillUpstreamTypes": [
                             "reference"
                           ],
-                          "oneOf": [
+                          "anyOf": [
                             {
                               "type": "string",
                               "pattern": "^\\{.*\\}$",
@@ -508,7 +508,7 @@
                             "value",
                             "reference"
                           ],
-                          "oneOf": [
+                          "anyOf": [
                             {
                               "type": "string",
                               "instillUpstreamType": "value"
@@ -565,7 +565,7 @@
                         "value",
                         "reference"
                       ],
-                      "oneOf": [
+                      "anyOf": [
                         {
                           "type": "string",
                           "instillUpstreamType": "value"
@@ -585,7 +585,7 @@
                         "value",
                         "reference"
                       ],
-                      "oneOf": [
+                      "anyOf": [
                         {
                           "type": "string",
                           "instillUpstreamType": "value"
@@ -605,7 +605,7 @@
                         "value",
                         "reference"
                       ],
-                      "oneOf": [
+                      "anyOf": [
                         {
                           "type": "integer",
                           "instillUpstreamType": "value"
@@ -625,7 +625,7 @@
                         "value",
                         "reference"
                       ],
-                      "oneOf": [
+                      "anyOf": [
                         {
                           "type": "string",
                           "instillUpstreamType": "value"
@@ -645,7 +645,7 @@
                         "value",
                         "reference"
                       ],
-                      "oneOf": [
+                      "anyOf": [
                         {
                           "type": "string",
                           "instillUpstreamType": "value"
@@ -665,7 +665,7 @@
                         "value",
                         "reference"
                       ],
-                      "oneOf": [
+                      "anyOf": [
                         {
                           "type": "integer",
                           "instillUpstreamType": "value"
@@ -685,7 +685,7 @@
                         "value",
                         "reference"
                       ],
-                      "oneOf": [
+                      "anyOf": [
                         {
                           "type": "integer",
                           "instillUpstreamType": "value"
@@ -740,7 +740,7 @@
                         "value",
                         "reference"
                       ],
-                      "oneOf": [
+                      "anyOf": [
                         {
                           "type": "string",
                           "instillUpstreamType": "value"
@@ -760,7 +760,7 @@
                         "value",
                         "reference"
                       ],
-                      "oneOf": [
+                      "anyOf": [
                         {
                           "type": "string",
                           "instillUpstreamType": "value"
@@ -780,7 +780,7 @@
                         "value",
                         "reference"
                       ],
-                      "oneOf": [
+                      "anyOf": [
                         {
                           "type": "number",
                           "instillUpstreamType": "value"
@@ -800,7 +800,7 @@
                         "value",
                         "reference"
                       ],
-                      "oneOf": [
+                      "anyOf": [
                         {
                           "type": "integer",
                           "instillUpstreamType": "value"
@@ -820,7 +820,7 @@
                         "value",
                         "reference"
                       ],
-                      "oneOf": [
+                      "anyOf": [
                         {
                           "type": "integer",
                           "instillUpstreamType": "value"
@@ -840,7 +840,7 @@
                         "value",
                         "reference"
                       ],
-                      "oneOf": [
+                      "anyOf": [
                         {
                           "type": "integer",
                           "instillUpstreamType": "value"
