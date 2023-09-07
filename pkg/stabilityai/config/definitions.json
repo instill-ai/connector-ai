@@ -1082,7 +1082,7 @@
                                     "items": {
                                       "type": "string"
                                     },
-                                    "instillFormat": "text_array"
+                                    "instillFormat": "image_array"
                                   },
                                   "seeds": {
                                     "title": "Seeds",
@@ -1429,7 +1429,7 @@
                                     "items": {
                                       "type": "string"
                                     },
-                                    "instillFormat": "text_array"
+                                    "instillFormat": "image_array"
                                   },
                                   "seeds": {
                                     "title": "Seeds",
