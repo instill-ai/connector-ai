@@ -4,6 +4,7 @@ import (
 	"crypto/tls"
 	_ "embed"
 	"fmt"
+	"io"
 	"net/http"
 	"strings"
 	"sync"
@@ -121,6 +122,39 @@ func (c *Connection) getServerURL() string {
 	return serverUrl
 }
 
+func (c *Connection) getModels() (err error) {
+	serverURL := c.getServerURL()
+	c.client, err = c.NewClient()
+	if err != nil {
+		return err
+	}
+	reqURL := serverURL + getModelPath
+	err = c.client.sendReq(reqURL, http.MethodGet, nil)
+	return err
+}
+
+// sendReq is responsible for making the http request with to given URL, method, and params and unmarshalling the response into given object.
+func (c *Client) sendReq(reqURL, method string, params interface{}) (err error) {
+	req, _ := http.NewRequest(method, reqURL, nil)
+	if c.APIKey != "" {
+		req.Header.Add("Authorization", "Bearer "+c.APIKey)
+	}
+	http.DefaultClient.Timeout = reqTimeout
+	res, err := c.HTTPClient.Do(req)
+
+	if err != nil || res == nil {
+		err = fmt.Errorf("error occurred: %v, while calling URL: %s", err, reqURL)
+		return
+	}
+	defer res.Body.Close()
+	bytes, _ := io.ReadAll(res.Body)
+	if res.StatusCode != http.StatusOK {
+		err = fmt.Errorf("non-200 status code: %d, while calling URL: %s, response body: %s", res.StatusCode, reqURL, bytes)
+		return
+	}
+	return
+}
+
 func (c *Connection) Execute(inputs []*structpb.Struct) ([]*structpb.Struct, error) {
 
 	var err error
@@ -181,6 +215,9 @@ func (c *Connection) Execute(inputs []*structpb.Struct) ([]*structpb.Struct, err
 }
 
 func (c *Connection) Test() (connectorPB.ConnectorResource_State, error) {
-	// TODO: add api_token validation endpoint in Base
+	err := c.getModels()
+	if err != nil {
+		return connectorPB.ConnectorResource_STATE_ERROR, err
+	}
 	return connectorPB.ConnectorResource_STATE_CONNECTED, nil
 }
