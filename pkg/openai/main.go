@@ -53,6 +53,7 @@ type Connection struct {
 // Client represents a OpenAI client
 type Client struct {
 	APIKey     string
+	Org        string
 	HTTPClient HTTPClient
 }
 
@@ -98,11 +99,11 @@ func (c *Connector) CreateConnection(defUid uuid.UUID, config *structpb.Struct, 
 }
 
 // NewClient initializes a new OpenAI client
-func NewClient(apiKey string) Client {
+func NewClient(apiKey, org string) Client {
 	tr := &http.Transport{
 		DisableKeepAlives: true,
 	}
-	return Client{APIKey: apiKey, HTTPClient: &http.Client{Timeout: reqTimeout, Transport: tr}}
+	return Client{APIKey: apiKey, Org: org, HTTPClient: &http.Client{Timeout: reqTimeout, Transport: tr}}
 }
 
 // sendReq is responsible for making the http request with to given URL, method, and params and unmarshalling the response into given object.
@@ -112,6 +113,9 @@ func (c *Client) sendReq(reqURL, method, contentType string, data io.Reader, res
 	req.Header.Add("Content-Type", contentType)
 	req.Header.Add("Accept", jsonMimeType)
 	req.Header.Add("Authorization", "Bearer "+c.APIKey)
+	if c.Org != "" {
+		req.Header.Add("OpenAI-Organization", c.Org)
+	}
 	http.DefaultClient.Timeout = reqTimeout
 	res, err := c.HTTPClient.Do(req)
 	if res != nil && res.Body != nil {
@@ -136,9 +140,17 @@ func (c *Connection) getAPIKey() string {
 	return c.Config.GetFields()["api_key"].GetStringValue()
 }
 
+func (c *Connection) getOrg() string {
+	val, ok := c.Config.GetFields()["organization"]
+	if !ok {
+		return ""
+	}
+	return val.GetStringValue()
+}
+
 func (c *Connection) Execute(inputs []*structpb.Struct) ([]*structpb.Struct, error) {
 
-	client := NewClient(c.getAPIKey())
+	client := NewClient(c.getAPIKey(), c.getOrg())
 
 	outputs := []*structpb.Struct{}
 
@@ -267,7 +279,7 @@ func (c *Connection) Execute(inputs []*structpb.Struct) ([]*structpb.Struct, err
 }
 
 func (c *Connection) Test() (connectorPB.ConnectorResource_State, error) {
-	client := NewClient(c.getAPIKey())
+	client := NewClient(c.getAPIKey(), c.getOrg())
 	models, err := client.ListModels()
 	if err != nil {
 		return connectorPB.ConnectorResource_STATE_ERROR, err
