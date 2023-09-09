@@ -87,7 +87,7 @@
                       "type": "object",
                       "required": [
                         "image_base64",
-                        "model_id"
+                        "model_name"
                       ],
                       "properties": {
                         "image_base64": {
@@ -105,9 +105,9 @@
                             }
                           ]
                         },
-                        "model_id": {
-                          "title": "Model ID",
-                          "description": "ID of the Instill Model model to be used.",
+                        "model_name": {
+                          "title": "Model Name",
+                          "description": "Name of the Instill Model model to be used.",
                           "instillFormat": "text",
                           "instillUpstreamTypes": [
                             "value",
@@ -166,7 +166,7 @@
                       "type": "object",
                       "required": [
                         "image_base64",
-                        "model_id"
+                        "model_name"
                       ],
                       "properties": {
                         "image_base64": {
@@ -184,9 +184,9 @@
                             }
                           ]
                         },
-                        "model_id": {
-                          "title": "Model ID",
-                          "description": "ID of the Instill Model model to be used.",
+                        "model_name": {
+                          "title": "Model Name",
+                          "description": "Name of the Instill Model model to be used.",
                           "instillFormat": "text",
                           "instillUpstreamTypes": [
                             "value",
@@ -245,7 +245,7 @@
                       "type": "object",
                       "required": [
                         "image_base64",
-                        "model_id"
+                        "model_name"
                       ],
                       "properties": {
                         "image_base64": {
@@ -263,9 +263,9 @@
                             }
                           ]
                         },
-                        "model_id": {
-                          "title": "Model ID",
-                          "description": "ID of the Instill Model model to be used.",
+                        "model_name": {
+                          "title": "Model Name",
+                          "description": "Name of the Instill Model model to be used.",
                           "instillFormat": "text",
                           "instillUpstreamTypes": [
                             "value",
@@ -324,7 +324,7 @@
                       "type": "object",
                       "required": [
                         "image_base64",
-                        "model_id"
+                        "model_name"
                       ],
                       "properties": {
                         "image_base64": {
@@ -342,9 +342,9 @@
                             }
                           ]
                         },
-                        "model_id": {
-                          "title": "Model ID",
-                          "description": "ID of the Instill Model model to be used.",
+                        "model_name": {
+                          "title": "Model Name",
+                          "description": "Name of the Instill Model model to be used.",
                           "instillFormat": "text",
                           "instillUpstreamTypes": [
                             "value",
@@ -403,7 +403,7 @@
                       "type": "object",
                       "required": [
                         "image_base64",
-                        "model_id"
+                        "model_name"
                       ],
                       "properties": {
                         "image_base64": {
@@ -421,9 +421,9 @@
                             }
                           ]
                         },
-                        "model_id": {
-                          "title": "Model ID",
-                          "description": "ID of the Instill Model model to be used.",
+                        "model_name": {
+                          "title": "Model Name",
+                          "description": "Name of the Instill Model model to be used.",
                           "instillFormat": "text",
                           "instillUpstreamTypes": [
                             "value",
@@ -482,7 +482,7 @@
                       "type": "object",
                       "required": [
                         "image_base64",
-                        "model_id"
+                        "model_name"
                       ],
                       "properties": {
                         "image_base64": {
@@ -500,9 +500,9 @@
                             }
                           ]
                         },
-                        "model_id": {
-                          "title": "Model ID",
-                          "description": "ID of the Instill Model model to be used.",
+                        "model_name": {
+                          "title": "Model Name",
+                          "description": "Name of the Instill Model model to be used.",
                           "instillFormat": "text",
                           "instillUpstreamTypes": [
                             "value",
@@ -551,13 +551,13 @@
                   "required": [
                     "task",
                     "prompt",
-                    "model_id"
+                    "model_name"
                   ],
                   "properties": {
                     "task": {
                       "const": "TASK_TEXT_GENERATION"
                     },
-                    "model_id": {
+                    "model_name": {
                       "title": "Model ID",
                       "description": "ID of the Instill Model model to be used.",
                       "instillFormat": "text",
@@ -726,13 +726,13 @@
                   "required": [
                     "task",
                     "prompt",
-                    "model_id"
+                    "model_name"
                   ],
                   "properties": {
                     "task": {
                       "const": "TASK_TEXT_TO_IMAGE"
                     },
-                    "model_id": {
+                    "model_name": {
                       "title": "Model ID",
                       "description": "ID of the Instill Model model to be used.",
                       "instillFormat": "text",
@@ -894,7 +894,7 @@
                                   "type": "object",
                                   "required": [
                                     "image_base64",
-                                    "model_id"
+                                    "model_name"
                                   ],
                                   "properties": {
                                     "image_base64": {
@@ -905,9 +905,9 @@
                                         "reference"
                                       ]
                                     },
-                                    "model_id": {
-                                      "title": "Model ID",
-                                      "description": "ID of the Instill Model model to be used.",
+                                    "model_name": {
+                                      "title": "Model Name",
+                                      "description": "Name of the Instill Model model to be used.",
                                       "type": "string",
                                       "instillFormat": "text",
                                       "instillUpstreamTypes": [
@@ -1004,7 +1004,7 @@
                                   "type": "object",
                                   "required": [
                                     "image_base64",
-                                    "model_id"
+                                    "model_name"
                                   ],
                                   "properties": {
                                     "image_base64": {
@@ -1015,9 +1015,9 @@
                                         "reference"
                                       ]
                                     },
-                                    "model_id": {
-                                      "title": "Model ID",
-                                      "description": "ID of the Instill Model model to be used.",
+                                    "model_name": {
+                                      "title": "Model Name",
+                                      "description": "Name of the Instill Model model to be used.",
                                       "type": "string",
                                       "instillFormat": "text",
                                       "instillUpstreamTypes": [
@@ -1162,7 +1162,7 @@
                                   "type": "object",
                                   "required": [
                                     "image_base64",
-                                    "model_id"
+                                    "model_name"
                                   ],
                                   "properties": {
                                     "image_base64": {
@@ -1173,9 +1173,9 @@
                                         "reference"
                                       ]
                                     },
-                                    "model_id": {
-                                      "title": "Model ID",
-                                      "description": "ID of the Instill Model model to be used.",
+                                    "model_name": {
+                                      "title": "Model Name",
+                                      "description": "Name of the Instill Model model to be used.",
                                       "type": "string",
                                       "instillFormat": "text",
                                       "instillUpstreamTypes": [
@@ -1337,7 +1337,7 @@
                                   "type": "object",
                                   "required": [
                                     "image_base64",
-                                    "model_id"
+                                    "model_name"
                                   ],
                                   "properties": {
                                     "image_base64": {
@@ -1348,9 +1348,9 @@
                                         "reference"
                                       ]
                                     },
-                                    "model_id": {
-                                      "title": "Model ID",
-                                      "description": "ID of the Instill Model model to be used.",
+                                    "model_name": {
+                                      "title": "Model Name",
+                                      "description": "Name of the Instill Model model to be used.",
                                       "type": "string",
                                       "instillFormat": "text",
                                       "instillUpstreamTypes": [
@@ -1491,7 +1491,7 @@
                                   "type": "object",
                                   "required": [
                                     "image_base64",
-                                    "model_id"
+                                    "model_name"
                                   ],
                                   "properties": {
                                     "image_base64": {
@@ -1502,9 +1502,9 @@
                                         "reference"
                                       ]
                                     },
-                                    "model_id": {
-                                      "title": "Model ID",
-                                      "description": "ID of the Instill Model model to be used.",
+                                    "model_name": {
+                                      "title": "Model Name",
+                                      "description": "Name of the Instill Model model to be used.",
                                       "type": "string",
                                       "instillFormat": "text",
                                       "instillUpstreamTypes": [
@@ -1644,7 +1644,7 @@
                                   "type": "object",
                                   "required": [
                                     "image_base64",
-                                    "model_id"
+                                    "model_name"
                                   ],
                                   "properties": {
                                     "image_base64": {
@@ -1655,9 +1655,9 @@
                                         "reference"
                                       ]
                                     },
-                                    "model_id": {
-                                      "title": "Model ID",
-                                      "description": "ID of the Instill Model model to be used.",
+                                    "model_name": {
+                                      "title": "Model Name",
+                                      "description": "Name of the Instill Model model to be used.",
                                       "type": "string",
                                       "instillFormat": "text",
                                       "instillUpstreamTypes": [
@@ -1756,13 +1756,13 @@
                               "required": [
                                 "task",
                                 "prompt",
-                                "model_id"
+                                "model_name"
                               ],
                               "properties": {
                                 "task": {
                                   "const": "TASK_TEXT_GENERATION"
                                 },
-                                "model_id": {
+                                "model_name": {
                                   "title": "Model ID",
                                   "description": "ID of the Instill Model model to be used.",
                                   "type": "string",
@@ -1887,13 +1887,13 @@
                               "required": [
                                 "task",
                                 "prompt",
-                                "model_id"
+                                "model_name"
                               ],
                               "properties": {
                                 "task": {
                                   "const": "TASK_TEXT_TO_IMAGE"
                                 },
-                                "model_id": {
+                                "model_name": {
                                   "title": "Model ID",
                                   "description": "ID of the Instill Model model to be used.",
                                   "type": "string",

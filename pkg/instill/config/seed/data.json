@@ -2,7 +2,7 @@
   "$defs": {
     "common": {
       "type": "object",
-      "required": ["image_base64", "model_id"],
+      "required": ["image_base64", "model_name"],
       "properties": {
         "image_base64": {
           "title": "Image",
@@ -10,9 +10,9 @@
           "instillFormat": "image",
           "instillUpstreamTypes": ["reference"]
         },
-        "model_id": {
-          "title": "Model ID",
-          "description": "ID of the Instill Model model to be used.",
+        "model_name": {
+          "title": "Model Name",
+          "description": "Name of the Instill Model model to be used.",
           "type": "string",
           "instillFormat": "text",
           "instillUpstreamTypes": ["value", "reference"]
@@ -146,10 +146,10 @@
   "TASK_TEXT_GENERATION": {
     "input": {
       "type": "object",
-      "required": ["task", "prompt", "model_id"],
+      "required": ["task", "prompt", "model_name"],
       "properties": {
         "task": { "const": "TASK_TEXT_GENERATION" },
-        "model_id": {
+        "model_name": {
           "title": "Model ID",
           "description": "ID of the Instill Model model to be used.",
           "type": "string",
@@ -207,10 +207,10 @@
   "TASK_TEXT_TO_IMAGE": {
     "input": {
       "type": "object",
-      "required": ["task", "prompt", "model_id"],
+      "required": ["task", "prompt", "model_name"],
       "properties": {
         "task": { "const": "TASK_TEXT_TO_IMAGE" },
-        "model_id": {
+        "model_name": {
           "title": "Model ID",
           "description": "ID of the Instill Model model to be used.",
           "type": "string",

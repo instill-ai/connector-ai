@@ -23,7 +23,7 @@ func (c *Connection) executeTextToImage(grpcClient modelPB.ModelPublicServiceCli
 			return nil, err
 		}
 		textToImageInput := &modelPB.TextToImageInput{}
-		err = protojson.Unmarshal(inputJson, textToImageInput)
+		err = protojson.UnmarshalOptions{DiscardUnknown: true}.Unmarshal(inputJson, textToImageInput)
 		if err != nil {
 			return nil, err
 		}

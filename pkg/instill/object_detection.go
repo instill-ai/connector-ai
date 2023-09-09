@@ -24,7 +24,7 @@ func (c *Connection) executeObjectDetection(grpcClient modelPB.ModelPublicServic
 		}
 
 		detectionInput := &modelPB.DetectionInput{}
-		err = protojson.Unmarshal(inputJson, detectionInput)
+		err = protojson.UnmarshalOptions{DiscardUnknown: true}.Unmarshal(inputJson, detectionInput)
 		if err != nil {
 			return nil, err
 		}

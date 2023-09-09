@@ -183,7 +183,7 @@ func (c *Connection) Execute(inputs []*structpb.Struct) ([]*structpb.Struct, err
 		return nil, err
 	}
 
-	modelName := fmt.Sprintf("models/%s", inputs[0].GetFields()["model_id"].GetStringValue())
+	modelName := inputs[0].GetFields()["model_name"].GetStringValue()
 
 	var result []*structpb.Struct
 	switch task {
