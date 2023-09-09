@@ -937,28 +937,23 @@
                               "type": "array",
                               "items": {
                                 "type": "object",
+                                "format": "classification",
+                                "additionalProperties": false,
+                                "required": [
+                                  "category",
+                                  "score"
+                                ],
                                 "properties": {
-                                  "classification": {
-                                    "type": "object",
-                                    "format": "classification",
-                                    "additionalProperties": false,
-                                    "required": [
-                                      "category",
-                                      "score"
-                                    ],
-                                    "properties": {
-                                      "category": {
-                                        "description": "The predicted category of the input",
-                                        "type": "string"
-                                      },
-                                      "score": {
-                                        "description": "The confidence score of the predicted category of the input",
-                                        "type": "number"
-                                      }
-                                    },
-                                    "instillFormat": "object"
+                                  "category": {
+                                    "description": "The predicted category of the input",
+                                    "type": "string"
+                                  },
+                                  "score": {
+                                    "description": "The confidence score of the predicted category of the input",
+                                    "type": "number"
                                   }
-                                }
+                                },
+                                "instillFormat": "object"
                               }
                             }
                           }
@@ -1047,76 +1042,71 @@
                               "type": "array",
                               "items": {
                                 "type": "object",
+                                "format": "instance_segmentation",
+                                "additionalProperties": false,
+                                "required": [
+                                  "objects"
+                                ],
                                 "properties": {
-                                  "instance_segmentation": {
-                                    "type": "object",
-                                    "format": "instance_segmentation",
-                                    "additionalProperties": false,
-                                    "required": [
-                                      "objects"
-                                    ],
-                                    "properties": {
-                                      "objects": {
-                                        "description": "A list of detected instance bounding boxes",
-                                        "type": "array",
-                                        "items": {
+                                  "objects": {
+                                    "description": "A list of detected instance bounding boxes",
+                                    "type": "array",
+                                    "items": {
+                                      "type": "object",
+                                      "required": [
+                                        "rle",
+                                        "boundingBox",
+                                        "category",
+                                        "score"
+                                      ],
+                                      "properties": {
+                                        "rle": {
+                                          "description": "Run Length Encoding (RLE) of instance mask within the bounding box",
+                                          "type": "string"
+                                        },
+                                        "boundingBox": {
                                           "type": "object",
+                                          "format": "bounding_box",
+                                          "description": "The detected bounding box in (left, top, width, height) format",
+                                          "additionalProperties": false,
                                           "required": [
-                                            "rle",
-                                            "boundingBox",
-                                            "category",
-                                            "score"
+                                            "left",
+                                            "top",
+                                            "width",
+                                            "height"
                                           ],
                                           "properties": {
-                                            "rle": {
-                                              "description": "Run Length Encoding (RLE) of instance mask within the bounding box",
-                                              "type": "string"
+                                            "left": {
+                                              "description": "Bounding box left x-axis value",
+                                              "type": "number"
                                             },
-                                            "boundingBox": {
-                                              "type": "object",
-                                              "format": "bounding_box",
-                                              "description": "The detected bounding box in (left, top, width, height) format",
-                                              "additionalProperties": false,
-                                              "required": [
-                                                "left",
-                                                "top",
-                                                "width",
-                                                "height"
-                                              ],
-                                              "properties": {
-                                                "left": {
-                                                  "description": "Bounding box left x-axis value",
-                                                  "type": "number"
-                                                },
-                                                "top": {
-                                                  "description": "Bounding box top y-axis value",
-                                                  "type": "number"
-                                                },
-                                                "width": {
-                                                  "description": "Bounding box width value",
-                                                  "type": "number"
-                                                },
-                                                "height": {
-                                                  "description": "Bounding box height value",
-                                                  "type": "number"
-                                                }
-                                              }
+                                            "top": {
+                                              "description": "Bounding box top y-axis value",
+                                              "type": "number"
                                             },
-                                            "category": {
-                                              "description": "The predicted category of the bounding box",
-                                              "type": "string"
+                                            "width": {
+                                              "description": "Bounding box width value",
+                                              "type": "number"
                                             },
-                                            "score": {
-                                              "description": "The confidence score of the predicted instance object",
+                                            "height": {
+                                              "description": "Bounding box height value",
                                               "type": "number"
                                             }
                                           }
+                                        },
+                                        "category": {
+                                          "description": "The predicted category of the bounding box",
+                                          "type": "string"
+                                        },
+                                        "score": {
+                                          "description": "The confidence score of the predicted instance object",
+                                          "type": "number"
                                         }
                                       }
-                                    },
-                                    "instillFormat": "object"
+                                    }
                                   }
-                                }
+                                },
+                                "instillFormat": "object"
                               }
                             }
                           }
@@ -1205,93 +1195,88 @@
                               "type": "array",
                               "items": {
                                 "type": "object",
+                                "format": "keypoint",
+                                "additionalProperties": false,
+                                "required": [
+                                  "objects"
+                                ],
                                 "properties": {
-                                  "keypoint": {
-                                    "type": "object",
-                                    "format": "keypoint",
-                                    "additionalProperties": false,
-                                    "required": [
-                                      "objects"
-                                    ],
-                                    "properties": {
-                                      "objects": {
-                                        "description": "A list of keypoint objects, a keypoint object includes all the pre-defined keypoints of a detected object",
-                                        "type": "array",
-                                        "items": {
+                                  "objects": {
+                                    "description": "A list of keypoint objects, a keypoint object includes all the pre-defined keypoints of a detected object",
+                                    "type": "array",
+                                    "items": {
+                                      "type": "object",
+                                      "required": [
+                                        "keypoints",
+                                        "score",
+                                        "bounding_box"
+                                      ],
+                                      "properties": {
+                                        "keypoints": {
+                                          "description": "A keypoint group is composed of a list of pre-defined keypoints of a detected object",
+                                          "type": "array",
+                                          "items": {
+                                            "type": "object",
+                                            "required": [
+                                              "x",
+                                              "y",
+                                              "v"
+                                            ],
+                                            "properties": {
+                                              "x": {
+                                                "description": "x coordinate of the keypoint",
+                                                "type": "number"
+                                              },
+                                              "y": {
+                                                "description": "y coordinate of the keypoint",
+                                                "type": "number"
+                                              },
+                                              "v": {
+                                                "description": "visibility score of the keypoint",
+                                                "type": "number"
+                                              }
+                                            }
+                                          }
+                                        },
+                                        "score": {
+                                          "description": "The confidence score of the predicted object",
+                                          "type": "number"
+                                        },
+                                        "bounding_box": {
                                           "type": "object",
+                                          "format": "bounding_box",
+                                          "description": "The detected bounding box in (left, top, width, height) format",
+                                          "additionalProperties": false,
                                           "required": [
-                                            "keypoints",
-                                            "score",
-                                            "bounding_box"
+                                            "left",
+                                            "top",
+                                            "width",
+                                            "height"
                                           ],
                                           "properties": {
-                                            "keypoints": {
-                                              "description": "A keypoint group is composed of a list of pre-defined keypoints of a detected object",
-                                              "type": "array",
-                                              "items": {
-                                                "type": "object",
-                                                "required": [
-                                                  "x",
-                                                  "y",
-                                                  "v"
-                                                ],
-                                                "properties": {
-                                                  "x": {
-                                                    "description": "x coordinate of the keypoint",
-                                                    "type": "number"
-                                                  },
-                                                  "y": {
-                                                    "description": "y coordinate of the keypoint",
-                                                    "type": "number"
-                                                  },
-                                                  "v": {
-                                                    "description": "visibility score of the keypoint",
-                                                    "type": "number"
-                                                  }
-                                                }
-                                              }
-                                            },
-                                            "score": {
-                                              "description": "The confidence score of the predicted object",
+                                            "left": {
+                                              "description": "Bounding box left x-axis value",
                                               "type": "number"
                                             },
-                                            "bounding_box": {
-                                              "type": "object",
-                                              "format": "bounding_box",
-                                              "description": "The detected bounding box in (left, top, width, height) format",
-                                              "additionalProperties": false,
-                                              "required": [
-                                                "left",
-                                                "top",
-                                                "width",
-                                                "height"
-                                              ],
-                                              "properties": {
-                                                "left": {
-                                                  "description": "Bounding box left x-axis value",
-                                                  "type": "number"
-                                                },
-                                                "top": {
-                                                  "description": "Bounding box top y-axis value",
-                                                  "type": "number"
-                                                },
-                                                "width": {
-                                                  "description": "Bounding box width value",
-                                                  "type": "number"
-                                                },
-                                                "height": {
-                                                  "description": "Bounding box height value",
-                                                  "type": "number"
-                                                }
-                                              }
+                                            "top": {
+                                              "description": "Bounding box top y-axis value",
+                                              "type": "number"
+                                            },
+                                            "width": {
+                                              "description": "Bounding box width value",
+                                              "type": "number"
+                                            },
+                                            "height": {
+                                              "description": "Bounding box height value",
+                                              "type": "number"
                                             }
                                           }
                                         }
                                       }
-                                    },
-                                    "instillFormat": "object"
+                                    }
                                   }
-                                }
+                                },
+                                "instillFormat": "object"
                               }
                             }
                           }
@@ -1380,72 +1365,67 @@
                               "type": "array",
                               "items": {
                                 "type": "object",
+                                "format": "detection",
+                                "additionalProperties": false,
+                                "required": [
+                                  "objects"
+                                ],
                                 "properties": {
-                                  "detection": {
-                                    "type": "object",
-                                    "format": "detection",
-                                    "additionalProperties": false,
-                                    "required": [
-                                      "objects"
-                                    ],
-                                    "properties": {
-                                      "objects": {
-                                        "description": "A list of detected objects",
-                                        "type": "array",
-                                        "items": {
+                                  "objects": {
+                                    "description": "A list of detected objects",
+                                    "type": "array",
+                                    "items": {
+                                      "type": "object",
+                                      "additionalProperties": false,
+                                      "required": [
+                                        "bounding_box",
+                                        "category",
+                                        "score"
+                                      ],
+                                      "properties": {
+                                        "bounding_box": {
                                           "type": "object",
+                                          "format": "bounding_box",
+                                          "description": "The detected bounding box in (left, top, width, height) format",
                                           "additionalProperties": false,
                                           "required": [
-                                            "bounding_box",
-                                            "category",
-                                            "score"
+                                            "left",
+                                            "top",
+                                            "width",
+                                            "height"
                                           ],
                                           "properties": {
-                                            "bounding_box": {
-                                              "type": "object",
-                                              "format": "bounding_box",
-                                              "description": "The detected bounding box in (left, top, width, height) format",
-                                              "additionalProperties": false,
-                                              "required": [
-                                                "left",
-                                                "top",
-                                                "width",
-                                                "height"
-                                              ],
-                                              "properties": {
-                                                "left": {
-                                                  "description": "Bounding box left x-axis value",
-                                                  "type": "number"
-                                                },
-                                                "top": {
-                                                  "description": "Bounding box top y-axis value",
-                                                  "type": "number"
-                                                },
-                                                "width": {
-                                                  "description": "Bounding box width value",
-                                                  "type": "number"
-                                                },
-                                                "height": {
-                                                  "description": "Bounding box height value",
-                                                  "type": "number"
-                                                }
-                                              }
+                                            "left": {
+                                              "description": "Bounding box left x-axis value",
+                                              "type": "number"
                                             },
-                                            "category": {
-                                              "description": "The predicted category of the bounding box",
-                                              "type": "string"
+                                            "top": {
+                                              "description": "Bounding box top y-axis value",
+                                              "type": "number"
                                             },
-                                            "score": {
-                                              "description": "The confidence score of the predicted category of the bounding box",
+                                            "width": {
+                                              "description": "Bounding box width value",
+                                              "type": "number"
+                                            },
+                                            "height": {
+                                              "description": "Bounding box height value",
                                               "type": "number"
                                             }
                                           }
+                                        },
+                                        "category": {
+                                          "description": "The predicted category of the bounding box",
+                                          "type": "string"
+                                        },
+                                        "score": {
+                                          "description": "The confidence score of the predicted category of the bounding box",
+                                          "type": "number"
                                         }
                                       }
-                                    },
-                                    "instillFormat": "object"
+                                    }
                                   }
-                                }
+                                },
+                                "instillFormat": "object"
                               }
                             }
                           }
@@ -1534,71 +1514,66 @@
                               "type": "array",
                               "items": {
                                 "type": "object",
+                                "format": "ocr",
+                                "additionalProperties": false,
+                                "required": [
+                                  "objects"
+                                ],
                                 "properties": {
-                                  "ocr": {
-                                    "type": "object",
-                                    "format": "ocr",
-                                    "additionalProperties": false,
-                                    "required": [
-                                      "objects"
-                                    ],
-                                    "properties": {
-                                      "objects": {
-                                        "description": "A list of detected bounding boxes",
-                                        "type": "array",
-                                        "items": {
+                                  "objects": {
+                                    "description": "A list of detected bounding boxes",
+                                    "type": "array",
+                                    "items": {
+                                      "type": "object",
+                                      "required": [
+                                        "boundingBox",
+                                        "text",
+                                        "score"
+                                      ],
+                                      "properties": {
+                                        "boundingBox": {
                                           "type": "object",
+                                          "format": "bounding_box",
+                                          "description": "The detected bounding box in (left, top, width, height) format",
+                                          "additionalProperties": false,
                                           "required": [
-                                            "boundingBox",
-                                            "text",
-                                            "score"
+                                            "left",
+                                            "top",
+                                            "width",
+                                            "height"
                                           ],
                                           "properties": {
-                                            "boundingBox": {
-                                              "type": "object",
-                                              "format": "bounding_box",
-                                              "description": "The detected bounding box in (left, top, width, height) format",
-                                              "additionalProperties": false,
-                                              "required": [
-                                                "left",
-                                                "top",
-                                                "width",
-                                                "height"
-                                              ],
-                                              "properties": {
-                                                "left": {
-                                                  "description": "Bounding box left x-axis value",
-                                                  "type": "number"
-                                                },
-                                                "top": {
-                                                  "description": "Bounding box top y-axis value",
-                                                  "type": "number"
-                                                },
-                                                "width": {
-                                                  "description": "Bounding box width value",
-                                                  "type": "number"
-                                                },
-                                                "height": {
-                                                  "description": "Bounding box height value",
-                                                  "type": "number"
-                                                }
-                                              }
+                                            "left": {
+                                              "description": "Bounding box left x-axis value",
+                                              "type": "number"
                                             },
-                                            "text": {
-                                              "description": "Text string recognised per bounding box",
-                                              "type": "string"
+                                            "top": {
+                                              "description": "Bounding box top y-axis value",
+                                              "type": "number"
                                             },
-                                            "score": {
-                                              "description": "The confidence score of the predicted object",
+                                            "width": {
+                                              "description": "Bounding box width value",
+                                              "type": "number"
+                                            },
+                                            "height": {
+                                              "description": "Bounding box height value",
                                               "type": "number"
                                             }
                                           }
+                                        },
+                                        "text": {
+                                          "description": "Text string recognised per bounding box",
+                                          "type": "string"
+                                        },
+                                        "score": {
+                                          "description": "The confidence score of the predicted object",
+                                          "type": "number"
                                         }
                                       }
-                                    },
-                                    "instillFormat": "object"
+                                    }
                                   }
-                                }
+                                },
+                                "instillFormat": "object"
                               }
                             }
                           }
@@ -1687,40 +1662,35 @@
                               "type": "array",
                               "items": {
                                 "type": "object",
+                                "format": "semantic_segmentation",
+                                "additionalProperties": false,
+                                "required": [
+                                  "stuffs"
+                                ],
                                 "properties": {
-                                  "semantic_segmentation": {
-                                    "type": "object",
-                                    "format": "semantic_segmentation",
-                                    "additionalProperties": false,
-                                    "required": [
-                                      "stuffs"
-                                    ],
-                                    "properties": {
-                                      "stuffs": {
-                                        "description": "A list of RLE binary masks",
-                                        "type": "array",
-                                        "items": {
-                                          "type": "object",
-                                          "required": [
-                                            "rle",
-                                            "category"
-                                          ],
-                                          "properties": {
-                                            "rle": {
-                                              "description": "Run Length Encoding (RLE) of each stuff mask within the image",
-                                              "type": "string"
-                                            },
-                                            "category": {
-                                              "description": "Category text string corresponding to each stuff mask",
-                                              "type": "string"
-                                            }
-                                          }
+                                  "stuffs": {
+                                    "description": "A list of RLE binary masks",
+                                    "type": "array",
+                                    "items": {
+                                      "type": "object",
+                                      "required": [
+                                        "rle",
+                                        "category"
+                                      ],
+                                      "properties": {
+                                        "rle": {
+                                          "description": "Run Length Encoding (RLE) of each stuff mask within the image",
+                                          "type": "string"
+                                        },
+                                        "category": {
+                                          "description": "Category text string corresponding to each stuff mask",
+                                          "type": "string"
                                         }
                                       }
-                                    },
-                                    "instillFormat": "object"
+                                    }
                                   }
-                                }
+                                },
+                                "instillFormat": "object"
                               }
                             }
                           }

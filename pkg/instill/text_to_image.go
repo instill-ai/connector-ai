@@ -56,7 +56,10 @@ func (c *Connection) executeTextToImage(grpcClient modelPB.ModelPublicServiceCli
 			return nil, fmt.Errorf("invalid output: %v for model: %s", textToImgOutput, modelName)
 		}
 
-		outputJson, err := protojson.Marshal(textToImgOutput)
+		outputJson, err := protojson.MarshalOptions{
+			UseProtoNames:   true,
+			EmitUnpopulated: true,
+		}.Marshal(textToImgOutput)
 		if err != nil {
 			return nil, err
 		}

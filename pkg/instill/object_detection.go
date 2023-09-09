@@ -61,7 +61,10 @@ func (c *Connection) executeObjectDetection(grpcClient modelPB.ModelPublicServic
 		if objDetectionOutput == nil {
 			return nil, fmt.Errorf("invalid output: %v for model: %s", objDetectionOutput, modelName)
 		}
-		outputJson, err := protojson.Marshal(objDetectionOutput)
+		outputJson, err := protojson.MarshalOptions{
+			UseProtoNames:   true,
+			EmitUnpopulated: true,
+		}.Marshal(objDetectionOutput)
 		if err != nil {
 			return nil, err
 		}

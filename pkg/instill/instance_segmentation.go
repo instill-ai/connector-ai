@@ -57,7 +57,10 @@ func (c *Connection) executeInstanceSegmentation(grpcClient modelPB.ModelPublicS
 		if instanceSegmentationOp == nil {
 			return nil, fmt.Errorf("invalid output: %v for model: %s", instanceSegmentationOp, modelName)
 		}
-		outputJson, err := protojson.Marshal(instanceSegmentationOp)
+		outputJson, err := protojson.MarshalOptions{
+			UseProtoNames:   true,
+			EmitUnpopulated: true,
+		}.Marshal(instanceSegmentationOp)
 		if err != nil {
 			return nil, err
 		}
