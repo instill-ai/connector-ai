@@ -58,7 +58,10 @@ func (c *Connection) executeSemanticSegmentation(grpcClient modelPB.ModelPublicS
 		if semanticSegmentationOp == nil {
 			return nil, fmt.Errorf("invalid output: %v for model: %s", semanticSegmentationOp, modelName)
 		}
-		outputJson, err := protojson.Marshal(semanticSegmentationOp)
+		outputJson, err := protojson.MarshalOptions{
+			UseProtoNames:   true,
+			EmitUnpopulated: true,
+		}.Marshal(semanticSegmentationOp)
 		if err != nil {
 			return nil, err
 		}

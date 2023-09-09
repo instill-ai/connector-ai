@@ -33,12 +33,7 @@
     },
     "output": {
       "type": "object",
-      "properties": {
-        "classification": {
-          "$ref": "https://raw.githubusercontent.com/instill-ai/connector/622978a8ce8b5c4f2242afad7e5ba7d4d18cab27/shared_schema.json#/$defs/instill_types/classification",
-          "instillFormat": "object"
-        }
-      }
+      "$ref": "https://raw.githubusercontent.com/instill-ai/connector/622978a8ce8b5c4f2242afad7e5ba7d4d18cab27/shared_schema.json#/$defs/instill_types/classification"
     }
   },
   "TASK_INSTANCE_SEGMENTATION": {
@@ -54,12 +49,7 @@
     },
     "output": {
       "type": "object",
-      "properties": {
-        "instance_segmentation": {
-          "$ref": "https://raw.githubusercontent.com/instill-ai/connector/622978a8ce8b5c4f2242afad7e5ba7d4d18cab27/shared_schema.json#/$defs/instill_types/instance_segmentation",
-          "instillFormat": "object"
-        }
-      }
+      "$ref": "https://raw.githubusercontent.com/instill-ai/connector/622978a8ce8b5c4f2242afad7e5ba7d4d18cab27/shared_schema.json#/$defs/instill_types/instance_segmentation"
     }
   },
   "TASK_KEYPOINT": {
@@ -75,12 +65,7 @@
     },
     "output": {
       "type": "object",
-      "properties": {
-        "keypoint": {
-          "$ref": "https://raw.githubusercontent.com/instill-ai/connector/622978a8ce8b5c4f2242afad7e5ba7d4d18cab27/shared_schema.json#/$defs/instill_types/keypoint",
-          "instillFormat": "object"
-        }
-      }
+      "$ref": "https://raw.githubusercontent.com/instill-ai/connector/622978a8ce8b5c4f2242afad7e5ba7d4d18cab27/shared_schema.json#/$defs/instill_types/keypoint"
     }
   },
   "TASK_DETECTION": {
@@ -96,12 +81,7 @@
     },
     "output": {
       "type": "object",
-      "properties": {
-        "detection": {
-          "$ref": "https://raw.githubusercontent.com/instill-ai/connector/622978a8ce8b5c4f2242afad7e5ba7d4d18cab27/shared_schema.json#/$defs/instill_types/detection",
-          "instillFormat": "object"
-        }
-      }
+      "$ref": "https://raw.githubusercontent.com/instill-ai/connector/622978a8ce8b5c4f2242afad7e5ba7d4d18cab27/shared_schema.json#/$defs/instill_types/detection"
     }
   },
   "TASK_OCR": {
@@ -114,12 +94,7 @@
     },
     "output": {
       "type": "object",
-      "properties": {
-        "ocr": {
-          "$ref": "https://raw.githubusercontent.com/instill-ai/connector/622978a8ce8b5c4f2242afad7e5ba7d4d18cab27/shared_schema.json#/$defs/instill_types/ocr",
-          "instillFormat": "object"
-        }
-      }
+      "$ref": "https://raw.githubusercontent.com/instill-ai/connector/622978a8ce8b5c4f2242afad7e5ba7d4d18cab27/shared_schema.json#/$defs/instill_types/ocr"
     }
   },
   "TASK_SEMANTIC_SEGMENTATION": {
@@ -135,12 +110,7 @@
     },
     "output": {
       "type": "object",
-      "properties": {
-        "semantic_segmentation": {
-          "$ref": "https://raw.githubusercontent.com/instill-ai/connector/622978a8ce8b5c4f2242afad7e5ba7d4d18cab27/shared_schema.json#/$defs/instill_types/semantic_segmentation",
-          "instillFormat": "object"
-        }
-      }
+      "$ref": "https://raw.githubusercontent.com/instill-ai/connector/622978a8ce8b5c4f2242afad7e5ba7d4d18cab27/shared_schema.json#/$defs/instill_types/semantic_segmentation"
     }
   },
   "TASK_TEXT_GENERATION": {

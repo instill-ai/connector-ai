@@ -56,7 +56,10 @@ func (c *Connection) executeKeyPointDetection(grpcClient modelPB.ModelPublicServ
 		if keyPointOutput == nil {
 			return nil, fmt.Errorf("invalid output: %v for model: %s", keyPointOutput, modelName)
 		}
-		outputJson, err := protojson.Marshal(keyPointOutput)
+		outputJson, err := protojson.MarshalOptions{
+			UseProtoNames:   true,
+			EmitUnpopulated: true,
+		}.Marshal(keyPointOutput)
 		if err != nil {
 			return nil, err
 		}

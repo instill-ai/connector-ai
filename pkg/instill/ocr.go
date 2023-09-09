@@ -55,7 +55,10 @@ func (c *Connection) executeOCR(grpcClient modelPB.ModelPublicServiceClient, mod
 		if ocrOutput == nil {
 			return nil, fmt.Errorf("invalid output: %v for model: %s", ocrOutput, modelName)
 		}
-		outputJson, err := protojson.Marshal(ocrOutput)
+		outputJson, err := protojson.MarshalOptions{
+			UseProtoNames:   true,
+			EmitUnpopulated: true,
+		}.Marshal(ocrOutput)
 		if err != nil {
 			return nil, err
 		}

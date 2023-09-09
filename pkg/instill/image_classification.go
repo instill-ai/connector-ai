@@ -58,7 +58,10 @@ func (c *Connection) executeImageClassification(grpcClient modelPB.ModelPublicSe
 		if imgClassificationOp == nil {
 			return nil, fmt.Errorf("invalid output: %v for model: %s", imgClassificationOp, modelName)
 		}
-		outputJson, err := protojson.Marshal(imgClassificationOp)
+		outputJson, err := protojson.MarshalOptions{
+			UseProtoNames:   true,
+			EmitUnpopulated: true,
+		}.Marshal(imgClassificationOp)
 		if err != nil {
 			return nil, err
 		}
