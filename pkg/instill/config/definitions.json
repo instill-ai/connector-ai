@@ -952,8 +952,7 @@
                                     "description": "The confidence score of the predicted category of the input",
                                     "type": "number"
                                   }
-                                },
-                                "instillFormat": "object"
+                                }
                               }
                             }
                           }
@@ -1105,8 +1104,7 @@
                                       }
                                     }
                                   }
-                                },
-                                "instillFormat": "object"
+                                }
                               }
                             }
                           }
@@ -1275,8 +1273,7 @@
                                       }
                                     }
                                   }
-                                },
-                                "instillFormat": "object"
+                                }
                               }
                             }
                           }
@@ -1424,8 +1421,7 @@
                                       }
                                     }
                                   }
-                                },
-                                "instillFormat": "object"
+                                }
                               }
                             }
                           }
@@ -1572,8 +1568,7 @@
                                       }
                                     }
                                   }
-                                },
-                                "instillFormat": "object"
+                                }
                               }
                             }
                           }
@@ -1689,8 +1684,7 @@
                                       }
                                     }
                                   }
-                                },
-                                "instillFormat": "object"
+                                }
                               }
                             }
                           }
