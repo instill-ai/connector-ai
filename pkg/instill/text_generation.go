@@ -24,7 +24,7 @@ func (c *Connection) executeTextGeneration(grpcClient modelPB.ModelPublicService
 			return nil, err
 		}
 		textGenerationInput := &modelPB.TextGenerationInput{}
-		err = protojson.Unmarshal(inputJson, textGenerationInput)
+		err = protojson.UnmarshalOptions{DiscardUnknown: true}.Unmarshal(inputJson, textGenerationInput)
 		if err != nil {
 			return nil, err
 		}

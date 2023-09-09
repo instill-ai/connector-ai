@@ -22,7 +22,7 @@ func (c *Connection) executeSemanticSegmentation(grpcClient modelPB.ModelPublicS
 			return nil, err
 		}
 		semanticSegmentationInput := &modelPB.SemanticSegmentationInput{}
-		err = protojson.Unmarshal(inputJson, semanticSegmentationInput)
+		err = protojson.UnmarshalOptions{DiscardUnknown: true}.Unmarshal(inputJson, semanticSegmentationInput)
 		if err != nil {
 			return nil, err
 		}

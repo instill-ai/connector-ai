@@ -23,7 +23,7 @@ func (c *Connection) executeInstanceSegmentation(grpcClient modelPB.ModelPublicS
 			return nil, err
 		}
 		segmentationInput := &modelPB.InstanceSegmentationInput{}
-		err = protojson.Unmarshal(inputJson, segmentationInput)
+		err = protojson.UnmarshalOptions{DiscardUnknown: true}.Unmarshal(inputJson, segmentationInput)
 		if err != nil {
 			return nil, err
 		}

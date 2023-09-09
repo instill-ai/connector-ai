@@ -22,7 +22,7 @@ func (c *Connection) executeKeyPointDetection(grpcClient modelPB.ModelPublicServ
 			return nil, err
 		}
 		keypointInput := &modelPB.KeypointInput{}
-		err = protojson.Unmarshal(inputJson, keypointInput)
+		err = protojson.UnmarshalOptions{DiscardUnknown: true}.Unmarshal(inputJson, keypointInput)
 		if err != nil {
 			return nil, err
 		}

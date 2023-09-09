@@ -23,7 +23,7 @@ func (c *Connection) executeOCR(grpcClient modelPB.ModelPublicServiceClient, mod
 			return nil, err
 		}
 		ocrInput := &modelPB.OcrInput{}
-		err = protojson.Unmarshal(inputJson, ocrInput)
+		err = protojson.UnmarshalOptions{DiscardUnknown: true}.Unmarshal(inputJson, ocrInput)
 		if err != nil {
 			return nil, err
 		}

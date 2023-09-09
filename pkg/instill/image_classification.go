@@ -24,7 +24,7 @@ func (c *Connection) executeImageClassification(grpcClient modelPB.ModelPublicSe
 			return nil, err
 		}
 		classificationInput := &modelPB.ClassificationInput{}
-		err = protojson.Unmarshal(inputJson, classificationInput)
+		err = protojson.UnmarshalOptions{DiscardUnknown: true}.Unmarshal(inputJson, classificationInput)
 		if err != nil {
 			return nil, err
 		}
