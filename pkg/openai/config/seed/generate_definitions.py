@@ -5,29 +5,29 @@ import copy
 from os.path import dirname
 
 NAME = "OpenAI"
-TASKS = ["TASK_TEXT_GENERATION", "TASK_TEXT_EMBEDDINGS", "TASK_SPEECH_RECOGNITION"]
+TASKS = ["TASK_TEXT_GENERATION",
+         "TASK_TEXT_EMBEDDINGS", "TASK_SPEECH_RECOGNITION"]
 
 DEFINITION_TEMPLATE = [
-  {
-    "uid": "9fb6a2cb-bff5-4c69-bc6d-4538dd8e3362",
-    "id": "ai-openai",
-    "title": NAME,
-    "documentation_url": "https://www.instill.tech/docs/vdp/ai-connectors/openai",
-    "icon": "openai.svg",
-    "icon_url": "",
-    "spec": {},
-    "public": True,
-    "custom": False,
-    "vendor_attributes": {
-      "githubIssueLabel": "openai",
-      "license": "MIT",
-      "releaseStage": "alpha",
-      "resourceRequirements": {},
-      "modelType": "api"
+    {
+        "uid": "9fb6a2cb-bff5-4c69-bc6d-4538dd8e3362",
+        "id": "ai-openai",
+        "title": NAME,
+        "documentation_url": "https://www.instill.tech/docs/vdp/ai-connectors/openai",
+        "icon": "openai.svg",
+        "icon_url": "",
+        "spec": {},
+        "public": True,
+        "custom": False,
+        "vendor_attributes": {
+            "githubIssueLabel": "openai",
+            "license": "MIT",
+            "releaseStage": "alpha",
+            "resourceRequirements": {},
+            "modelType": "api"
+        }
     }
-  }
 ]
-
 
 
 OPENAPI_SCHEMA_TEMPLATE = {
@@ -195,7 +195,6 @@ def convert_data_schema_to_component_schema(data):
             "input": convert_field(data["default"]["input"])
         }
 
-
     return component_schema
 
 
@@ -224,5 +223,6 @@ if __name__ == "__main__":
 
     with open("../definitions.json", "w") as o:
         out = json.dumps(a, indent=2)
+        out = out.replace("(/docs", "(https://platform.openai.com/docs")
         o.write(out)
         o.write("\n")

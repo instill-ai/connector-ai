@@ -98,7 +98,7 @@
                       ]
                     },
                     "model": {
-                      "description": "ID of the model to use. See the [model endpoint compatibility](/docs/models/model-endpoint-compatibility) table for details on which models work with the Chat API.",
+                      "description": "ID of the model to use. See the [model endpoint compatibility](https://platform.openai.com/docs/models/model-endpoint-compatibility) table for details on which models work with the Chat API.",
                       "example": "gpt-3.5-turbo",
                       "anyOf": [
                         {
@@ -278,7 +278,7 @@
                       ]
                     },
                     "model": {
-                      "description": "ID of the model to use. You can use the [List models](/docs/api-reference/models/list) API to see all of your available models, or see our [Model overview](/docs/models/overview) for descriptions of them.\n",
+                      "description": "ID of the model to use. You can use the [List models](https://platform.openai.com/docs/api-reference/models/list) API to see all of your available models, or see our [Model overview](https://platform.openai.com/docs/models/overview) for descriptions of them.\n",
                       "example": "text-embedding-ada-002",
                       "anyOf": [
                         {
@@ -414,7 +414,7 @@
                     },
                     "prompt": {
                       "title": "Prompt",
-                      "description": "An optional text to guide the model's style or continue a previous audio segment. The [prompt](/docs/guides/speech-to-text/prompting) should match the audio language.\n",
+                      "description": "An optional text to guide the model's style or continue a previous audio segment. The [prompt](https://platform.openai.com/docs/guides/speech-to-text/prompting) should match the audio language.\n",
                       "instillFormat": "text",
                       "instillUpstreamTypes": [
                         "value",
@@ -480,7 +480,7 @@
                                   ]
                                 },
                                 "model": {
-                                  "description": "ID of the model to use. See the [model endpoint compatibility](/docs/models/model-endpoint-compatibility) table for details on which models work with the Chat API.",
+                                  "description": "ID of the model to use. See the [model endpoint compatibility](https://platform.openai.com/docs/models/model-endpoint-compatibility) table for details on which models work with the Chat API.",
                                   "example": "gpt-3.5-turbo",
                                   "anyOf": [
                                     {
@@ -645,7 +645,7 @@
                                   ]
                                 },
                                 "model": {
-                                  "description": "ID of the model to use. You can use the [List models](/docs/api-reference/models/list) API to see all of your available models, or see our [Model overview](/docs/models/overview) for descriptions of them.\n",
+                                  "description": "ID of the model to use. You can use the [List models](https://platform.openai.com/docs/api-reference/models/list) API to see all of your available models, or see our [Model overview](https://platform.openai.com/docs/models/overview) for descriptions of them.\n",
                                   "example": "text-embedding-ada-002",
                                   "anyOf": [
                                     {
@@ -792,7 +792,7 @@
                                   ]
                                 },
                                 "prompt": {
-                                  "description": "An optional text to guide the model's style or continue a previous audio segment. The [prompt](/docs/guides/speech-to-text/prompting) should match the audio language.\n",
+                                  "description": "An optional text to guide the model's style or continue a previous audio segment. The [prompt](https://platform.openai.com/docs/guides/speech-to-text/prompting) should match the audio language.\n",
                                   "type": "string",
                                   "title": "Prompt",
                                   "instillFormat": "text",
