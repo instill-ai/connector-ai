@@ -689,11 +689,11 @@
                                 "properties": {
                                   "embedding": {
                                     "type": "array",
-                                    "format": "embedding",
+                                    "instillFormat": "number_array",
                                     "items": {
-                                      "type": "number"
-                                    },
-                                    "instillFormat": "number_array"
+                                      "type": "number",
+                                      "instillFormat": "number"
+                                    }
                                   }
                                 }
                               }

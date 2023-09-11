@@ -24,7 +24,8 @@
           "type": "array",
           "description": "An array of weights to use for generation.",
           "items": {
-            "$ref": "stabilityai.json#/components/schemas/TextPrompt/properties/weight"
+            "$ref": "stabilityai.json#/components/schemas/TextPrompt/properties/weight",
+            "instillFormat": "number"
           },
           "minItems": 1,
           "instillFormat": "number_array",
@@ -122,7 +123,8 @@
           "title": "Images",
           "type": "array",
           "items": {
-            "type": "string"
+            "type": "string",
+            "instillFormat": "image"
           },
           "instillFormat": "image_array"
         },
@@ -130,7 +132,8 @@
           "title": "Seeds",
           "type": "array",
           "items": {
-            "$ref": "stabilityai.json#/components/schemas/Image/properties/seed"
+            "$ref": "stabilityai.json#/components/schemas/Image/properties/seed",
+            "instillFormat": "number"
           },
           "instillFormat": "number_array"
         }
@@ -162,7 +165,8 @@
           "type": "array",
           "description": "An array of weights to use for generation.",
           "items": {
-            "$ref": "stabilityai.json#/components/schemas/TextPrompt/properties/weight"
+            "$ref": "stabilityai.json#/components/schemas/TextPrompt/properties/weight",
+            "instillFormat": "number"
           },
           "minItems": 1,
           "instillFormat": "number_array",
