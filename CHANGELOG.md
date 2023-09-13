@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.4.0-alpha](https://github.com/instill-ai/connector-ai/compare/v0.3.0-alpha...v0.4.0-alpha) (2023-09-13)
+
+
+### Features
+
+* ins-1583 Add support for Hugging Face Inference API ([#37](https://github.com/instill-ai/connector-ai/issues/37)) ([61125c6](https://github.com/instill-ai/connector-ai/commit/61125c6ffdec8d57381d23c18b5bdd9ead17858e))
+
+
+### Miscellaneous Chores
+
+* **release:** release v0.4.0-alpha ([7738fcd](https://github.com/instill-ai/connector-ai/commit/7738fcd02e3c69f8d68d927c2a235e3db0e02707))
+
 ## [0.3.0-alpha](https://github.com/instill-ai/connector-ai/compare/v0.2.0-alpha...v0.3.0-alpha) (2023-08-03)
 
 
