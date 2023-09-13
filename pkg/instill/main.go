@@ -123,7 +123,7 @@ func (c *Connection) getServerURL() string {
 }
 
 func (c *Connection) getModels() (err error) {
-	serverURL := c.getServerURL()
+	serverURL := c.getServerURL() + "/model"
 	c.client, err = c.NewClient()
 	if err != nil {
 		return err
