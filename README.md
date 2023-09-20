@@ -11,12 +11,6 @@ Currently, we support these AI vendors:
 | ai-openai      | [OpenAI](https://openai.com) | Text-Generation, Speech-Recognition, Text-Embedding
 | ai-stability-ai | [Stability AI](https://stability.ai/) | Text-to-Image, Image-to-Image |
 
-## Prerequisites
-
-## Quick start
-
-## Documentation
-
 ## Contributing
 
 Please refer to the [Contributing Guidelines](./.github/CONTRIBUTING.md) for more details.
