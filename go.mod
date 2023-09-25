@@ -5,8 +5,8 @@ go 1.19
 require (
 	github.com/gofrs/uuid v4.4.0+incompatible
 	github.com/h2non/filetype v1.1.3
-	github.com/instill-ai/component v0.4.0-alpha.0.20230925162635-046f0900f997
-	github.com/instill-ai/protogen-go v0.3.3-alpha.0.20230829012255-c03947a06bc7
+	github.com/instill-ai/component v0.4.0-alpha.0.20230925171029-e3485c428e72
+	github.com/instill-ai/protogen-go v0.3.3-alpha.0.20230925170910-6416b8d2be1a
 	github.com/stretchr/testify v1.8.4
 	go.uber.org/zap v1.24.0
 	google.golang.org/grpc v1.56.2
