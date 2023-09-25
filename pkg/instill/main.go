@@ -14,8 +14,8 @@ import (
 	"go.uber.org/zap"
 	"google.golang.org/protobuf/types/known/structpb"
 
-	"github.com/instill-ai/connector/pkg/base"
-	"github.com/instill-ai/connector/pkg/configLoader"
+	"github.com/instill-ai/component/pkg/base"
+	"github.com/instill-ai/component/pkg/configLoader"
 
 	commonPB "github.com/instill-ai/protogen-go/common/task/v1alpha"
 	connectorPB "github.com/instill-ai/protogen-go/vdp/connector/v1alpha"
@@ -42,7 +42,7 @@ type Connector struct {
 }
 
 type Connection struct {
-	base.BaseConnection
+	base.BaseExecution
 	connector *Connector
 	client    *Client
 }
@@ -61,7 +61,7 @@ type HTTPClient interface {
 func Init(logger *zap.Logger, options ConnectorOptions) base.IConnector {
 	once.Do(func() {
 		loader := configLoader.InitJSONSchema(logger)
-		connDefs, err := loader.Load(venderName, connectorPB.ConnectorType_CONNECTOR_TYPE_AI, definitionJSON)
+		connDefs, err := loader.LoadConnector(venderName, connectorPB.ConnectorType_CONNECTOR_TYPE_AI, definitionJSON)
 		if err != nil {
 			panic(err)
 		}
@@ -80,36 +80,36 @@ func Init(logger *zap.Logger, options ConnectorOptions) base.IConnector {
 	return connector
 }
 
-func (c *Connector) CreateConnection(defUid uuid.UUID, config *structpb.Struct, logger *zap.Logger) (base.IConnection, error) {
+func (c *Connector) CreateExecution(defUid uuid.UUID, config *structpb.Struct, logger *zap.Logger) (base.IExecution, error) {
 	def, err := c.GetConnectorDefinitionByUid(defUid)
 	if err != nil {
 		return nil, err
 	}
 	return &Connection{
-		BaseConnection: base.BaseConnection{
+		BaseExecution: base.BaseExecution{
 			Logger: logger, DefUid: defUid,
-			Config:     config,
-			Definition: def,
+			Config:                config,
+			OpenAPISpecifications: def.Spec.OpenapiSpecifications,
 		},
 		connector: c,
 	}, nil
 }
 
 // NewClient initializes a new Instill model client
-func (c *Connection) NewClient() (*Client, error) {
+func NewClient(config *structpb.Struct) (*Client, error) {
 	tr := &http.Transport{
 		TLSClientConfig:   &tls.Config{InsecureSkipVerify: true},
 		DisableKeepAlives: true,
 	}
-	return &Client{APIKey: c.getAPIKey(), HTTPClient: &http.Client{Timeout: reqTimeout, Transport: tr}}, nil
+	return &Client{APIKey: getAPIKey(config), HTTPClient: &http.Client{Timeout: reqTimeout, Transport: tr}}, nil
 }
 
-func (c *Connection) getAPIKey() string {
-	return c.Config.GetFields()["api_token"].GetStringValue()
+func getAPIKey(config *structpb.Struct) string {
+	return config.GetFields()["api_token"].GetStringValue()
 }
 
-func (c *Connection) getServerURL() string {
-	serverUrl := c.Config.GetFields()["server_url"].GetStringValue()
+func getServerURL(config *structpb.Struct) string {
+	serverUrl := config.GetFields()["server_url"].GetStringValue()
 	if strings.HasPrefix(serverUrl, "https://") {
 		if len(strings.Split(serverUrl, ":")) == 2 {
 			serverUrl = serverUrl + ":443"
@@ -122,14 +122,14 @@ func (c *Connection) getServerURL() string {
 	return serverUrl
 }
 
-func (c *Connection) getModels() (err error) {
-	serverURL := c.getServerURL() + "/model"
-	c.client, err = c.NewClient()
+func getModels(config *structpb.Struct) (err error) {
+	serverURL := getServerURL(config) + "/model"
+	client, err := NewClient(config)
 	if err != nil {
 		return err
 	}
 	reqURL := serverURL + getModelPath
-	err = c.client.sendReq(reqURL, http.MethodGet, nil)
+	err = client.sendReq(reqURL, http.MethodGet, nil)
 	return err
 }
 
@@ -158,7 +158,7 @@ func (c *Client) sendReq(reqURL, method string, params interface{}) (err error) 
 func (c *Connection) Execute(inputs []*structpb.Struct) ([]*structpb.Struct, error) {
 
 	var err error
-	c.client, err = c.NewClient()
+	c.client, err = NewClient(c.Config)
 	if err != nil {
 		return nil, err
 	}
@@ -167,7 +167,7 @@ func (c *Connection) Execute(inputs []*structpb.Struct) ([]*structpb.Struct, err
 		return inputs, fmt.Errorf("invalid input")
 	}
 
-	gRPCCLient, gRPCCLientConn := initModelPublicServiceClient(c.getServerURL())
+	gRPCCLient, gRPCCLientConn := initModelPublicServiceClient(getServerURL(c.Config))
 	if gRPCCLientConn != nil {
 		defer gRPCCLientConn.Close()
 	}
@@ -214,8 +214,8 @@ func (c *Connection) Execute(inputs []*structpb.Struct) ([]*structpb.Struct, err
 	return result, err
 }
 
-func (c *Connection) Test() (connectorPB.ConnectorResource_State, error) {
-	err := c.getModels()
+func (c *Connector) Test(defUid uuid.UUID, config *structpb.Struct, logger *zap.Logger) (connectorPB.ConnectorResource_State, error) {
+	err := getModels(config)
 	if err != nil {
 		return connectorPB.ConnectorResource_STATE_ERROR, err
 	}
