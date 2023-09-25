@@ -79,7 +79,7 @@
       "type": "object",
       "properties": {
         "embedding": {
-          "$ref": "https://raw.githubusercontent.com/instill-ai/connector/70d06a013fa06f86130bf6e186d8e7839c38c448/shared_schema.json#/$defs/instill_types/embedding",
+          "$ref": "https://raw.githubusercontent.com/instill-ai/component/70d06a013fa06f86130bf6e186d8e7839c38c448/shared_schema.json#/$defs/instill_types/embedding",
           "instillFormat": "number_array"
         }
       }
