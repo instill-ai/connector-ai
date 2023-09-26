@@ -25,6 +25,7 @@ var (
 	openAIKey      = "<valid api key>"
 	huggingFaceKey = "<valid api key>"
 	hfCon          base.IExecution
+	hfConfig       *structpb.Struct
 )
 
 func init() {
@@ -34,7 +35,7 @@ func init() {
 	stabilityAIKey = string(b)
 	b, _ = ioutil.ReadFile("test_artifacts/hugging_face.txt")
 	huggingFaceKey = string(b)
-	hfConfig := &structpb.Struct{
+	hfConfig = &structpb.Struct{
 		Fields: map[string]*structpb.Value{
 			"api_key":            {Kind: &structpb.Value_StringValue{StringValue: huggingFaceKey}},
 			"base_url":           {Kind: &structpb.Value_StringValue{StringValue: "https://api-inference.huggingface.co"}},
@@ -139,7 +140,8 @@ func TestOpenAIAudioTranscription(t *testing.T) {
 }
 
 func TestGetConnectionState(t *testing.T) {
-	state, err := hfCon.Test()
+	c := Init(nil, ConnectorOptions{})
+	state, err := c.Test(c.ListConnectorDefinitionUids()[3], hfConfig, nil)
 	fmt.Printf("\n state: %v, err: %v", state, err)
 }
 
