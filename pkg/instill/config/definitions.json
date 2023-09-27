@@ -24,7 +24,7 @@
           },
           "server_url": {
             "title": "Server URL",
-            "description": "Base URL for the Instill Model API. To access models on Instill Cloud, use the base URL `https://api-model.instill.tech`. To access models on your local Instill Model, use the base URL `http://localhost:9080`.",
+            "description": "Base URL for the Instill Model API. To access models on Instill Cloud, use the base URL `https://api.instill.tech`. To access models on your local Instill Model, use the base URL `http://api-gateway:8080`.",
             "type": "string",
             "default": "https://api-model.instill.tech"
           }
@@ -87,7 +87,8 @@
                       "type": "object",
                       "required": [
                         "image_base64",
-                        "model_name"
+                        "model_namespace",
+                        "model_id"
                       ],
                       "properties": {
                         "image_base64": {
@@ -105,9 +106,29 @@
                             }
                           ]
                         },
-                        "model_name": {
-                          "title": "Model Name",
-                          "description": "Name of the Instill Model model to be used.",
+                        "model_namespace": {
+                          "title": "Model Namespace",
+                          "description": "Namespace of the Instill Model model to be used.",
+                          "instillFormat": "text",
+                          "instillUpstreamTypes": [
+                            "value",
+                            "reference"
+                          ],
+                          "anyOf": [
+                            {
+                              "type": "string",
+                              "instillUpstreamType": "value"
+                            },
+                            {
+                              "type": "string",
+                              "pattern": "^\\{.*\\}$",
+                              "instillUpstreamType": "reference"
+                            }
+                          ]
+                        },
+                        "model_id": {
+                          "title": "Model Id",
+                          "description": "ID of the Instill Model model to be used.",
                           "instillFormat": "text",
                           "instillUpstreamTypes": [
                             "value",
@@ -166,7 +187,8 @@
                       "type": "object",
                       "required": [
                         "image_base64",
-                        "model_name"
+                        "model_namespace",
+                        "model_id"
                       ],
                       "properties": {
                         "image_base64": {
@@ -184,9 +206,29 @@
                             }
                           ]
                         },
-                        "model_name": {
-                          "title": "Model Name",
-                          "description": "Name of the Instill Model model to be used.",
+                        "model_namespace": {
+                          "title": "Model Namespace",
+                          "description": "Namespace of the Instill Model model to be used.",
+                          "instillFormat": "text",
+                          "instillUpstreamTypes": [
+                            "value",
+                            "reference"
+                          ],
+                          "anyOf": [
+                            {
+                              "type": "string",
+                              "instillUpstreamType": "value"
+                            },
+                            {
+                              "type": "string",
+                              "pattern": "^\\{.*\\}$",
+                              "instillUpstreamType": "reference"
+                            }
+                          ]
+                        },
+                        "model_id": {
+                          "title": "Model Id",
+                          "description": "ID of the Instill Model model to be used.",
                           "instillFormat": "text",
                           "instillUpstreamTypes": [
                             "value",
@@ -245,7 +287,8 @@
                       "type": "object",
                       "required": [
                         "image_base64",
-                        "model_name"
+                        "model_namespace",
+                        "model_id"
                       ],
                       "properties": {
                         "image_base64": {
@@ -263,9 +306,29 @@
                             }
                           ]
                         },
-                        "model_name": {
-                          "title": "Model Name",
-                          "description": "Name of the Instill Model model to be used.",
+                        "model_namespace": {
+                          "title": "Model Namespace",
+                          "description": "Namespace of the Instill Model model to be used.",
+                          "instillFormat": "text",
+                          "instillUpstreamTypes": [
+                            "value",
+                            "reference"
+                          ],
+                          "anyOf": [
+                            {
+                              "type": "string",
+                              "instillUpstreamType": "value"
+                            },
+                            {
+                              "type": "string",
+                              "pattern": "^\\{.*\\}$",
+                              "instillUpstreamType": "reference"
+                            }
+                          ]
+                        },
+                        "model_id": {
+                          "title": "Model Id",
+                          "description": "ID of the Instill Model model to be used.",
                           "instillFormat": "text",
                           "instillUpstreamTypes": [
                             "value",
@@ -324,7 +387,8 @@
                       "type": "object",
                       "required": [
                         "image_base64",
-                        "model_name"
+                        "model_namespace",
+                        "model_id"
                       ],
                       "properties": {
                         "image_base64": {
@@ -342,9 +406,29 @@
                             }
                           ]
                         },
-                        "model_name": {
-                          "title": "Model Name",
-                          "description": "Name of the Instill Model model to be used.",
+                        "model_namespace": {
+                          "title": "Model Namespace",
+                          "description": "Namespace of the Instill Model model to be used.",
+                          "instillFormat": "text",
+                          "instillUpstreamTypes": [
+                            "value",
+                            "reference"
+                          ],
+                          "anyOf": [
+                            {
+                              "type": "string",
+                              "instillUpstreamType": "value"
+                            },
+                            {
+                              "type": "string",
+                              "pattern": "^\\{.*\\}$",
+                              "instillUpstreamType": "reference"
+                            }
+                          ]
+                        },
+                        "model_id": {
+                          "title": "Model Id",
+                          "description": "ID of the Instill Model model to be used.",
                           "instillFormat": "text",
                           "instillUpstreamTypes": [
                             "value",
@@ -403,7 +487,8 @@
                       "type": "object",
                       "required": [
                         "image_base64",
-                        "model_name"
+                        "model_namespace",
+                        "model_id"
                       ],
                       "properties": {
                         "image_base64": {
@@ -421,9 +506,29 @@
                             }
                           ]
                         },
-                        "model_name": {
-                          "title": "Model Name",
-                          "description": "Name of the Instill Model model to be used.",
+                        "model_namespace": {
+                          "title": "Model Namespace",
+                          "description": "Namespace of the Instill Model model to be used.",
+                          "instillFormat": "text",
+                          "instillUpstreamTypes": [
+                            "value",
+                            "reference"
+                          ],
+                          "anyOf": [
+                            {
+                              "type": "string",
+                              "instillUpstreamType": "value"
+                            },
+                            {
+                              "type": "string",
+                              "pattern": "^\\{.*\\}$",
+                              "instillUpstreamType": "reference"
+                            }
+                          ]
+                        },
+                        "model_id": {
+                          "title": "Model Id",
+                          "description": "ID of the Instill Model model to be used.",
                           "instillFormat": "text",
                           "instillUpstreamTypes": [
                             "value",
@@ -482,7 +587,8 @@
                       "type": "object",
                       "required": [
                         "image_base64",
-                        "model_name"
+                        "model_namespace",
+                        "model_id"
                       ],
                       "properties": {
                         "image_base64": {
@@ -500,9 +606,29 @@
                             }
                           ]
                         },
-                        "model_name": {
-                          "title": "Model Name",
-                          "description": "Name of the Instill Model model to be used.",
+                        "model_namespace": {
+                          "title": "Model Namespace",
+                          "description": "Namespace of the Instill Model model to be used.",
+                          "instillFormat": "text",
+                          "instillUpstreamTypes": [
+                            "value",
+                            "reference"
+                          ],
+                          "anyOf": [
+                            {
+                              "type": "string",
+                              "instillUpstreamType": "value"
+                            },
+                            {
+                              "type": "string",
+                              "pattern": "^\\{.*\\}$",
+                              "instillUpstreamType": "reference"
+                            }
+                          ]
+                        },
+                        "model_id": {
+                          "title": "Model Id",
+                          "description": "ID of the Instill Model model to be used.",
                           "instillFormat": "text",
                           "instillUpstreamTypes": [
                             "value",
@@ -551,14 +677,35 @@
                   "required": [
                     "task",
                     "prompt",
-                    "model_name"
+                    "model_namespace",
+                    "model_id"
                   ],
                   "properties": {
                     "task": {
                       "const": "TASK_TEXT_GENERATION"
                     },
-                    "model_name": {
-                      "title": "Model ID",
+                    "model_namespace": {
+                      "title": "Model Namespace",
+                      "description": "Namespace of the Instill Model model to be used.",
+                      "instillFormat": "text",
+                      "instillUpstreamTypes": [
+                        "value",
+                        "reference"
+                      ],
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "instillUpstreamType": "value"
+                        },
+                        {
+                          "type": "string",
+                          "pattern": "^\\{.*\\}$",
+                          "instillUpstreamType": "reference"
+                        }
+                      ]
+                    },
+                    "model_id": {
+                      "title": "Model Id",
                       "description": "ID of the Instill Model model to be used.",
                       "instillFormat": "text",
                       "instillUpstreamTypes": [
@@ -726,14 +873,35 @@
                   "required": [
                     "task",
                     "prompt",
-                    "model_name"
+                    "model_namespace",
+                    "model_id"
                   ],
                   "properties": {
                     "task": {
                       "const": "TASK_TEXT_TO_IMAGE"
                     },
-                    "model_name": {
-                      "title": "Model ID",
+                    "model_namespace": {
+                      "title": "Model Namespace",
+                      "description": "Namespace of the Instill Model model to be used.",
+                      "instillFormat": "text",
+                      "instillUpstreamTypes": [
+                        "value",
+                        "reference"
+                      ],
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "instillUpstreamType": "value"
+                        },
+                        {
+                          "type": "string",
+                          "pattern": "^\\{.*\\}$",
+                          "instillUpstreamType": "reference"
+                        }
+                      ]
+                    },
+                    "model_id": {
+                      "title": "Model Id",
                       "description": "ID of the Instill Model model to be used.",
                       "instillFormat": "text",
                       "instillUpstreamTypes": [
@@ -894,7 +1062,8 @@
                                   "type": "object",
                                   "required": [
                                     "image_base64",
-                                    "model_name"
+                                    "model_namespace",
+                                    "model_id"
                                   ],
                                   "properties": {
                                     "image_base64": {
@@ -905,9 +1074,19 @@
                                         "reference"
                                       ]
                                     },
-                                    "model_name": {
-                                      "title": "Model Name",
-                                      "description": "Name of the Instill Model model to be used.",
+                                    "model_namespace": {
+                                      "title": "Model Namespace",
+                                      "description": "Namespace of the Instill Model model to be used.",
+                                      "type": "string",
+                                      "instillFormat": "text",
+                                      "instillUpstreamTypes": [
+                                        "value",
+                                        "reference"
+                                      ]
+                                    },
+                                    "model_id": {
+                                      "title": "Model Id",
+                                      "description": "ID of the Instill Model model to be used.",
                                       "type": "string",
                                       "instillFormat": "text",
                                       "instillUpstreamTypes": [
@@ -1000,7 +1179,8 @@
                                   "type": "object",
                                   "required": [
                                     "image_base64",
-                                    "model_name"
+                                    "model_namespace",
+                                    "model_id"
                                   ],
                                   "properties": {
                                     "image_base64": {
@@ -1011,9 +1191,19 @@
                                         "reference"
                                       ]
                                     },
-                                    "model_name": {
-                                      "title": "Model Name",
-                                      "description": "Name of the Instill Model model to be used.",
+                                    "model_namespace": {
+                                      "title": "Model Namespace",
+                                      "description": "Namespace of the Instill Model model to be used.",
+                                      "type": "string",
+                                      "instillFormat": "text",
+                                      "instillUpstreamTypes": [
+                                        "value",
+                                        "reference"
+                                      ]
+                                    },
+                                    "model_id": {
+                                      "title": "Model Id",
+                                      "description": "ID of the Instill Model model to be used.",
                                       "type": "string",
                                       "instillFormat": "text",
                                       "instillUpstreamTypes": [
@@ -1161,7 +1351,8 @@
                                   "type": "object",
                                   "required": [
                                     "image_base64",
-                                    "model_name"
+                                    "model_namespace",
+                                    "model_id"
                                   ],
                                   "properties": {
                                     "image_base64": {
@@ -1172,9 +1363,19 @@
                                         "reference"
                                       ]
                                     },
-                                    "model_name": {
-                                      "title": "Model Name",
-                                      "description": "Name of the Instill Model model to be used.",
+                                    "model_namespace": {
+                                      "title": "Model Namespace",
+                                      "description": "Namespace of the Instill Model model to be used.",
+                                      "type": "string",
+                                      "instillFormat": "text",
+                                      "instillUpstreamTypes": [
+                                        "value",
+                                        "reference"
+                                      ]
+                                    },
+                                    "model_id": {
+                                      "title": "Model Id",
+                                      "description": "ID of the Instill Model model to be used.",
                                       "type": "string",
                                       "instillFormat": "text",
                                       "instillUpstreamTypes": [
@@ -1341,7 +1542,8 @@
                                   "type": "object",
                                   "required": [
                                     "image_base64",
-                                    "model_name"
+                                    "model_namespace",
+                                    "model_id"
                                   ],
                                   "properties": {
                                     "image_base64": {
@@ -1352,9 +1554,19 @@
                                         "reference"
                                       ]
                                     },
-                                    "model_name": {
-                                      "title": "Model Name",
-                                      "description": "Name of the Instill Model model to be used.",
+                                    "model_namespace": {
+                                      "title": "Model Namespace",
+                                      "description": "Namespace of the Instill Model model to be used.",
+                                      "type": "string",
+                                      "instillFormat": "text",
+                                      "instillUpstreamTypes": [
+                                        "value",
+                                        "reference"
+                                      ]
+                                    },
+                                    "model_id": {
+                                      "title": "Model Id",
+                                      "description": "ID of the Instill Model model to be used.",
                                       "type": "string",
                                       "instillFormat": "text",
                                       "instillUpstreamTypes": [
@@ -1497,7 +1709,8 @@
                                   "type": "object",
                                   "required": [
                                     "image_base64",
-                                    "model_name"
+                                    "model_namespace",
+                                    "model_id"
                                   ],
                                   "properties": {
                                     "image_base64": {
@@ -1508,9 +1721,19 @@
                                         "reference"
                                       ]
                                     },
-                                    "model_name": {
-                                      "title": "Model Name",
-                                      "description": "Name of the Instill Model model to be used.",
+                                    "model_namespace": {
+                                      "title": "Model Namespace",
+                                      "description": "Namespace of the Instill Model model to be used.",
+                                      "type": "string",
+                                      "instillFormat": "text",
+                                      "instillUpstreamTypes": [
+                                        "value",
+                                        "reference"
+                                      ]
+                                    },
+                                    "model_id": {
+                                      "title": "Model Id",
+                                      "description": "ID of the Instill Model model to be used.",
                                       "type": "string",
                                       "instillFormat": "text",
                                       "instillUpstreamTypes": [
@@ -1652,7 +1875,8 @@
                                   "type": "object",
                                   "required": [
                                     "image_base64",
-                                    "model_name"
+                                    "model_namespace",
+                                    "model_id"
                                   ],
                                   "properties": {
                                     "image_base64": {
@@ -1663,9 +1887,19 @@
                                         "reference"
                                       ]
                                     },
-                                    "model_name": {
-                                      "title": "Model Name",
-                                      "description": "Name of the Instill Model model to be used.",
+                                    "model_namespace": {
+                                      "title": "Model Namespace",
+                                      "description": "Namespace of the Instill Model model to be used.",
+                                      "type": "string",
+                                      "instillFormat": "text",
+                                      "instillUpstreamTypes": [
+                                        "value",
+                                        "reference"
+                                      ]
+                                    },
+                                    "model_id": {
+                                      "title": "Model Id",
+                                      "description": "ID of the Instill Model model to be used.",
                                       "type": "string",
                                       "instillFormat": "text",
                                       "instillUpstreamTypes": [
@@ -1762,14 +1996,25 @@
                               "required": [
                                 "task",
                                 "prompt",
-                                "model_name"
+                                "model_namespace",
+                                "model_id"
                               ],
                               "properties": {
                                 "task": {
                                   "const": "TASK_TEXT_GENERATION"
                                 },
-                                "model_name": {
-                                  "title": "Model ID",
+                                "model_namespace": {
+                                  "title": "Model Namespace",
+                                  "description": "Namespace of the Instill Model model to be used.",
+                                  "type": "string",
+                                  "instillFormat": "text",
+                                  "instillUpstreamTypes": [
+                                    "value",
+                                    "reference"
+                                  ]
+                                },
+                                "model_id": {
+                                  "title": "Model Id",
                                   "description": "ID of the Instill Model model to be used.",
                                   "type": "string",
                                   "instillFormat": "text",
@@ -1893,14 +2138,25 @@
                               "required": [
                                 "task",
                                 "prompt",
-                                "model_name"
+                                "model_namespace",
+                                "model_id"
                               ],
                               "properties": {
                                 "task": {
                                   "const": "TASK_TEXT_TO_IMAGE"
                                 },
-                                "model_name": {
-                                  "title": "Model ID",
+                                "model_namespace": {
+                                  "title": "Model Namespace",
+                                  "description": "Namespace of the Instill Model model to be used.",
+                                  "type": "string",
+                                  "instillFormat": "text",
+                                  "instillUpstreamTypes": [
+                                    "value",
+                                    "reference"
+                                  ]
+                                },
+                                "model_id": {
+                                  "title": "Model Id",
                                   "description": "ID of the Instill Model model to be used.",
                                   "type": "string",
                                   "instillFormat": "text",
