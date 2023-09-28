@@ -2,12 +2,14 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "Stability AI Connector Spec",
   "type": "object",
-  "required": ["api_key"],
+  "required": [
+    "api_key"
+  ],
   "additionalProperties": false,
   "properties": {
     "api_key": {
       "title": "API Key",
-      "description": "Fill your Stability AI API key. To find your keys, navigate to your DreamStudio's Account page.",
+      "description": "Fill your Stability AI API key. To find your keys, visit - https://platform.stability.ai/account/keys",
       "type": "string",
       "credential_field": true
     }
