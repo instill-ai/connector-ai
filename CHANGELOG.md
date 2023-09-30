@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.5.0-alpha](https://github.com/instill-ai/connector-ai/compare/v0.4.0-alpha...v0.5.0-alpha) (2023-09-30)
+
+
+### Features
+
+* **instill-model:** improve UX for setting a Instill model ([#52](https://github.com/instill-ai/connector-ai/issues/52)) ([af62b73](https://github.com/instill-ai/connector-ai/commit/af62b73467719aedfddc135dc7e96d1a2d4805cc))
+
+
+### Miscellaneous Chores
+
+* **release:** release v0.5.0-alpha ([8f37992](https://github.com/instill-ai/connector-ai/commit/8f379927c4804b4f52e73bd021b0e14130ebcada))
+
 ## [0.4.0-alpha](https://github.com/instill-ai/connector-ai/compare/v0.3.0-alpha...v0.4.0-alpha) (2023-09-13)
 
 
