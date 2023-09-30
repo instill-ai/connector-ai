@@ -2,7 +2,7 @@
   "$defs": {
     "common": {
       "type": "object",
-      "required": ["image_base64", "model_name"],
+      "required": ["image_base64", "model_namespace", "model_id"],
       "properties": {
         "image_base64": {
           "title": "Image",
@@ -10,9 +10,16 @@
           "instillFormat": "image",
           "instillUpstreamTypes": ["reference"]
         },
-        "model_name": {
-          "title": "Model Name",
-          "description": "Name of the Instill Model model to be used.",
+        "model_namespace": {
+          "title": "Model Namespace",
+          "description": "Namespace of the Instill Model model to be used.",
+          "type": "string",
+          "instillFormat": "text",
+          "instillUpstreamTypes": ["value", "reference"]
+        },
+        "model_id": {
+          "title": "Model Id",
+          "description": "ID of the Instill Model model to be used.",
           "type": "string",
           "instillFormat": "text",
           "instillUpstreamTypes": ["value", "reference"]
@@ -116,11 +123,18 @@
   "TASK_TEXT_GENERATION": {
     "input": {
       "type": "object",
-      "required": ["task", "prompt", "model_name"],
+      "required": ["task", "prompt", "model_namespace", "model_id"],
       "properties": {
         "task": { "const": "TASK_TEXT_GENERATION" },
-        "model_name": {
-          "title": "Model ID",
+        "model_namespace": {
+          "title": "Model Namespace",
+          "description": "Namespace of the Instill Model model to be used.",
+          "type": "string",
+          "instillFormat": "text",
+          "instillUpstreamTypes": ["value", "reference"]
+        },
+        "model_id": {
+          "title": "Model Id",
           "description": "ID of the Instill Model model to be used.",
           "type": "string",
           "instillFormat": "text",
@@ -177,11 +191,18 @@
   "TASK_TEXT_TO_IMAGE": {
     "input": {
       "type": "object",
-      "required": ["task", "prompt", "model_name"],
+      "required": ["task", "prompt", "model_namespace", "model_id"],
       "properties": {
         "task": { "const": "TASK_TEXT_TO_IMAGE" },
-        "model_name": {
-          "title": "Model ID",
+        "model_namespace": {
+          "title": "Model Namespace",
+          "description": "Namespace of the Instill Model model to be used.",
+          "type": "string",
+          "instillFormat": "text",
+          "instillUpstreamTypes": ["value", "reference"]
+        },
+        "model_id": {
+          "title": "Model Id",
           "description": "ID of the Instill Model model to be used.",
           "type": "string",
           "instillFormat": "text",
