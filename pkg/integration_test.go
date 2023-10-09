@@ -41,8 +41,8 @@ func init() {
 			"base_url":           {Kind: &structpb.Value_StringValue{StringValue: "https://api-inference.huggingface.co"}},
 			"is_custom_endpoint": {Kind: &structpb.Value_BoolValue{BoolValue: false}},
 		}}
-	c := Init(nil, ConnectorOptions{})
-	hfCon, _ = c.CreateExecution(c.ListConnectorDefinitionUids()[3], hfConfig, nil)
+	c := Init(nil)
+	hfCon, _ = c.CreateExecution(c.ListDefinitionUids()[3], hfConfig, nil)
 }
 
 func TestStabilityAITextToImage(t *testing.T) {
@@ -58,8 +58,8 @@ func TestStabilityAITextToImage(t *testing.T) {
 	}
 	in, err := base.ConvertToStructpb(inputStruct)
 	fmt.Printf("err:%s", err)
-	c := Init(nil, ConnectorOptions{})
-	con, err := c.CreateExecution(c.ListConnectorDefinitionUids()[0], config, nil)
+	c := Init(nil)
+	con, err := c.CreateExecution(c.ListDefinitionUids()[0], config, nil)
 	fmt.Printf("err:%s", err)
 	op, err := con.Execute([]*structpb.Struct{in})
 	fmt.Printf("\n op :%v, err:%s", op, err)
@@ -86,8 +86,8 @@ func TestStabilityAIImageToImage(t *testing.T) {
 	}
 	in, err := base.ConvertToStructpb(inputStruct)
 	fmt.Printf("err:%s", err)
-	c := Init(nil, ConnectorOptions{})
-	con, err := c.CreateExecution(c.ListConnectorDefinitionUids()[0], config, nil)
+	c := Init(nil)
+	con, err := c.CreateExecution(c.ListDefinitionUids()[0], config, nil)
 	fmt.Printf("\n err: %s", err)
 	op, err := con.Execute([]*structpb.Struct{in})
 	fmt.Printf("\n op: %v, err: %s", op, err)
@@ -102,8 +102,8 @@ func TestOpenAITextGeneration(t *testing.T) {
 	in, err := base.ConvertToStructpb(inputStruct)
 	in.Fields["task"] = &structpb.Value{Kind: &structpb.Value_StringValue{StringValue: "TASK_TEXT_GENERATION"}}
 	fmt.Printf("err:%s", err)
-	c := Init(nil, ConnectorOptions{})
-	con, err := c.CreateExecution(c.ListConnectorDefinitionUids()[2], config, nil)
+	c := Init(nil)
+	con, err := c.CreateExecution(c.ListDefinitionUids()[2], config, nil)
 	fmt.Printf("err:%s", err)
 	op, err := con.Execute([]*structpb.Struct{in})
 	fmt.Printf("\n op :%v, err:%s", op, err)
@@ -132,16 +132,16 @@ func TestOpenAIAudioTranscription(t *testing.T) {
 	in, err := base.ConvertToStructpb(inputStruct)
 	in.Fields["task"] = &structpb.Value{Kind: &structpb.Value_StringValue{StringValue: "TASK_SPEECH_RECOGNITION"}}
 	fmt.Printf("err:%s", err)
-	c := Init(nil, ConnectorOptions{})
-	con, err := c.CreateExecution(c.ListConnectorDefinitionUids()[2], config, nil)
+	c := Init(nil)
+	con, err := c.CreateExecution(c.ListDefinitionUids()[2], config, nil)
 	fmt.Printf("err:%s", err)
 	op, err := con.Execute([]*structpb.Struct{in})
 	fmt.Printf("\n op :%v, err:%s", op, err)
 }
 
 func TestGetConnectionState(t *testing.T) {
-	c := Init(nil, ConnectorOptions{})
-	state, err := c.Test(c.ListConnectorDefinitionUids()[3], hfConfig, nil)
+	c := Init(nil)
+	state, err := c.Test(c.ListDefinitionUids()[3], hfConfig, nil)
 	fmt.Printf("\n state: %v, err: %v", state, err)
 }
 
@@ -394,8 +394,8 @@ func TestHuggingFaceCustomEndpointImageClassification(t *testing.T) {
 			"base_url":           {Kind: &structpb.Value_StringValue{StringValue: "valid URL here"}},
 			"is_custom_endpoint": {Kind: &structpb.Value_BoolValue{BoolValue: true}},
 		}}
-	c := Init(nil, ConnectorOptions{})
-	hfCustomCon, _ := c.CreateExecution(c.ListConnectorDefinitionUids()[3], hfCustomConfig, nil)
+	c := Init(nil)
+	hfCustomCon, _ := c.CreateExecution(c.ListDefinitionUids()[3], hfCustomConfig, nil)
 
 	b, _ := ioutil.ReadFile("test_artifacts/image.jpg")
 	req := huggingface.ImageRequest{Image: base64.StdEncoding.EncodeToString(b)}

@@ -30,13 +30,7 @@
   "TASK_CLASSIFICATION": {
     "input": {
       "type": "object",
-      "allOf": [
-        {
-          "type": "object",
-          "properties": { "task": { "const": "TASK_CLASSIFICATION" } }
-        },
-        { "$ref": "#/$defs/common" }
-      ]
+      "$ref": "#/$defs/common"
     },
     "output": {
       "type": "object",
@@ -46,13 +40,7 @@
   "TASK_INSTANCE_SEGMENTATION": {
     "input": {
       "type": "object",
-      "allOf": [
-        {
-          "type": "object",
-          "properties": { "task": { "const": "TASK_INSTANCE_SEGMENTATION" } }
-        },
-        { "$ref": "#/$defs/common" }
-      ]
+      "$ref": "#/$defs/common"
     },
     "output": {
       "type": "object",
@@ -62,13 +50,7 @@
   "TASK_KEYPOINT": {
     "input": {
       "type": "object",
-      "allOf": [
-        {
-          "type": "object",
-          "properties": { "task": { "const": "TASK_KEYPOINT" } }
-        },
-        { "$ref": "#/$defs/common" }
-      ]
+      "$ref": "#/$defs/common"
     },
     "output": {
       "type": "object",
@@ -78,13 +60,7 @@
   "TASK_DETECTION": {
     "input": {
       "type": "object",
-      "allOf": [
-        {
-          "type": "object",
-          "properties": { "task": { "const": "TASK_DETECTION" } }
-        },
-        { "$ref": "#/$defs/common" }
-      ]
+      "$ref": "#/$defs/common"
     },
     "output": {
       "type": "object",
@@ -94,10 +70,7 @@
   "TASK_OCR": {
     "input": {
       "type": "object",
-      "allOf": [
-        { "type": "object", "properties": { "task": { "const": "TASK_OCR" } } },
-        { "$ref": "#/$defs/common" }
-      ]
+      "$ref": "#/$defs/common"
     },
     "output": {
       "type": "object",
@@ -107,13 +80,7 @@
   "TASK_SEMANTIC_SEGMENTATION": {
     "input": {
       "type": "object",
-      "allOf": [
-        {
-          "type": "object",
-          "properties": { "task": { "const": "TASK_SEMANTIC_SEGMENTATION" } }
-        },
-        { "$ref": "#/$defs/common" }
-      ]
+      "$ref": "#/$defs/common"
     },
     "output": {
       "type": "object",
@@ -123,9 +90,8 @@
   "TASK_TEXT_GENERATION": {
     "input": {
       "type": "object",
-      "required": ["task", "prompt", "model_namespace", "model_id"],
+      "required": ["prompt", "model_namespace", "model_id"],
       "properties": {
-        "task": { "const": "TASK_TEXT_GENERATION" },
         "model_namespace": {
           "title": "Model Namespace",
           "description": "Namespace of the Instill Model model to be used.",
@@ -191,9 +157,8 @@
   "TASK_TEXT_TO_IMAGE": {
     "input": {
       "type": "object",
-      "required": ["task", "prompt", "model_namespace", "model_id"],
+      "required": ["prompt", "model_namespace", "model_id"],
       "properties": {
-        "task": { "const": "TASK_TEXT_TO_IMAGE" },
         "model_namespace": {
           "title": "Model Namespace",
           "description": "Namespace of the Instill Model model to be used.",
