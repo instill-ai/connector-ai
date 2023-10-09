@@ -16,7 +16,6 @@ import (
 	"google.golang.org/protobuf/types/known/structpb"
 
 	"github.com/instill-ai/component/pkg/base"
-	"github.com/instill-ai/component/pkg/configLoader"
 
 	connectorPB "github.com/instill-ai/protogen-go/vdp/connector/v1alpha"
 )
@@ -33,21 +32,19 @@ const (
 
 var (
 	//go:embed config/definitions.json
-	definitionJSON []byte
-	once           sync.Once
-	connector      base.IConnector
+	definitionsJSON []byte
+	//go:embed config/tasks.json
+	tasksJSON []byte
+	once      sync.Once
+	connector base.IConnector
 )
 
-type ConnectorOptions struct{}
-
 type Connector struct {
-	base.BaseConnector
-	options ConnectorOptions
+	base.Connector
 }
 
-type Connection struct {
-	base.BaseExecution
-	connector *Connector
+type Execution struct {
+	base.Execution
 }
 
 // Client represents a OpenAI client
@@ -62,40 +59,25 @@ type HTTPClient interface {
 	Do(req *http.Request) (*http.Response, error)
 }
 
-func Init(logger *zap.Logger, options ConnectorOptions) base.IConnector {
+func Init(logger *zap.Logger) base.IConnector {
 	once.Do(func() {
-		loader := configLoader.InitJSONSchema(logger)
-		connDefs, err := loader.LoadConnector(venderName, connectorPB.ConnectorType_CONNECTOR_TYPE_AI, definitionJSON)
-		if err != nil {
-			panic(err)
-		}
 		connector = &Connector{
-			BaseConnector: base.BaseConnector{Logger: logger},
-			options:       options,
+			Connector: base.Connector{
+				Component: base.Component{Logger: logger},
+			},
 		}
-		for idx := range connDefs {
-			err := connector.AddConnectorDefinition(uuid.FromStringOrNil(connDefs[idx].GetUid()), connDefs[idx].GetId(), connDefs[idx])
-			if err != nil {
-				logger.Warn(err.Error())
-			}
+		err := connector.LoadConnectorDefinitions(definitionsJSON, tasksJSON)
+		if err != nil {
+			logger.Fatal(err.Error())
 		}
 	})
 	return connector
 }
 
-func (c *Connector) CreateExecution(defUid uuid.UUID, config *structpb.Struct, logger *zap.Logger) (base.IExecution, error) {
-	def, err := c.GetConnectorDefinitionByUid(defUid)
-	if err != nil {
-		return nil, err
-	}
-	return &Connection{
-		BaseExecution: base.BaseExecution{
-			Logger: logger, DefUid: defUid,
-			Config:                config,
-			OpenAPISpecifications: def.Spec.OpenapiSpecifications,
-		},
-		connector: c,
-	}, nil
+func (c *Connector) CreateExecution(defUID uuid.UUID, task string, config *structpb.Struct, logger *zap.Logger) (base.IExecution, error) {
+	e := &Execution{}
+	e.Execution = base.CreateExecutionHelper(e, c, defUID, task, config, logger)
+	return e, nil
 }
 
 // NewClient initializes a new OpenAI client
@@ -148,25 +130,14 @@ func getOrg(config *structpb.Struct) string {
 	return val.GetStringValue()
 }
 
-func (c *Connection) Execute(inputs []*structpb.Struct) ([]*structpb.Struct, error) {
+func (e *Execution) Execute(inputs []*structpb.Struct) ([]*structpb.Struct, error) {
 
-	client := NewClient(getAPIKey(c.Config), getOrg(c.Config))
+	client := NewClient(getAPIKey(e.Config), getOrg(e.Config))
 
 	outputs := []*structpb.Struct{}
 
-	task := inputs[0].GetFields()["task"].GetStringValue()
 	for _, input := range inputs {
-		if input.GetFields()["task"].GetStringValue() != task {
-			return nil, fmt.Errorf("each input should be the same task")
-		}
-	}
-
-	if err := c.ValidateInput(inputs, task); err != nil {
-		return nil, err
-	}
-
-	for _, input := range inputs {
-		switch task {
+		switch e.Task {
 		case textGenerationTask:
 
 			inputStruct := TextCompletionInput{}
@@ -269,12 +240,10 @@ func (c *Connection) Execute(inputs []*structpb.Struct) ([]*structpb.Struct, err
 			outputs = append(outputs, output)
 
 		default:
-			return nil, fmt.Errorf("not supported task: %s", task)
+			return nil, fmt.Errorf("not supported task: %s", e.Task)
 		}
 	}
-	if err := c.ValidateOutput(outputs, task); err != nil {
-		return nil, err
-	}
+
 	return outputs, nil
 }
 

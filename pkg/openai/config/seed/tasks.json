@@ -2,13 +2,8 @@
   "TASK_SPEECH_RECOGNITION": {
     "input": {
       "type": "object",
-      "required": [
-        "task", "audio", "model"
-      ],
+      "required": ["audio", "model"],
       "properties": {
-        "task": {
-          "const": "TASK_SPEECH_RECOGNITION"
-        },
         "audio": {
           "title": "Audio",
           "$ref": "openai.json#/components/schemas/CreateTranscriptionRequest/properties/file",
@@ -54,13 +49,8 @@
   "TASK_TEXT_EMBEDDINGS": {
     "input": {
       "type": "object",
-      "required": [
-        "task", "text", "model"
-      ],
+      "required": ["text", "model"],
       "properties": {
-        "task": {
-          "const": "TASK_TEXT_EMBEDDINGS"
-        },
         "text": {
           "title": "Text",
           "type": "string",
@@ -88,13 +78,8 @@
   "TASK_TEXT_GENERATION": {
     "input": {
       "type": "object",
-      "required": [
-        "task", "model", "prompt"
-      ],
+      "required": ["model", "prompt"],
       "properties": {
-        "task": {
-          "const": "TASK_TEXT_GENERATION"
-        },
         "prompt": {
           "title": "Prompt",
           "type": "string",
@@ -124,15 +109,13 @@
         },
         "n": {
           "title": "N",
-          "$ref": "openai.json#/components/schemas/CreateChatCompletionRequest/properties/n"
-          ,
+          "$ref": "openai.json#/components/schemas/CreateChatCompletionRequest/properties/n",
           "instillFormat": "integer",
           "instillUpstreamTypes": ["value", "reference"]
         },
         "max_tokens": {
           "title": "Max Tokens",
-          "$ref": "openai.json#/components/schemas/CreateChatCompletionRequest/properties/max_tokens"
-          ,
+          "$ref": "openai.json#/components/schemas/CreateChatCompletionRequest/properties/max_tokens",
           "instillFormat": "integer",
           "instillUpstreamTypes": ["value", "reference"]
         }

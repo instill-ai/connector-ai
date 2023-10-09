@@ -15,7 +15,6 @@ import (
 	"google.golang.org/protobuf/types/known/structpb"
 
 	"github.com/instill-ai/component/pkg/base"
-	"github.com/instill-ai/component/pkg/configLoader"
 
 	commonPB "github.com/instill-ai/protogen-go/common/task/v1alpha"
 	connectorPB "github.com/instill-ai/protogen-go/vdp/connector/v1alpha"
@@ -29,22 +28,20 @@ const (
 
 var (
 	//go:embed config/definitions.json
-	definitionJSON []byte
-	once           sync.Once
-	connector      base.IConnector
+	definitionsJSON []byte
+	//go:embed config/tasks.json
+	tasksJSON []byte
+	once      sync.Once
+	connector base.IConnector
 )
 
-type ConnectorOptions struct{}
-
 type Connector struct {
-	base.BaseConnector
-	options ConnectorOptions
+	base.Connector
 }
 
-type Connection struct {
-	base.BaseExecution
-	connector *Connector
-	client    *Client
+type Execution struct {
+	base.Execution
+	client *Client
 }
 
 // Client represents an Instill Model client
@@ -58,41 +55,25 @@ type HTTPClient interface {
 	Do(req *http.Request) (*http.Response, error)
 }
 
-func Init(logger *zap.Logger, options ConnectorOptions) base.IConnector {
+func Init(logger *zap.Logger) base.IConnector {
 	once.Do(func() {
-		loader := configLoader.InitJSONSchema(logger)
-		connDefs, err := loader.LoadConnector(venderName, connectorPB.ConnectorType_CONNECTOR_TYPE_AI, definitionJSON)
-		if err != nil {
-			panic(err)
-		}
 		connector = &Connector{
-			BaseConnector: base.BaseConnector{Logger: logger},
-			options:       options,
+			Connector: base.Connector{
+				Component: base.Component{Logger: logger},
+			},
 		}
-		for idx := range connDefs {
-			err := connector.AddConnectorDefinition(uuid.FromStringOrNil(connDefs[idx].GetUid()), connDefs[idx].GetId(), connDefs[idx])
-			if err != nil {
-				logger.Warn(err.Error())
-			}
+		err := connector.LoadConnectorDefinitions(definitionsJSON, tasksJSON)
+		if err != nil {
+			logger.Fatal(err.Error())
 		}
-
 	})
 	return connector
 }
 
-func (c *Connector) CreateExecution(defUid uuid.UUID, config *structpb.Struct, logger *zap.Logger) (base.IExecution, error) {
-	def, err := c.GetConnectorDefinitionByUid(defUid)
-	if err != nil {
-		return nil, err
-	}
-	return &Connection{
-		BaseExecution: base.BaseExecution{
-			Logger: logger, DefUid: defUid,
-			Config:                config,
-			OpenAPISpecifications: def.Spec.OpenapiSpecifications,
-		},
-		connector: c,
-	}, nil
+func (c *Connector) CreateExecution(defUID uuid.UUID, task string, config *structpb.Struct, logger *zap.Logger) (base.IExecution, error) {
+	e := &Execution{}
+	e.Execution = base.CreateExecutionHelper(e, c, defUID, task, config, logger)
+	return e, nil
 }
 
 // NewClient initializes a new Instill model client
@@ -155,10 +136,10 @@ func (c *Client) sendReq(reqURL, method string, params interface{}) (err error) 
 	return
 }
 
-func (c *Connection) Execute(inputs []*structpb.Struct) ([]*structpb.Struct, error) {
+func (e *Execution) Execute(inputs []*structpb.Struct) ([]*structpb.Struct, error) {
 
 	var err error
-	c.client, err = NewClient(c.Config)
+	e.client, err = NewClient(e.Config)
 	if err != nil {
 		return nil, err
 	}
@@ -167,20 +148,9 @@ func (c *Connection) Execute(inputs []*structpb.Struct) ([]*structpb.Struct, err
 		return inputs, fmt.Errorf("invalid input")
 	}
 
-	gRPCCLient, gRPCCLientConn := initModelPublicServiceClient(getServerURL(c.Config))
+	gRPCCLient, gRPCCLientConn := initModelPublicServiceClient(getServerURL(e.Config))
 	if gRPCCLientConn != nil {
 		defer gRPCCLientConn.Close()
-	}
-
-	task := inputs[0].GetFields()["task"].GetStringValue()
-	for _, input := range inputs {
-		if input.GetFields()["task"].GetStringValue() != task {
-			return nil, fmt.Errorf("each input should be the same task")
-		}
-	}
-
-	if err := c.ValidateInput(inputs, task); err != nil {
-		return nil, err
 	}
 
 	modelNamespace := inputs[0].GetFields()["model_namespace"].GetStringValue()
@@ -188,31 +158,29 @@ func (c *Connection) Execute(inputs []*structpb.Struct) ([]*structpb.Struct, err
 	modelName := fmt.Sprintf("users/%s/models/%s", modelNamespace, modelId)
 
 	var result []*structpb.Struct
-	switch task {
+	switch e.Task {
 	case commonPB.Task_TASK_UNSPECIFIED.String():
-		result, err = c.executeUnspecified(gRPCCLient, modelName, inputs)
+		result, err = e.executeUnspecified(gRPCCLient, modelName, inputs)
 	case commonPB.Task_TASK_CLASSIFICATION.String():
-		result, err = c.executeImageClassification(gRPCCLient, modelName, inputs)
+		result, err = e.executeImageClassification(gRPCCLient, modelName, inputs)
 	case commonPB.Task_TASK_DETECTION.String():
-		result, err = c.executeObjectDetection(gRPCCLient, modelName, inputs)
+		result, err = e.executeObjectDetection(gRPCCLient, modelName, inputs)
 	case commonPB.Task_TASK_KEYPOINT.String():
-		result, err = c.executeKeyPointDetection(gRPCCLient, modelName, inputs)
+		result, err = e.executeKeyPointDetection(gRPCCLient, modelName, inputs)
 	case commonPB.Task_TASK_OCR.String():
-		result, err = c.executeOCR(gRPCCLient, modelName, inputs)
+		result, err = e.executeOCR(gRPCCLient, modelName, inputs)
 	case commonPB.Task_TASK_INSTANCE_SEGMENTATION.String():
-		result, err = c.executeInstanceSegmentation(gRPCCLient, modelName, inputs)
+		result, err = e.executeInstanceSegmentation(gRPCCLient, modelName, inputs)
 	case commonPB.Task_TASK_SEMANTIC_SEGMENTATION.String():
-		result, err = c.executeSemanticSegmentation(gRPCCLient, modelName, inputs)
+		result, err = e.executeSemanticSegmentation(gRPCCLient, modelName, inputs)
 	case commonPB.Task_TASK_TEXT_TO_IMAGE.String():
-		result, err = c.executeTextToImage(gRPCCLient, modelName, inputs)
+		result, err = e.executeTextToImage(gRPCCLient, modelName, inputs)
 	case commonPB.Task_TASK_TEXT_GENERATION.String():
-		result, err = c.executeTextGeneration(gRPCCLient, modelName, inputs)
+		result, err = e.executeTextGeneration(gRPCCLient, modelName, inputs)
 	default:
-		return inputs, fmt.Errorf("unsupported task: %s", task)
+		return inputs, fmt.Errorf("unsupported task: %s", e.Task)
 	}
-	if err := c.ValidateOutput(result, task); err != nil {
-		return nil, err
-	}
+
 	return result, err
 }
 

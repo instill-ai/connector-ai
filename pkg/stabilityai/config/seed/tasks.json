@@ -5,9 +5,6 @@
       "required": ["prompts"],
       "additionalProperties": false,
       "properties": {
-        "task": {
-          "const": "TASK_TEXT_TO_IMAGE"
-        },
         "prompts": {
           "title": "Prompts",
           "type": "array",
@@ -146,9 +143,6 @@
       "additionalProperties": false,
       "required": ["prompts"],
       "properties": {
-        "task": {
-          "const": "TASK_IMAGE_TO_IMAGE"
-        },
         "prompts": {
           "title": "Prompts",
           "type": "array",
