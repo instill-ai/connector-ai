@@ -1,3 +1,5 @@
+**This repository has been archived and the connectors are moved to [connector](https://github.com/instill-ai/connector) repository.**
+
 # Connector AI
 
 **Connector AI** is a package built on [component](https://github.com/instill-ai/component). It enables [**Instill VDP**](https://github.com/instill-ai/vdp) to connect with AI vendors and harness the power of AI models.
